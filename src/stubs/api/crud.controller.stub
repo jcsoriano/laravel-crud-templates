@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers\Api{{ NAMESPACE_PATH }};
+
+{{ NAMESPACES }}
+
+class {{ MODEL }}Controller extends Controller
+{
+    public function index(Request $request)
+    {
+        Gate::authorize('viewAny', {{ MODEL }}::class);
+
+        $request->validate([
+            'page' => 'nullable|integer|min:1',
+            'per_page' => 'nullable|integer|min:1',
+        ]);
+
+        return {{ MODEL }}Resource::collection(
+            {{ MODEL }}::paginate(
+                $request->integer('per_page'),
+            ),
+        );
+    }
+
+    public function store(Store{{ MODEL }}Request $request)
+    {
+        Gate::authorize('create', {{ MODEL }}::class);
+
+        return {{ MODEL }}Resource::make(
+            {{ MODEL }}::create(
+                $request->validated(),
+            ),
+        );
+    }
+
+    public function show(Request $request, {{ MODEL }} ${{ MODEL_CAMEL }})
+    {
+        Gate::authorize('view', ${{ MODEL_CAMEL }});
+
+        return {{ MODEL }}Resource::make(${{ MODEL_CAMEL }});
+    }
+
+    public function update(Update{{ MODEL }}Request $request, {{ MODEL }} ${{ MODEL_CAMEL }})
+    {
+        Gate::authorize('update', ${{ MODEL_CAMEL }});
+
+        return {{ MODEL }}Resource::make(
+            tap(${{ MODEL_CAMEL }})->update(
+                $request->validated(),
+            ),
+        );
+    }
+
+    public function destroy(Request $request, {{ MODEL }} ${{ MODEL_CAMEL }})
+    {
+        Gate::authorize('delete', ${{ MODEL_CAMEL }});
+
+        return {{ MODEL }}Resource::make(
+            tap(${{ MODEL_CAMEL }})->delete(),
+        );
+    }
+}

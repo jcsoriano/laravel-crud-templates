@@ -1,0 +1,50 @@
+<?php
+
+namespace JCSoriano\LaravelCrudStubs\Generators;
+
+use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
+use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+
+class FactoryGenerator extends Generator
+{
+    public function generate(Payload $payload): Payload
+    {
+        $model = $payload->model;
+        $namespace = $model->namespace();
+        $modelName = $model->model()->studlyCase();
+
+        $directory = database_path('factories/'.str_replace('\\', '/', $namespace));
+        $this->createDirectoryIfNotExists($directory);
+
+        $fileName = $modelName.'Factory';
+
+        $factoryPrinter = LaravelCrudStubs::buildPrinter('factory');
+        $output = $factoryPrinter->print($payload->fields);
+
+        // Build proper namespace paths
+        $modelNamespace = $this->buildNamespace('App\\Models', $payload);
+
+        // Collect namespaces from field types
+        $namespaces = collect([
+            "{$modelNamespace}\\{$modelName}",
+            'Illuminate\Database\Eloquent\Factories\Factory',
+        ])->merge($output->namespaces);
+
+        LaravelStub::from($this->getStubPath('crud.factory.stub'))
+            ->to($directory)
+            ->name($fileName)
+            ->ext('php')
+            ->replaces([
+                ...$payload->variables(),
+                'FACTORY_FIELDS' => $output->output,
+                'NAMESPACES' => $this->buildNamespaces($namespaces),
+            ])
+            ->conditions($payload->conditions)
+            ->generate();
+
+        $this->printSuccess('Factory', $directory, $fileName, $payload);
+
+        return $payload;
+    }
+}

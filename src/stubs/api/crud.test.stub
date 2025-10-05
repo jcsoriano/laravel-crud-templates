@@ -1,0 +1,84 @@
+<?php
+
+namespace Tests\Feature\Api{{ NAMESPACE_PATH }};
+
+use Illuminate\Testing\TestResponse;
+
+class {{ MODEL }}ControllerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
+
+    private function assertResponseStructure(TestResponse $response): void
+    {
+        $response->assertJsonStructure([
+            'data' => [
+                {{ TEST_STRUCTURE }}
+            ],
+        ]);
+    }
+
+    public function test_can_list_{{ MODEL_SNAKE_PLURAL }}(): void
+    {
+        {{ MODEL }}::factory()->count(3)->create();
+
+        $response = $this->getJson('/api/{{ MODEL_KEBAB_PLURAL }}');
+
+        $response->assertOk();
+        $this->assertResponseStructure($response);
+    }
+
+    public function test_can_create_{{ MODEL_SNAKE }}(): void
+    {
+        $data = {{ MODEL }}::factory()->make()->toArray();
+
+        $response = $this->postJson('/api/{{ MODEL_KEBAB_PLURAL }}', $data);
+
+        $response->assertCreated();
+        $this->assertResponseStructure($response);
+
+        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $data);
+    }
+
+    public function test_can_show_{{ MODEL_SNAKE }}(): void
+    {
+        ${{ MODEL_CAMEL }} = {{ MODEL }}::factory()->create();
+
+        $response = $this->getJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->id}");
+
+        $response->assertOk();
+        $this->assertResponseStructure($response);
+    }
+
+    public function test_can_update_{{ MODEL_SNAKE }}(): void
+    {
+        ${{ MODEL_CAMEL }} = {{ MODEL }}::factory()->create();
+        $data = {{ MODEL }}::factory()->make()->toArray();
+
+        $response = $this->putJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->id}", $data);
+
+        $response->assertOk();
+        $this->assertResponseStructure($response);
+
+        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', array_merge(['id' => ${{ MODEL_CAMEL }}->id], $data));
+    }
+
+    public function test_can_delete_{{ MODEL_SNAKE }}(): void
+    {
+        ${{ MODEL_CAMEL }} = {{ MODEL }}::factory()->create();
+
+        $response = $this->deleteJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->id}");
+
+        $response->assertOk();
+        $this->assertSoftDeleted('{{ MODEL_SNAKE_PLURAL }}', ['id' => ${{ MODEL_CAMEL }}->id]);
+    }
+}
