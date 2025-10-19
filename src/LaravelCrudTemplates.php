@@ -28,7 +28,6 @@ use JCSoriano\LaravelCrudTemplates\Generators\ResourceGenerator;
 use JCSoriano\LaravelCrudTemplates\Generators\StoreRequestGenerator;
 use JCSoriano\LaravelCrudTemplates\Generators\TestGenerator;
 use JCSoriano\LaravelCrudTemplates\Generators\UpdateRequestGenerator;
-use JCSoriano\LaravelCrudTemplates\Templates\ApiTemplate;
 use JCSoriano\LaravelCrudTemplates\Printers\CastsPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\FactoryPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\FillablePrinter;
@@ -37,6 +36,7 @@ use JCSoriano\LaravelCrudTemplates\Printers\RelationsPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\ResourceOnlyPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\ResourceRelationPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\RulesPrinter;
+use JCSoriano\LaravelCrudTemplates\Templates\ApiTemplate;
 
 class LaravelCrudTemplates
 {
