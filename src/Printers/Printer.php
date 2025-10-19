@@ -2,10 +2,10 @@
 
 namespace JCSoriano\LaravelCrudStubs\Printers;
 
-use Illuminate\Support\Collection;
 use JCSoriano\LaravelCrudStubs\DataObjects\Output;
+use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
 
 interface Printer
 {
-    public function print(Collection $fields): Output;
+    public function print(Payload $payload): Output;
 }

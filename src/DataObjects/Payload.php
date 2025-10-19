@@ -36,4 +36,15 @@ class Payload
             ...$this->variables,
         ];
     }
+
+    public function conditions(): array
+    {
+        $scope = $this->options['scope'] ?? null;
+
+        return [
+            'scopeUser' => $scope === 'user',
+            'scopeTeam' => $scope === 'team',
+            'scopeNone' => $scope === 'none' || is_null($scope),
+        ];
+    }
 }

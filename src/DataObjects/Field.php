@@ -4,9 +4,7 @@ namespace JCSoriano\LaravelCrudStubs\DataObjects;
 
 class Field
 {
-    /**
-     * @param  class-string  $typeClass
-     */
+    /** @param  class-string  $typeClass */
     public function __construct(
         public protected(set) Name $name,
         public protected(set) bool $required,

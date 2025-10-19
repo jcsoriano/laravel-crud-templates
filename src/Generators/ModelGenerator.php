@@ -23,9 +23,9 @@ class ModelGenerator extends Generator
         $castsPrinter = LaravelCrudStubs::buildPrinter('casts');
         $relationsPrinter = LaravelCrudStubs::buildPrinter('relations');
 
-        $fillableOutput = $fillablePrinter->print($payload->fields);
-        $castsOutput = $castsPrinter->print($payload->fields);
-        $relationsOutput = $relationsPrinter->print($payload->fields);
+        $fillableOutput = $fillablePrinter->print($payload);
+        $castsOutput = $castsPrinter->print($payload);
+        $relationsOutput = $relationsPrinter->print($payload);
 
         // Collect namespaces from printers
         $namespaces = collect([
@@ -47,7 +47,7 @@ class ModelGenerator extends Generator
                 'RELATIONS' => $relationsOutput->output,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Model', $directory, $fileName, $payload);

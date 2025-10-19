@@ -2,14 +2,15 @@
 
 namespace JCSoriano\LaravelCrudStubs\Printers;
 
-use Illuminate\Support\Collection;
 use JCSoriano\LaravelCrudStubs\DataObjects\Field;
 use JCSoriano\LaravelCrudStubs\DataObjects\Output;
+use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
 
 class RulesPrinter implements Printer
 {
-    public function print(Collection $fields): Output
+    public function print(Payload $payload): Output
     {
+        $fields = $payload->fields;
         $rules = collect();
         $namespaces = collect();
 

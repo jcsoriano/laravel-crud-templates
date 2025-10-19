@@ -34,7 +34,7 @@ class PolicyGenerator extends Generator
                 ...$payload->variables(),
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Policy', $directory, $fileName, $payload);

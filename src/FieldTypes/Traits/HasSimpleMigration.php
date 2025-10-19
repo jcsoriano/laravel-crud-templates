@@ -8,8 +8,9 @@ trait HasSimpleMigration
 {
     public function buildSimpleMigration(string $type): Output
     {
-        $nullable = $this->field->required ? '' : '->nullable()';
-        $output = "\$table->{$type}('{$this->field->name->snakeCase()}'){$nullable};";
+        $field = $this->field;
+        $nullable = $field->required ? '' : '->nullable()';
+        $output = "\$table->{$type}('{$field->name->snakeCase()}'){$nullable};";
 
         return new Output($output);
     }

@@ -20,7 +20,7 @@ class FactoryGenerator extends Generator
         $fileName = $modelName.'Factory';
 
         $factoryPrinter = LaravelCrudStubs::buildPrinter('factory');
-        $output = $factoryPrinter->print($payload->fields);
+        $output = $factoryPrinter->print($payload);
 
         // Build proper namespace paths
         $modelNamespace = $this->buildNamespace('App\\Models', $payload);
@@ -40,7 +40,7 @@ class FactoryGenerator extends Generator
                 'FACTORY_FIELDS' => $output->output,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Factory', $directory, $fileName, $payload);

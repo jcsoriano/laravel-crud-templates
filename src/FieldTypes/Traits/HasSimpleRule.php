@@ -8,8 +8,9 @@ trait HasSimpleRule
 {
     protected function buildSimpleRule(string $rule): Output
     {
-        $required = $this->field->required ? 'required' : 'nullable';
-        $output = "'{$this->field->name->snakeCase()}' => '{$required}|{$rule}'";
+        $field = $this->field;
+        $required = $field->required ? 'required' : 'nullable';
+        $output = "'{$field->name->snakeCase()}' => '{$required}|{$rule}'";
 
         return new Output($output);
     }

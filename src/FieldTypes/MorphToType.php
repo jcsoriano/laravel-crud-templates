@@ -33,8 +33,9 @@ OUTPUT;
 
     public function resourceRelations(): array
     {
-        $fieldName = $this->field->name->snakeCase();
-        $relationName = $this->field->name->camelCase();
+        $name = $this->field->name;
+        $fieldName = $name->snakeCase();
+        $relationName = $name->camelCase();
 
         return [
             $fieldName => "\$this->whenLoaded('{$relationName}')",

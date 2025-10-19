@@ -41,6 +41,7 @@ class TestGenerator extends Generator
             "{$modelNamespace}\\{$modelName}",
             'App\Models\User',
             'Illuminate\Foundation\Testing\RefreshDatabase',
+            'Illuminate\Testing\TestResponse',
             'Tests\TestCase',
         ]);
 
@@ -53,7 +54,7 @@ class TestGenerator extends Generator
                 'TEST_STRUCTURE' => $testStructureString,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Test', $directory, $fileName, $payload);

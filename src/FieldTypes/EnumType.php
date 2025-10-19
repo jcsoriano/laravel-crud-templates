@@ -13,16 +13,18 @@ class EnumType extends FieldType
 
     public function migration(): Output
     {
-        $nullable = $this->field->required ? '' : '->nullable()';
-        $output = "\$table->string('{$this->field->name->snakeCase()}'){$nullable};";
+        $field = $this->field;
+        $nullable = $field->required ? '' : '->nullable()';
+        $output = "\$table->string('{$field->name->snakeCase()}'){$nullable};";
 
         return new Output($output);
     }
 
     public function cast(): Output
     {
-        $enumClass = $this->field->options['enumClass'] ?? 'Enum';
-        $output = "'{$this->field->name->snakeCase()}' => {$enumClass}::class";
+        $field = $this->field;
+        $enumClass = $field->options['enumClass'] ?? 'Enum';
+        $output = "'{$field->name->snakeCase()}' => {$enumClass}::class";
 
         return new Output($output, collect(["App\\Enums\\{$enumClass}"]));
     }

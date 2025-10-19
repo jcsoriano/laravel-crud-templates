@@ -20,7 +20,7 @@ class UpdateRequestGenerator extends Generator
         $fileName = 'Update'.$modelName.'Request';
 
         $rulesPrinter = LaravelCrudStubs::buildPrinter('rules');
-        $rulesOutput = $rulesPrinter->print($payload->fields);
+        $rulesOutput = $rulesPrinter->print($payload);
 
         // Collect namespaces from printer
         $namespaces = collect([
@@ -36,7 +36,7 @@ class UpdateRequestGenerator extends Generator
                 'RULES' => $rulesOutput->output,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Request', $directory, $fileName, $payload);

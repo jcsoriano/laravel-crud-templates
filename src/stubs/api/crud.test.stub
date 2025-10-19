@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Api{{ NAMESPACE_PATH }};
 
-use Illuminate\Testing\TestResponse;
+{{ NAMESPACES }}
 
 class {{ MODEL }}ControllerTest extends TestCase
 {
@@ -29,7 +29,7 @@ class {{ MODEL }}ControllerTest extends TestCase
 
     public function test_can_list_{{ MODEL_SNAKE_PLURAL }}(): void
     {
-        {{ MODEL }}::factory()->count(3)->create();
+        $this->buildInstance();
 
         $response = $this->getJson('/api/{{ MODEL_KEBAB_PLURAL }}');
 
@@ -51,9 +51,9 @@ class {{ MODEL }}ControllerTest extends TestCase
 
     public function test_can_show_{{ MODEL_SNAKE }}(): void
     {
-        ${{ MODEL_CAMEL }} = {{ MODEL }}::factory()->create();
+        ${{ MODEL_CAMEL }} = $this->buildInstance();
 
-        $response = $this->getJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->id}");
+        $response = $this->getJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}");
 
         $response->assertOk();
         $this->assertResponseStructure($response);
@@ -61,10 +61,10 @@ class {{ MODEL }}ControllerTest extends TestCase
 
     public function test_can_update_{{ MODEL_SNAKE }}(): void
     {
-        ${{ MODEL_CAMEL }} = {{ MODEL }}::factory()->create();
+        ${{ MODEL_CAMEL }} = $this->buildInstance();
         $data = {{ MODEL }}::factory()->make()->toArray();
 
-        $response = $this->putJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->id}", $data);
+        $response = $this->putJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}", $data);
 
         $response->assertOk();
         $this->assertResponseStructure($response);
@@ -74,11 +74,28 @@ class {{ MODEL }}ControllerTest extends TestCase
 
     public function test_can_delete_{{ MODEL_SNAKE }}(): void
     {
-        ${{ MODEL_CAMEL }} = {{ MODEL }}::factory()->create();
+        ${{ MODEL_CAMEL }} = $this->buildInstance();
 
-        $response = $this->deleteJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->id}");
+        $response = $this->deleteJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}");
 
         $response->assertOk();
         $this->assertSoftDeleted('{{ MODEL_SNAKE_PLURAL }}', ['id' => ${{ MODEL_CAMEL }}->id]);
+    }
+
+    private function buildInstance(): {{ MODEL }}
+    {
+        {{ if scopeNone }}
+        return {{ MODEL }}::factory()->create();
+        {{ endif }}
+        {{ if scopeUser }}
+        return {{ MODEL }}::factory()
+            ->for($this->user)
+            ->create();
+        {{ endif }}
+        {{ if scopeTeam }}
+        return {{ MODEL }}::factory()->create([
+            'team_id' => $this->user->current_team_id,
+        ]);
+        {{ endif }}
     }
 }

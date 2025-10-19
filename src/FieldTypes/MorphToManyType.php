@@ -8,8 +8,9 @@ class MorphToManyType extends FieldType
 {
     public function relation(): Output
     {
-        $relationName = $this->field->name->pluralCamelCase();
-        $modelName = $this->field->name->studlyCase();
+        $name = $this->field->name;
+        $relationName = $name->pluralCamelCase();
+        $modelName = $name->studlyCase();
 
         $output = <<<OUTPUT
     public function {$relationName}(): MorphToMany
@@ -28,9 +29,10 @@ OUTPUT;
 
     public function resourceRelations(): array
     {
-        $fieldName = $this->field->name->pluralSnakeCase();
-        $relationName = $this->field->name->pluralCamelCase();
-        $resourceName = $this->field->name->studlyCase();
+        $name = $this->field->name;
+        $fieldName = $name->pluralSnakeCase();
+        $relationName = $name->pluralCamelCase();
+        $resourceName = $name->studlyCase();
 
         return [
             $fieldName => "{$resourceName}Resource::collection(\$this->whenLoaded('{$relationName}'))",

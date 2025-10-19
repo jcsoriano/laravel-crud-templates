@@ -22,8 +22,8 @@ class ResourceGenerator extends Generator
         $resourceOnlyPrinter = LaravelCrudStubs::buildPrinter('resource-only');
         $resourceRelationPrinter = LaravelCrudStubs::buildPrinter('resource-relation');
 
-        $resourceOnlyOutput = $resourceOnlyPrinter->print($payload->fields);
-        $resourceRelationsOutput = $resourceRelationPrinter->print($payload->fields);
+        $resourceOnlyOutput = $resourceOnlyPrinter->print($payload);
+        $resourceRelationsOutput = $resourceRelationPrinter->print($payload);
 
         // Collect namespaces from printers
         $namespaces = collect([
@@ -41,7 +41,7 @@ class ResourceGenerator extends Generator
                 'RESOURCE_RELATIONS' => $resourceRelationsOutput->output,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Resource', $directory, $fileName, $payload);

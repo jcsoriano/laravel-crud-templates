@@ -17,9 +17,17 @@ class {{ MODEL }}Policy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
+    public function view(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): bool|Response
     {
+        {{ if scopeUser }}
+        return ${{ MODEL_CAMEL }}->user_id == $user->id;
+        {{ endif }}
+        {{ if scopeTeam }}
+        return ${{ MODEL_CAMEL }}->team_id == $user->current_team_id;
+        {{ endif }}
+        {{ if scopeNone }}
         return Response::allow();
+        {{ endif }}
     }
 
     /**
@@ -35,7 +43,15 @@ class {{ MODEL }}Policy
      */
     public function update(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
     {
+        {{ if scopeUser }}
+        return ${{ MODEL_CAMEL }}->user_id == $user->id;
+        {{ endif }}
+        {{ if scopeTeam }}
+        return ${{ MODEL_CAMEL }}->team_id == $user->current_team_id;
+        {{ endif }}
+        {{ if scopeNone }}
         return Response::allow();
+        {{ endif }}
     }
 
     /**
@@ -43,7 +59,15 @@ class {{ MODEL }}Policy
      */
     public function delete(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
     {
+        {{ if scopeUser }}
+        return ${{ MODEL_CAMEL }}->user_id == $user->id;
+        {{ endif }}
+        {{ if scopeTeam }}
+        return ${{ MODEL_CAMEL }}->team_id == $user->current_team_id;
+        {{ endif }}
+        {{ if scopeNone }}
         return Response::allow();
+        {{ endif }}
     }
 
     /**
@@ -51,7 +75,15 @@ class {{ MODEL }}Policy
      */
     public function restore(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
     {
+        {{ if scopeUser }}
+        return ${{ MODEL_CAMEL }}->user_id == $user->id;
+        {{ endif }}
+        {{ if scopeTeam }}
+        return ${{ MODEL_CAMEL }}->team_id == $user->current_team_id;
+        {{ endif }}
+        {{ if scopeNone }}
         return Response::allow();
+        {{ endif }}
     }
 
     /**
@@ -59,6 +91,14 @@ class {{ MODEL }}Policy
      */
     public function forceDelete(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
     {
+        {{ if scopeUser }}
+        return ${{ MODEL_CAMEL }}->user_id == $user->id;
+        {{ endif }}
+        {{ if scopeTeam }}
+        return ${{ MODEL_CAMEL }}->team_id == $user->current_team_id;
+        {{ endif }}
+        {{ if scopeNone }}
         return Response::allow();
+        {{ endif }}
     }
 }

@@ -16,9 +16,19 @@ class {{ MODEL }}Controller extends Controller
         ]);
 
         return {{ MODEL }}Resource::collection(
+            {{ if scopeUser }}
+            {{ MODEL }}::where('user_id', Auth::id())
+                ->paginate($request->integer('per_page')),
+            {{ endif }}
+            {{ if scopeTeam }}
+            {{ MODEL }}::where('team_id', Auth::user()->current_team_id)
+                ->paginate($request->integer('per_page')),
+            {{ endif }}
+            {{ if scopeNone }}
             {{ MODEL }}::paginate(
                 $request->integer('per_page'),
             ),
+            {{ endif }}
         );
     }
 
@@ -27,9 +37,23 @@ class {{ MODEL }}Controller extends Controller
         Gate::authorize('create', {{ MODEL }}::class);
 
         return {{ MODEL }}Resource::make(
+            {{ if scopeNone }}
             {{ MODEL }}::create(
                 $request->validated(),
             ),
+            {{ endif }}
+            {{ if scopeUser }}
+            {{ MODEL }}::create([
+                ...$request->validated(),
+                'user_id' => Auth::id(),
+            ]),
+            {{ endif }}
+            {{ if scopeTeam }}
+            {{ MODEL }}::create([
+                ...$request->validated(),
+                'team_id' => Auth::user()->current_team_id,
+            ]),
+            {{ endif }}
         );
     }
 

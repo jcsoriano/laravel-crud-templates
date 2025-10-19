@@ -33,6 +33,11 @@ class ControllerGenerator extends Generator
             'Illuminate\Support\Facades\Gate',
         ]);
 
+        $scope = $payload->options['scope'] ?? null;
+        if (in_array($scope, ['user', 'team'])) {
+            $namespaces->push('Illuminate\Support\Facades\Auth');
+        }
+
         LaravelStub::from($this->getStubPath('crud.controller.stub'))
             ->to($directory)
             ->name($fileName)
@@ -41,7 +46,7 @@ class ControllerGenerator extends Generator
                 ...$payload->variables(),
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Controller', $directory, $fileName, $payload);

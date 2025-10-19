@@ -84,7 +84,6 @@ class GenerateCrud extends Command
             $this->info('CRUD files generated successfully!');
 
             return self::SUCCESS;
-
         } catch (InvalidFieldsException $e) {
             $this->error("Invalid fields: {$e->getMessage()}");
 

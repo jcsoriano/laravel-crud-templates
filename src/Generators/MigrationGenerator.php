@@ -11,7 +11,6 @@ class MigrationGenerator extends Generator
     public function generate(Payload $payload): Payload
     {
         $model = $payload->model;
-        $modelName = $model->model()->studlyCase();
         $tableName = $model->model()->pluralSnakeCase();
 
         $directory = database_path('migrations');
@@ -21,7 +20,7 @@ class MigrationGenerator extends Generator
         $fileName = $timestamp.'_create_'.$tableName.'_table';
 
         $migrationsPrinter = LaravelCrudStubs::buildPrinter('migrations');
-        $output = $migrationsPrinter->print($payload->fields);
+        $output = $migrationsPrinter->print($payload);
 
         LaravelStub::from($this->getStubPath('crud.migration.stub'))
             ->to($directory)
@@ -31,7 +30,7 @@ class MigrationGenerator extends Generator
                 ...$payload->variables(),
                 'MIGRATION_FIELDS' => $output->output,
             ])
-            ->conditions($payload->conditions)
+            ->conditions($payload->conditions())
             ->generate();
 
         $this->printSuccess('Migration', $directory, $fileName, $payload);

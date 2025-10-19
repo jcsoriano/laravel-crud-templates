@@ -31,8 +31,9 @@ class BelongsToType extends FieldType
 
     public function relation(): Output
     {
-        $relationName = $this->field->name->camelCase();
-        $modelName = $this->field->name->studlyCase();
+        $name = $this->field->name;
+        $relationName = $name->camelCase();
+        $modelName = $name->studlyCase();
 
         $output = <<<OUTPUT
     public function {$relationName}(): BelongsTo
@@ -51,9 +52,10 @@ OUTPUT;
 
     public function resourceRelations(): array
     {
-        $fieldName = $this->field->name->snakeCase();
-        $relationName = $this->field->name->camelCase();
-        $resourceName = $this->field->name->studlyCase();
+        $name = $this->field->name;
+        $fieldName = $name->snakeCase();
+        $relationName = $name->camelCase();
+        $resourceName = $name->studlyCase();
 
         return [
             $fieldName => "{$resourceName}Resource::make(\$this->whenLoaded('{$relationName}'))",
