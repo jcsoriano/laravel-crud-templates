@@ -8,7 +8,8 @@ class MorphToType extends FieldType
 {
     public function migration(): Output
     {
-        $output = "\$table->morphs('{$this->field->name->snakeCase()}');";
+        $method = $this->field->required ? 'morphs' : 'nullableMorphs';
+        $output = "\$table->{$method}('{$this->field->name->snakeCase()}');";
 
         return new Output($output);
     }

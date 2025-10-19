@@ -42,6 +42,19 @@ abstract class Generator
         $payload->data['files'][] = $path;
     }
 
+    protected function logIfFileExists(string $type, string $directory, string $fileName, Payload $payload): bool
+    {
+        $path = $directory.'/'.$fileName.'.php';
+
+        if (File::exists($path) && ! $payload->force) {
+            $payload->components->warn(sprintf('%s [%s] already exists. Skipping. Use --force to overwrite.', $type, $path));
+
+            return true;
+        }
+
+        return false;
+    }
+
     protected function buildNamespace(string $namespace, Payload $payload): string
     {
         $folder = $payload->model->namespace();

@@ -11,6 +11,8 @@ class Payload
         public protected(set) Factory $components,
         public Model $model,
         public Collection $fields,
+        public protected(set) bool $force = false,
+        public protected(set) ?string $table = null,
         public array $options = [],
         public array $variables = [],
         public array $conditions = [],

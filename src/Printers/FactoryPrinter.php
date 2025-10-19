@@ -5,7 +5,6 @@ namespace JCSoriano\LaravelCrudTemplates\Printers;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\EnumType;
 
 class FactoryPrinter implements Printer
 {
@@ -20,13 +19,14 @@ class FactoryPrinter implements Printer
             $fieldType = new $field->typeClass($field);
 
             if (method_exists($fieldType, 'factory')) {
-                $fakeData = $fieldType->factory();
+                $output = $fieldType->factory();
+                $fakeData = $output->output;
                 $factoryFields->push("'{$field->name->snakeCase()}' => {$fakeData},");
-            }
 
-            if ($fieldType instanceof EnumType) {
-                $enumClass = $field->options['enumClass'] ?? 'Enum';
-                $namespaces->push("App\\Enums\\{$enumClass}");
+                // Merge namespaces from the factory output
+                if ($output->namespaces) {
+                    $namespaces = $namespaces->merge($output->namespaces);
+                }
             }
         }
 

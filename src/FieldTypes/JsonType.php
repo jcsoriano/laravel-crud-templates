@@ -32,8 +32,8 @@ class JsonType extends FieldType
         return $this->buildCast('array');
     }
 
-    public function factory(): string
+    public function factory(): Output
     {
-        return "['key' => 'value']";
+        return new Output("['key' => 'value']");
     }
 }

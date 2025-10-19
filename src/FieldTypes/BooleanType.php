@@ -32,8 +32,8 @@ class BooleanType extends FieldType
         return $this->buildCast('boolean');
     }
 
-    public function factory(): string
+    public function factory(): Output
     {
-        return 'fake()->boolean()';
+        return new Output('fake()->boolean()');
     }
 }

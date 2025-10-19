@@ -29,10 +29,21 @@ class EnumType extends FieldType
         return new Output($output, collect(["App\\Enums\\{$enumClass}"]));
     }
 
-    public function factory(): string
+    public function rule(): Output
+    {
+        $field = $this->field;
+        $enumClass = $field->options['enumClass'] ?? 'Enum';
+        $required = $field->required ? 'required' : 'nullable';
+        $output = "'{$field->name->snakeCase()}' => ['bail', '{$required}', Rule::enum({$enumClass}::class)]";
+
+        return new Output($output, collect(["App\\Enums\\{$enumClass}"]));
+    }
+
+    public function factory(): Output
     {
         $enumClass = $this->field->options['enumClass'] ?? 'Enum';
+        $output = "{$enumClass}::cases()[array_rand({$enumClass}::cases())]";
 
-        return "{$enumClass}::cases()[array_rand({$enumClass}::cases())]";
+        return new Output($output, collect(["App\\Enums\\{$enumClass}"]));
     }
 }

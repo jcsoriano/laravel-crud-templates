@@ -16,7 +16,8 @@ class GenerateCrud extends Command
                             {--fields= : The fields to generate. Format: field1:type1,field2?:type2}
                             {--table= : The database table to generate the fields from}
                             {--template=api : The CRUD template to generate}
-                            {--options= : Other options to pass to the generator. Format: key1:value1,key2:value2}';
+                            {--options= : Other options to pass to the generator. Format: key1:value1,key2:value2}
+                            {--force : Overwrite existing files}';
 
     protected $description = 'Generate CRUD files for a model';
 
@@ -69,11 +70,15 @@ class GenerateCrud extends Command
             }
 
             $templateClass = $templates[$template];
+            $options = $this->parseOptions($optionsString);
+
             $templateInstance = new $templateClass(
                 model: $model = new Model($modelPath),
                 fields: $fields,
                 components: $this->components,
-                options: $this->parseOptions($optionsString),
+                force: $this->option('force'),
+                table: $tableName,
+                options: $options,
             );
 
             // Generate files

@@ -24,11 +24,6 @@ class LaravelStub extends BaseLaravelStub
             throw new RuntimeException('The given folder path is not valid.');
         }
 
-        // Check if files exists and it not force throw exception
-        if (! File::exists($this->to) && !$force) {
-            throw new RuntimeException('The destination file does not exist, please enter a valid path.');
-        }
-
         // Get file content
         $content = File::get($this->from);
 
@@ -48,7 +43,7 @@ class LaravelStub extends BaseLaravelStub
                     // Replace placeholders for conditions that are true
                     $content = preg_replace(
                         "/^[ \t]*{{ if $condition }}\s*\n(.*?)(?=^[ \t]*{{ endif }}\s*\n)/ms",
-                        "$1",
+                        '$1',
                         $content
                     );
                 } else {

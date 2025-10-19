@@ -20,6 +20,16 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
             ->hasCommand(GenerateCrud::class);
     }
 
+    public function packageBooted(): void
+    {
+        // Publish stubs
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/stubs/api' => base_path('stubs'),
+            ], 'laravel-crud-templates-stubs');
+        }
+    }
+
     public function register(): void
     {
         parent::register();

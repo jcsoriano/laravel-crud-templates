@@ -1,0 +1,290 @@
+# Customizing Printers
+
+Printers are responsible for generating specific parts of code within templates, such as fillable arrays, casts, validation rules, and migrations. By customizing printers, you can modify how these code segments are generated without changing the entire generator.
+
+## Understanding Printers
+
+CRUD Templates for Laravel includes these built-in printers:
+
+- `casts` - Model type casts
+- `factory` - Factory field definitions
+- `fillable` - Fillable array for models
+- `migrations` - Migration column definitions
+- `relations` - Relationship methods for models
+- `resource-only` - Resource fields (non-relationships)
+- `resource-relation` - Resource relationship fields
+- `rules` - Validation rules
+
+## How Printers Work
+
+Printers are used by generators to produce specific code segments. They receive a `Payload` object containing model and field information, and return an `Output` object with the generated code.
+
+## Creating a Custom Printer
+
+### Step 1: Create the Printer Class
+
+Create a class that implements the `Printer` interface:
+
+```php
+<?php
+
+namespace App\Printers;
+
+use JCSoriano\LaravelCrudTemplates\Printers\Printer;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+
+class CustomFillablePrinter implements Printer
+{
+    public function print(Payload $payload): Output
+    {
+        $fields = $payload->fields;
+        $fillableFields = collect();
+        
+        foreach ($fields as $field) {
+            $fieldType = new $field->typeClass($field);
+            
+            if (method_exists($fieldType, 'fillable')) {
+                $result = $fieldType->fillable();
+                if ($result) {
+                    $fillableFields->push("'{$result->output}'");
+                }
+            }
+        }
+        
+        return new Output($fillableFields->join(",\n        "));
+    }
+}
+```
+
+### Step 2: Register the Printer
+
+Register your printer in a service provider:
+
+```php
+use App\Printers\CustomFillablePrinter;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
+
+public function boot()
+{
+    LaravelCrudTemplates::registerPrinter('fillable', CustomFillablePrinter::class);
+}
+```
+
+### Step 3: The Printer is Used Automatically
+
+Once registered, your custom printer will be used automatically by the model generator when it needs to generate fillable fields.
+
+## The Printer Interface
+
+All printers must implement the `Printer` interface:
+
+```php
+interface Printer
+{
+    public function print(Payload $payload): Output;
+}
+```
+
+## The Output Object
+
+Printers return an `Output` object that can contain:
+
+- **output**: The generated code string
+- **namespaces**: Optional namespace collection. Used by Generators to collect namespaces, deduplicate them, sort alphabetically, and place them at the top of the file.
+
+## Built-in Printer Examples
+
+### Casts Printer
+
+Generates model type casts:
+
+```php
+class CastsPrinter implements Printer
+{
+    public function print(Payload $payload): Output
+    {
+        $fields = $payload->fields;
+        $casts = collect();
+        
+        foreach ($fields as $field) {
+            $fieldType = new $field->typeClass($field);
+            
+            if (method_exists($fieldType, 'cast')) {
+                $result = $fieldType->cast();
+                if ($result) {
+                    $casts->push("'{$result->key}' => {$result->value},");
+                }
+            }
+        }
+        
+        return new Output($casts->join("\n        "));
+    }
+}
+```
+
+### Rules Printer
+
+Generates validation rules:
+
+```php
+class RulesPrinter implements Printer
+{
+    public function print(Payload $payload): Output
+    {
+        $fields = $payload->fields;
+        $rules = collect();
+        
+        foreach ($fields as $field) {
+            $fieldType = new $field->typeClass($field);
+            
+            if (method_exists($fieldType, 'rule')) {
+                $result = $fieldType->rule();
+                if ($result) {
+                    $rules->push("'{$result->key}' => '{$result->value}',");
+                }
+            }
+        }
+        
+        return new Output($rules->join("\n            "));
+    }
+}
+```
+
+## Practical Example: Searchable Fields Printer
+
+Create a printer for Laravel Scout searchable fields:
+
+```php
+<?php
+
+namespace App\Printers;
+
+use JCSoriano\LaravelCrudTemplates\Printers\Printer;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+
+class SearchablePrinter implements Printer
+{
+    public function print(Payload $payload): Output
+    {
+        $fields = $payload->fields;
+        $searchableFields = collect();
+        
+        // Only include string and text fields as searchable
+        foreach ($fields as $field) {
+            if (in_array($field->type->name, ['string', 'text'])) {
+                $searchableFields->push("'{$field->name->snakeCase()}'");
+            }
+        }
+        
+        return new Output($searchableFields->join(",\n            "));
+    }
+}
+```
+
+Register it:
+
+```php
+LaravelCrudTemplates::registerPrinter('searchable', SearchablePrinter::class);
+```
+
+Use in a custom model stub:
+
+```php
+public function toSearchableArray(): array
+{
+    return $this->only([
+        {{ SEARCHABLE }}
+    ]);
+}
+```
+
+## Using Printers in Custom Generators
+
+You can use printers in your custom generators:
+
+```php
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
+
+public function generate(Payload $payload): Payload
+{
+    // Get a printer
+    $fillablePrinter = LaravelCrudTemplates::buildPrinter('fillable');
+    
+    // Use the printer
+    $fillableOutput = $fillablePrinter->print($payload);
+    $fillableFields = $fillableOutput->output;
+    
+    // Add to stub variables
+    $variables = [
+        ...$payload->variables(),
+        'FILLABLE' => $fillableFields,
+    ];
+    
+    // ... continue with generation
+}
+```
+
+## Best Practices
+
+1. **Keep It Focused**: Each printer should handle one specific aspect of code generation
+2. **Reuse Logic**: Leverage field type methods (like `fillable()`, `cast()`, etc.)
+3. **Handle Edge Cases**: Check if methods exist before calling them
+4. **Return Clean Code**: Ensure proper formatting and indentation
+5. **Document Purpose**: Add comments explaining what the printer generates
+
+## Common Use Cases
+
+### Custom Attributes
+
+Create a printer for model attributes:
+
+```php
+class AttributesPrinter implements Printer
+{
+    public function print(Payload $payload): Output
+    {
+        $attributes = collect([
+            "protected function fullName(): Attribute",
+            "{",
+            "    return Attribute::make(",
+            "        get: fn () => \$this->first_name . ' ' . \$this->last_name,",
+            "    );",
+            "}",
+        ]);
+        
+        return new Output($attributes->join("\n    "));
+    }
+}
+```
+
+### API Filter Fields
+
+Create a printer for filterable fields:
+
+```php
+class FilterablePrinter implements Printer
+{
+    public function print(Payload $payload): Output
+    {
+        $fields = $payload->fields;
+        $filterableFields = collect();
+        
+        foreach ($fields as $field) {
+            if (!in_array($field->type->name, ['belongsTo', 'hasMany', 'belongsToMany'])) {
+                $filterableFields->push("'{$field->name->snakeCase()}'");
+            }
+        }
+        
+        return new Output($filterableFields->join(",\n        "));
+    }
+}
+```
+
+## Next Steps
+
+- Learn about [Customizing Generators](/templates/customizing-generators) to use printers
+- Explore [Customizing Field Types](/templates/customizing-field-types) to control what printers output
+- Review [Creating Your Own Template](/templates/custom) to orchestrate printers and generators
+

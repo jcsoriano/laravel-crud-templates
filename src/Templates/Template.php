@@ -20,7 +20,9 @@ abstract class Template
         protected Model $model,
         protected Collection $fields,
         protected Factory $components,
-        protected array $options,
+        protected bool $force = false,
+        protected ?string $table = null,
+        protected array $options = [],
     ) {
         $this->generators = LaravelCrudTemplates::getGenerators();
         $this->payload = $this->buildPayload();
@@ -34,6 +36,8 @@ abstract class Template
             model: $this->model,
             fields: $this->fields,
             components: $this->components,
+            force: $this->force,
+            table: $this->table,
             options: $this->options,
             variables: $this->variables(),
             conditions: $this->conditions(),

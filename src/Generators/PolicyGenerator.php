@@ -2,8 +2,8 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 class PolicyGenerator extends Generator
 {
@@ -17,6 +17,11 @@ class PolicyGenerator extends Generator
 
         $fileName = $modelName.'Policy';
 
+        // Check if file exists and return early if not forcing
+        if ($this->logIfFileExists('Policy', $directory, $fileName, $payload)) {
+            return $payload;
+        }
+
         // Build proper namespace paths
         $modelNamespace = $this->buildNamespace('App\\Models', $payload);
 
@@ -26,7 +31,7 @@ class PolicyGenerator extends Generator
             'Illuminate\Auth\Access\Response',
         ]);
 
-        LaravelStub::from($this->getStubPath('crud.policy.stub'))
+        LaravelStub::from($this->getStubPath('api.policy.stub'))
             ->to($directory)
             ->name($fileName)
             ->ext('php')

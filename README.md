@@ -24,10 +24,10 @@ You can install the package via composer:
 composer require jcsoriano/laravel-crud-templates
 ```
 
-You can publish the config file with:
+You can publish the stubs to customize them:
 
 ```bash
-php artisan vendor:publish --tag="laravel-crud-templates-config"
+php artisan vendor:publish --tag="laravel-crud-templates-stubs"
 ```
 
 ## Usage
@@ -107,11 +107,23 @@ You can also generate fields from an existing database table:
 php artisan crud:generate Post --table=posts
 ```
 
-Or combine table introspection with additional fields:
+When using `--table`, the migration file is automatically skipped since the table already exists. 
+
+You can use `--fields` to add relationship fields that can't be detected by inspecting the table (e.g. hasMany fields).
 
 ```bash
-php artisan crud:generate Post --table=posts --fields="featured:boolean,tags:belongsToMany"
+php artisan crud:generate Post --table=posts --fields="comments:hasMany"
 ```
+
+### File Overwrite Protection
+
+By default, existing files will not be overwritten. Use the `--force` flag to overwrite existing files:
+
+```bash
+php artisan crud:generate Post --fields="title:string" --force
+```
+
+Without `--force`, if a file already exists, you'll see a warning and the file will be skipped.
 
 ### Custom Template Types
 
@@ -147,28 +159,6 @@ Create custom templates for different CRUD patterns:
 
 ```php
 LaravelCrudTemplates::registerTemplate('web', App\Templates\WebTemplate::class);
-```
-
-## Configuration
-
-The config file allows you to customize default behavior:
-
-```php
-return [
-    'default_template' => 'api',
-    
-    'field_types' => [
-        'custom-type' => App\FieldTypes\CustomType::class,
-    ],
-    
-    'generators' => [
-        'controller' => App\Generators\CustomControllerGenerator::class,
-    ],
-    
-    'templates' => [
-        'web' => App\Templates\WebTemplate::class,
-    ],
-];
 ```
 
 ## Testing

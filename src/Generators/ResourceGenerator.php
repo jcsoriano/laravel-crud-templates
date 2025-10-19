@@ -2,8 +2,8 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class ResourceGenerator extends Generator
@@ -19,6 +19,11 @@ class ResourceGenerator extends Generator
 
         $fileName = $modelName.'Resource';
 
+        // Check if file exists and return early if not forcing
+        if ($this->logIfFileExists('Resource', $directory, $fileName, $payload)) {
+            return $payload;
+        }
+
         $resourceOnlyPrinter = LaravelCrudTemplates::buildPrinter('resource-only');
         $resourceRelationPrinter = LaravelCrudTemplates::buildPrinter('resource-relation');
 
@@ -31,7 +36,7 @@ class ResourceGenerator extends Generator
             'Illuminate\Http\Resources\Json\JsonResource',
         ])->merge($resourceRelationsOutput->namespaces);
 
-        LaravelStub::from($this->getStubPath('crud.resource.stub'))
+        LaravelStub::from($this->getStubPath('api.resource.stub'))
             ->to($directory)
             ->name($fileName)
             ->ext('php')

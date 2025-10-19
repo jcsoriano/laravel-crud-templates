@@ -2,8 +2,8 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class ModelGenerator extends Generator
@@ -18,6 +18,11 @@ class ModelGenerator extends Generator
         $this->createDirectoryIfNotExists($directory);
 
         $fileName = $modelName;
+
+        // Check if file exists and return early if not forcing
+        if ($this->logIfFileExists('Model', $directory, $fileName, $payload)) {
+            return $payload;
+        }
 
         $fillablePrinter = LaravelCrudTemplates::buildPrinter('fillable');
         $castsPrinter = LaravelCrudTemplates::buildPrinter('casts');
@@ -36,7 +41,7 @@ class ModelGenerator extends Generator
             ->merge($castsOutput->namespaces)
             ->merge($relationsOutput->namespaces);
 
-        LaravelStub::from($this->getStubPath('crud.model.stub'))
+        LaravelStub::from($this->getStubPath('api.model.stub'))
             ->to($directory)
             ->name($fileName)
             ->ext('php')

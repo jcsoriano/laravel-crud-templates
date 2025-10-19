@@ -2,8 +2,8 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 class ControllerGenerator extends Generator
 {
@@ -17,6 +17,11 @@ class ControllerGenerator extends Generator
         $this->createDirectoryIfNotExists($directory);
 
         $fileName = $modelName.'Controller';
+
+        // Check if file exists and return early if not forcing
+        if ($this->logIfFileExists('Controller', $directory, $fileName, $payload)) {
+            return $payload;
+        }
 
         // Build proper namespace paths
         $requestNamespace = $this->buildNamespace('App\\Http\\Requests', $payload);
@@ -38,7 +43,7 @@ class ControllerGenerator extends Generator
             $namespaces->push('Illuminate\Support\Facades\Auth');
         }
 
-        LaravelStub::from($this->getStubPath('crud.controller.stub'))
+        LaravelStub::from($this->getStubPath('api.controller.stub'))
             ->to($directory)
             ->name($fileName)
             ->ext('php')

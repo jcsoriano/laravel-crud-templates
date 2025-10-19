@@ -2,8 +2,8 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class StoreRequestGenerator extends Generator
@@ -19,6 +19,11 @@ class StoreRequestGenerator extends Generator
 
         $fileName = 'Store'.$modelName.'Request';
 
+        // Check if file exists and return early if not forcing
+        if ($this->logIfFileExists('Request', $directory, $fileName, $payload)) {
+            return $payload;
+        }
+
         $rulesPrinter = LaravelCrudTemplates::buildPrinter('rules');
         $rulesOutput = $rulesPrinter->print($payload);
 
@@ -27,7 +32,7 @@ class StoreRequestGenerator extends Generator
             'Illuminate\Foundation\Http\FormRequest',
         ])->merge($rulesOutput->namespaces);
 
-        LaravelStub::from($this->getStubPath('crud.request.store.stub'))
+        LaravelStub::from($this->getStubPath('api.request.store.stub'))
             ->to($directory)
             ->name($fileName)
             ->ext('php')

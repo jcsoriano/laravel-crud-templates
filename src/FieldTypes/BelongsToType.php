@@ -24,7 +24,7 @@ class BelongsToType extends FieldType
     {
         $table = Str::plural(Str::snake($this->field->name->name));
         $required = $this->field->required ? 'required' : 'nullable';
-        $output = "'{$this->column()}' => '{$required}|exists:{$table},id'";
+        $output = "'{$this->column()}' => ['bail', '{$required}', 'exists:{$table},id']";
 
         return new Output($output);
     }
@@ -67,10 +67,11 @@ OUTPUT;
         return $this->column();
     }
 
-    public function factory(): string
+    public function factory(): Output
     {
         $modelName = $this->field->name->studlyCase();
+        $output = "{$modelName}::factory()";
 
-        return "{$modelName}::factory()";
+        return new Output($output, collect(["App\\Models\\{$modelName}"]));
     }
 }
