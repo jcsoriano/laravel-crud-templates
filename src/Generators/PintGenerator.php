@@ -1,8 +1,8 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class PintGenerator extends Generator
 {

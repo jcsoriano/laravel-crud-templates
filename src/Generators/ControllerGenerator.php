@@ -1,9 +1,9 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use Binafy\LaravelStub\Facades\LaravelStub;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class ControllerGenerator extends Generator
 {

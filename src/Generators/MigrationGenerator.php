@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use Binafy\LaravelStub\Facades\LaravelStub;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class MigrationGenerator extends Generator
 {
@@ -19,7 +19,7 @@ class MigrationGenerator extends Generator
         $timestamp = now()->format('Y_m_d_His');
         $fileName = $timestamp.'_create_'.$tableName.'_table';
 
-        $migrationsPrinter = LaravelCrudStubs::buildPrinter('migrations');
+        $migrationsPrinter = LaravelCrudTemplates::buildPrinter('migrations');
         $output = $migrationsPrinter->print($payload);
 
         LaravelStub::from($this->getStubPath('crud.migration.stub'))

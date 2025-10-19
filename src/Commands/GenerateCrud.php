@@ -1,13 +1,13 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Commands;
+namespace JCSoriano\LaravelCrudTemplates\Commands;
 
 use Illuminate\Console\Command;
-use JCSoriano\LaravelCrudStubs\DataObjects\Model;
-use JCSoriano\LaravelCrudStubs\Exceptions\InvalidFieldsException;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
-use JCSoriano\LaravelCrudStubs\Parsers\FieldsParser;
-use JCSoriano\LaravelCrudStubs\Parsers\TableParser;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
+use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
+use JCSoriano\LaravelCrudTemplates\Parsers\FieldsParser;
+use JCSoriano\LaravelCrudTemplates\Parsers\TableParser;
 
 class GenerateCrud extends Command
 {
@@ -15,7 +15,7 @@ class GenerateCrud extends Command
                             {model : The name of the model}
                             {--fields= : The fields to generate. Format: field1:type1,field2?:type2}
                             {--table= : The database table to generate the fields from}
-                            {--type=api : The type of CRUD to generate}
+                            {--template=api : The CRUD template to generate}
                             {--options= : Other options to pass to the generator. Format: key1:value1,key2:value2}';
 
     protected $description = 'Generate CRUD files for a model';
@@ -26,7 +26,7 @@ class GenerateCrud extends Command
             $modelPath = $this->argument('model');
             $fieldsString = $this->option('fields');
             $tableName = $this->option('table');
-            $type = $this->option('type');
+            $template = $this->option('template');
             $optionsString = $this->option('options');
 
             // Parse fields
@@ -59,17 +59,17 @@ class GenerateCrud extends Command
                 }
             }
 
-            // Get pipeline
-            $pipelines = LaravelCrudStubs::getPipelines();
+            // Get template
+            $templates = LaravelCrudTemplates::getTemplates();
 
-            if (! array_key_exists($type, $pipelines)) {
-                $this->error("Unsupported pipeline type: {$type}");
+            if (! array_key_exists($template, $templates)) {
+                $this->error("Unsupported template: {$template}");
 
                 return self::FAILURE;
             }
 
-            $pipelineClass = $pipelines[$type];
-            $pipeline = new $pipelineClass(
+            $templateClass = $templates[$template];
+            $templateInstance = new $templateClass(
                 model: $model = new Model($modelPath),
                 fields: $fields,
                 components: $this->components,
@@ -79,7 +79,7 @@ class GenerateCrud extends Command
             // Generate files
             $this->info("Generating CRUD files for {$model->model()->studlyCase()}...");
 
-            $pipeline->run();
+            $templateInstance->run();
 
             $this->info('CRUD files generated successfully!');
 

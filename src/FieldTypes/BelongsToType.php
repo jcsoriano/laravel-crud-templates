@@ -1,9 +1,9 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\FieldTypes;
+namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
 
 use Illuminate\Support\Str;
-use JCSoriano\LaravelCrudStubs\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
 
 class BelongsToType extends FieldType
 {

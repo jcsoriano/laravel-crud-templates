@@ -1,12 +1,15 @@
 {
-    "name": "jcsoriano/laravel-crud-stubs",
-    "description": "This is my package laravel-crud-stubs",
+    "name": "jcsoriano/laravel-crud-templates",
+    "description": "Laravel CRUD Templates - Generate complete CRUD operations with a single command",
     "keywords": [
         "JC Soriano",
         "laravel",
-        "laravel-crud-stubs"
+        "laravel-crud-templates",
+        "crud",
+        "generator",
+        "templates"
     ],
-    "homepage": "https://github.com/jcsoriano/laravel-crud-stubs",
+    "homepage": "https://github.com/jcsoriano/laravel-crud-templates",
     "license": "MIT",
     "authors": [
         {
@@ -35,13 +38,13 @@
     },
     "autoload": {
         "psr-4": {
-            "JCSoriano\\LaravelCrudStubs\\": "src/",
-            "JCSoriano\\LaravelCrudStubs\\Database\\Factories\\": "database/factories/"
+            "JCSoriano\\LaravelCrudTemplates\\": "src/",
+            "JCSoriano\\LaravelCrudTemplates\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JCSoriano\\LaravelCrudStubs\\Tests\\": "tests/",
+            "JCSoriano\\LaravelCrudTemplates\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +66,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "JCSoriano\\LaravelCrudStubs\\LaravelCrudStubsServiceProvider"
+                "JCSoriano\\LaravelCrudTemplates\\LaravelCrudTemplatesServiceProvider"
             ],
             "aliases": {
-                "LaravelCrudStubs": "JCSoriano\\LaravelCrudStubs\\Facades\\LaravelCrudStubs"
+                "LaravelCrudTemplates": "JCSoriano\\LaravelCrudTemplates\\Facades\\LaravelCrudTemplates"
             }
         }
     },

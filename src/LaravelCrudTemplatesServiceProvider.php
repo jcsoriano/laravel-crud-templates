@@ -1,12 +1,12 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs;
+namespace JCSoriano\LaravelCrudTemplates;
 
-use JCSoriano\LaravelCrudStubs\Commands\GenerateCrud;
+use JCSoriano\LaravelCrudTemplates\Commands\GenerateCrud;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class LaravelCrudStubsServiceProvider extends PackageServiceProvider
+class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,8 +16,7 @@ class LaravelCrudStubsServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-crud-stubs')
-            ->hasConfigFile('crud-stubs')
+            ->name('laravel-crud-templates')
             ->hasCommand(GenerateCrud::class);
     }
 
@@ -25,8 +24,8 @@ class LaravelCrudStubsServiceProvider extends PackageServiceProvider
     {
         parent::register();
 
-        $this->app->singleton(LaravelCrudStubs::class, function () {
-            return new LaravelCrudStubs;
+        $this->app->singleton(LaravelCrudTemplates::class, function () {
+            return new LaravelCrudTemplates;
         });
     }
 }

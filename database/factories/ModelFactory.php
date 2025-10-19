@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Database\Factories;
+namespace JCSoriano\LaravelCrudTemplates\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

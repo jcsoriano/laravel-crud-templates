@@ -1,44 +1,44 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs;
+namespace JCSoriano\LaravelCrudTemplates;
 
-use JCSoriano\LaravelCrudStubs\FieldTypes\BelongsToManyType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\BelongsToType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\BooleanType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\DateTimeType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\DateType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\DecimalType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\EnumType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\HasManyType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\IntegerType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\JsonType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\MorphManyType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\MorphToManyType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\MorphToType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\StringType;
-use JCSoriano\LaravelCrudStubs\FieldTypes\TextType;
-use JCSoriano\LaravelCrudStubs\Generators\ApiRouteGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\ControllerGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\FactoryGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\MigrationGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\ModelGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\PintGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\PolicyGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\ResourceGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\StoreRequestGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\TestGenerator;
-use JCSoriano\LaravelCrudStubs\Generators\UpdateRequestGenerator;
-use JCSoriano\LaravelCrudStubs\Pipelines\ApiPipeline;
-use JCSoriano\LaravelCrudStubs\Printers\CastsPrinter;
-use JCSoriano\LaravelCrudStubs\Printers\FactoryPrinter;
-use JCSoriano\LaravelCrudStubs\Printers\FillablePrinter;
-use JCSoriano\LaravelCrudStubs\Printers\MigrationsPrinter;
-use JCSoriano\LaravelCrudStubs\Printers\RelationsPrinter;
-use JCSoriano\LaravelCrudStubs\Printers\ResourceOnlyPrinter;
-use JCSoriano\LaravelCrudStubs\Printers\ResourceRelationPrinter;
-use JCSoriano\LaravelCrudStubs\Printers\RulesPrinter;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\BelongsToManyType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\BelongsToType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\BooleanType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\DateTimeType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\DateType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\DecimalType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\EnumType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\HasManyType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\IntegerType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\JsonType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\MorphManyType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\MorphToManyType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\MorphToType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\StringType;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\TextType;
+use JCSoriano\LaravelCrudTemplates\Generators\ApiRouteGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\ControllerGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\FactoryGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\MigrationGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\ModelGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\PintGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\PolicyGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\ResourceGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\StoreRequestGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\TestGenerator;
+use JCSoriano\LaravelCrudTemplates\Generators\UpdateRequestGenerator;
+use JCSoriano\LaravelCrudTemplates\Templates\ApiTemplate;
+use JCSoriano\LaravelCrudTemplates\Printers\CastsPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\FactoryPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\FillablePrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\MigrationsPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\RelationsPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\ResourceOnlyPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\ResourceRelationPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\RulesPrinter;
 
-class LaravelCrudStubs
+class LaravelCrudTemplates
 {
     protected static array $fieldTypes = [
         'string' => StringType::class,
@@ -72,8 +72,8 @@ class LaravelCrudStubs
         'pint' => PintGenerator::class,
     ];
 
-    protected static array $pipelines = [
-        'api' => ApiPipeline::class,
+    protected static array $templates = [
+        'api' => ApiTemplate::class,
     ];
 
     protected static array $printers = [
@@ -97,9 +97,9 @@ class LaravelCrudStubs
         static::$generators[$key] = $class;
     }
 
-    public static function registerPipeline(string $key, string $class): void
+    public static function registerTemplate(string $key, string $class): void
     {
-        static::$pipelines[$key] = $class;
+        static::$templates[$key] = $class;
     }
 
     public static function registerPrinter(string $key, string $class): void
@@ -117,9 +117,9 @@ class LaravelCrudStubs
         return static::$generators;
     }
 
-    public static function getPipelines(): array
+    public static function getTemplates(): array
     {
-        return static::$pipelines;
+        return static::$templates;
     }
 
     public static function getPrinters(): array

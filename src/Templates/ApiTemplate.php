@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Pipelines;
+namespace JCSoriano\LaravelCrudTemplates\Templates;
 
-class ApiPipeline extends Pipeline
+class ApiTemplate extends Template
 {
-    public function pipeline(): array
+    public function template(): array
     {
         return $this->buildGenerators([
             'controller',

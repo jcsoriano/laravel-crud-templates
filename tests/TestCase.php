@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Tests;
+namespace JCSoriano\LaravelCrudTemplates\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubsServiceProvider;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplatesServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,14 +13,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'JCSoriano\\LaravelCrudStubs\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'JCSoriano\\LaravelCrudTemplates\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            LaravelCrudStubsServiceProvider::class,
+            LaravelCrudTemplatesServiceProvider::class,
         ];
     }
 

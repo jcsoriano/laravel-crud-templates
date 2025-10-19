@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\FieldTypes\Traits;
+namespace JCSoriano\LaravelCrudTemplates\FieldTypes\Traits;
 
 trait IsSimpleResourceField
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use Binafy\LaravelStub\Facades\LaravelStub;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class FactoryGenerator extends Generator
 {
@@ -19,7 +19,7 @@ class FactoryGenerator extends Generator
 
         $fileName = $modelName.'Factory';
 
-        $factoryPrinter = LaravelCrudStubs::buildPrinter('factory');
+        $factoryPrinter = LaravelCrudTemplates::buildPrinter('factory');
         $output = $factoryPrinter->print($payload);
 
         // Build proper namespace paths

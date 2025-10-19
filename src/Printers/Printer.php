@@ -1,9 +1,9 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Printers;
+namespace JCSoriano\LaravelCrudTemplates\Printers;
 
-use JCSoriano\LaravelCrudStubs\DataObjects\Output;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 interface Printer
 {

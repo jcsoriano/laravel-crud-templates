@@ -13,17 +13,15 @@ class {{ MODEL }}ControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
     }
 
-    private function assertResponseStructure(TestResponse $response): void
+    private function assertJsonStructure(AssertableJson $json): void
     {
-        $response->assertJsonStructure([
-            'data' => [
-                {{ TEST_STRUCTURE }}
-            ],
+        $json->assertJsonStructure([
+            {{ TEST_STRUCTURE }}
         ]);
     }
 
@@ -31,55 +29,71 @@ class {{ MODEL }}ControllerTest extends TestCase
     {
         $this->buildInstance();
 
-        $response = $this->getJson('/api/{{ MODEL_KEBAB_PLURAL }}');
-
-        $response->assertOk();
-        $this->assertResponseStructure($response);
+        $this->getJson('/api/{{ MODEL_KEBAB_PLURAL }}')
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $json->has(
+                    'data.0',
+                    fn (AssertableJson $json) => $this->assertJsonStructure($json),
+                ),
+            );
     }
 
     public function test_can_create_{{ MODEL_SNAKE }}(): void
     {
-        $data = {{ MODEL }}::factory()->make()->toArray();
+        $payload = $this->buildPayload();
 
-        $response = $this->postJson('/api/{{ MODEL_KEBAB_PLURAL }}', $data);
+        $this->postJson('/api/{{ MODEL_KEBAB_PLURAL }}', $payload)
+            ->assertCreated()
+            ->assertJson(
+                fn (AssertableJson $json) => $this->assertJsonStructure($json),
+            );
 
-        $response->assertCreated();
-        $this->assertResponseStructure($response);
-
-        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $data);
+        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $payload);
     }
 
     public function test_can_show_{{ MODEL_SNAKE }}(): void
     {
         ${{ MODEL_CAMEL }} = $this->buildInstance();
 
-        $response = $this->getJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}");
-
-        $response->assertOk();
-        $this->assertResponseStructure($response);
+        $this->getJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}")
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $this->assertJsonStructure($json),
+            );
     }
 
     public function test_can_update_{{ MODEL_SNAKE }}(): void
     {
         ${{ MODEL_CAMEL }} = $this->buildInstance();
-        $data = {{ MODEL }}::factory()->make()->toArray();
+        $payload = $this->buildPayload();
 
-        $response = $this->putJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}", $data);
+        $this->putJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}", $payload)
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $this->assertJsonStructure($json),
+            );
 
-        $response->assertOk();
-        $this->assertResponseStructure($response);
-
-        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', array_merge(['id' => ${{ MODEL_CAMEL }}->id], $data));
+        $payload['id'] = ${{ MODEL_CAMEL }}->id;
+        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $payload);
     }
 
     public function test_can_delete_{{ MODEL_SNAKE }}(): void
     {
         ${{ MODEL_CAMEL }} = $this->buildInstance();
 
-        $response = $this->deleteJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}");
+        $this->deleteJson("/api/{{ MODEL_KEBAB_PLURAL }}/{${{ MODEL_CAMEL }}->getRouteKey()}")
+            ->assertOk()
+            ->assertJson(
+                fn (AssertableJson $json) => $this->assertJsonStructure($json),
+            );
 
-        $response->assertOk();
-        $this->assertSoftDeleted('{{ MODEL_SNAKE_PLURAL }}', ['id' => ${{ MODEL_CAMEL }}->id]);
+        $this->assertSoftDeleted('{{ MODEL_SNAKE_PLURAL }}', ${{ MODEL_CAMEL }}->only('id'));
+    }
+
+    private function buildPayload(): array
+    {
+        return {{ MODEL }}::factory()->make()->toArray();
     }
 
     private function buildInstance(): {{ MODEL }}

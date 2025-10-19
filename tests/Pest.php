@@ -1,5 +1,5 @@
 <?php
 
-use JCSoriano\LaravelCrudStubs\Tests\TestCase;
+use JCSoriano\LaravelCrudTemplates\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

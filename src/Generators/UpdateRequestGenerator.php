@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use Binafy\LaravelStub\Facades\LaravelStub;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class UpdateRequestGenerator extends Generator
 {
@@ -19,7 +19,7 @@ class UpdateRequestGenerator extends Generator
 
         $fileName = 'Update'.$modelName.'Request';
 
-        $rulesPrinter = LaravelCrudStubs::buildPrinter('rules');
+        $rulesPrinter = LaravelCrudTemplates::buildPrinter('rules');
         $rulesOutput = $rulesPrinter->print($payload);
 
         // Collect namespaces from printer

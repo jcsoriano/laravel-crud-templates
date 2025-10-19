@@ -1,11 +1,11 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Printers;
+namespace JCSoriano\LaravelCrudTemplates\Printers;
 
 use Illuminate\Support\Arr;
-use JCSoriano\LaravelCrudStubs\DataObjects\Field;
-use JCSoriano\LaravelCrudStubs\DataObjects\Output;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class FillablePrinter implements Printer
 {

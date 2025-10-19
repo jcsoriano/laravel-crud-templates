@@ -1,8 +1,8 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\FieldTypes\Traits;
+namespace JCSoriano\LaravelCrudTemplates\FieldTypes\Traits;
 
-use JCSoriano\LaravelCrudStubs\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
 
 trait HasSimpleMigration
 {

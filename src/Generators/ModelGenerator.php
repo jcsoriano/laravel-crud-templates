@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use Binafy\LaravelStub\Facades\LaravelStub;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class ModelGenerator extends Generator
 {
@@ -19,9 +19,9 @@ class ModelGenerator extends Generator
 
         $fileName = $modelName;
 
-        $fillablePrinter = LaravelCrudStubs::buildPrinter('fillable');
-        $castsPrinter = LaravelCrudStubs::buildPrinter('casts');
-        $relationsPrinter = LaravelCrudStubs::buildPrinter('relations');
+        $fillablePrinter = LaravelCrudTemplates::buildPrinter('fillable');
+        $castsPrinter = LaravelCrudTemplates::buildPrinter('casts');
+        $relationsPrinter = LaravelCrudTemplates::buildPrinter('relations');
 
         $fillableOutput = $fillablePrinter->print($payload);
         $castsOutput = $castsPrinter->print($payload);

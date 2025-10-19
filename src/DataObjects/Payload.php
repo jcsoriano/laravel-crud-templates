@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\DataObjects;
+namespace JCSoriano\LaravelCrudTemplates\DataObjects;
 
 use Illuminate\Console\View\Components\Factory;
 use Illuminate\Support\Collection;

@@ -1,16 +1,16 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Pipelines;
+namespace JCSoriano\LaravelCrudTemplates\Templates;
 
 use Illuminate\Console\View\Components\Factory;
 use Illuminate\Pipeline\Pipeline as LaravelPipeline;
 use Illuminate\Support\Collection;
-use JCSoriano\LaravelCrudStubs\DataObjects\Model;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
-use JCSoriano\LaravelCrudStubs\Generators\Generator;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Generators\Generator;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
-abstract class Pipeline
+abstract class Template
 {
     protected array $generators;
 
@@ -22,11 +22,11 @@ abstract class Pipeline
         protected Factory $components,
         protected array $options,
     ) {
-        $this->generators = LaravelCrudStubs::getGenerators();
+        $this->generators = LaravelCrudTemplates::getGenerators();
         $this->payload = $this->buildPayload();
     }
 
-    abstract public function pipeline(): array;
+    abstract public function template(): array;
 
     protected function buildPayload(): Payload
     {
@@ -50,7 +50,7 @@ abstract class Pipeline
     {
         app(LaravelPipeline::class)
             ->send($this->payload)
-            ->through($this->pipeline())
+            ->through($this->template())
             ->thenReturn();
     }
 

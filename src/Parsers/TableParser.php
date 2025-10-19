@@ -1,12 +1,12 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Parsers;
+namespace JCSoriano\LaravelCrudTemplates\Parsers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
-use JCSoriano\LaravelCrudStubs\DataObjects\Field;
-use JCSoriano\LaravelCrudStubs\DataObjects\Name;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class TableParser
 {
@@ -32,7 +32,7 @@ class TableParser
                 continue; // Skip unsupported column types
             }
 
-            $fieldTypes = LaravelCrudStubs::getFieldTypes();
+            $fieldTypes = LaravelCrudTemplates::getFieldTypes();
 
             $fields->push(new Field(
                 name: new Name($column),

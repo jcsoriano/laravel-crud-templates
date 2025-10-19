@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Generators;
+namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use Binafy\LaravelStub\Facades\LaravelStub;
-use JCSoriano\LaravelCrudStubs\DataObjects\Payload;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class ResourceGenerator extends Generator
 {
@@ -19,8 +19,8 @@ class ResourceGenerator extends Generator
 
         $fileName = $modelName.'Resource';
 
-        $resourceOnlyPrinter = LaravelCrudStubs::buildPrinter('resource-only');
-        $resourceRelationPrinter = LaravelCrudStubs::buildPrinter('resource-relation');
+        $resourceOnlyPrinter = LaravelCrudTemplates::buildPrinter('resource-only');
+        $resourceRelationPrinter = LaravelCrudTemplates::buildPrinter('resource-relation');
 
         $resourceOnlyOutput = $resourceOnlyPrinter->print($payload);
         $resourceRelationsOutput = $resourceRelationPrinter->print($payload);

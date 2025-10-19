@@ -1,18 +1,18 @@
-# Laravel CRUD Stubs
+# Laravel CRUD Templates
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/jcsoriano/laravel-crud-stubs.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-stubs)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-stubs/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/jcsoriano/laravel-crud-stubs/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-stubs/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/jcsoriano/laravel-crud-stubs/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/jcsoriano/laravel-crud-stubs.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-stubs)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jcsoriano/laravel-crud-templates.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-templates)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-templates/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/jcsoriano/laravel-crud-templates/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-templates/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/jcsoriano/laravel-crud-templates/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/jcsoriano/laravel-crud-templates.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-templates)
 
-Laravel CRUD Stubs is a powerful package that allows you to quickly generate complete CRUD (Create, Read, Update, Delete) operations for your Laravel applications. With a single command, you can generate controllers, models, policies, requests, resources, migrations, factories, and tests.
+Laravel CRUD Templates is a powerful package that allows you to quickly generate complete CRUD (Create, Read, Update, Delete) operations for your Laravel applications. With a single command, you can generate controllers, models, policies, requests, resources, migrations, factories, and tests.
 
 ## Features
 
 - **Complete CRUD Generation**: Generate all necessary files for CRUD operations in one command
 - **Flexible Field Types**: Support for various field types including relationships
-- **Customizable**: Extend with custom field types, generators, and pipelines
-- **Multiple Pipelines**: Support for different CRUD patterns (API, Web, etc.)
+- **Customizable**: Extend with custom field types, generators, and templates
+- **Multiple Templates**: Support for different CRUD patterns (API, Web, etc.)
 - **Laravel Standards**: Generated code follows Laravel conventions and best practices
 - **Table Introspection**: Can generate fields from existing database tables
 
@@ -21,13 +21,13 @@ Laravel CRUD Stubs is a powerful package that allows you to quickly generate com
 You can install the package via composer:
 
 ```bash
-composer require jcsoriano/laravel-crud-stubs
+composer require jcsoriano/laravel-crud-templates
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-crud-stubs-config"
+php artisan vendor:publish --tag="laravel-crud-templates-config"
 ```
 
 ## Usage
@@ -113,12 +113,12 @@ Or combine table introspection with additional fields:
 php artisan crud:generate Post --table=posts --fields="featured:boolean,tags:belongsToMany"
 ```
 
-### Custom Pipeline Types
+### Custom Template Types
 
-By default, the package generates API CRUD files. You can specify different pipeline types:
+By default, the package generates API CRUD files. You can specify different template types:
 
 ```bash
-php artisan crud:generate Post --fields="title:string" --type=api
+php artisan crud:generate Post --fields="title:string" --template=api
 ```
 
 ## Customization
@@ -128,9 +128,9 @@ php artisan crud:generate Post --fields="title:string" --type=api
 You can register custom field types in your service provider:
 
 ```php
-use JCSoriano\LaravelCrudStubs\Facades\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
 
-LaravelCrudStubs::registerFieldType('custom-type', App\FieldTypes\CustomFieldType::class);
+LaravelCrudTemplates::registerFieldType('custom-type', App\FieldTypes\CustomFieldType::class);
 ```
 
 ### Custom Generators
@@ -138,15 +138,15 @@ LaravelCrudStubs::registerFieldType('custom-type', App\FieldTypes\CustomFieldTyp
 Override existing generators or add new ones:
 
 ```php
-LaravelCrudStubs::registerGenerator('controller', App\Generators\CustomControllerGenerator::class);
+LaravelCrudTemplates::registerGenerator('controller', App\Generators\CustomControllerGenerator::class);
 ```
 
-### Custom Pipelines
+### Custom Templates
 
-Create custom pipelines for different CRUD patterns:
+Create custom templates for different CRUD patterns:
 
 ```php
-LaravelCrudStubs::registerPipeline('web', App\Pipelines\WebPipeline::class);
+LaravelCrudTemplates::registerTemplate('web', App\Templates\WebTemplate::class);
 ```
 
 ## Configuration
@@ -155,7 +155,7 @@ The config file allows you to customize default behavior:
 
 ```php
 return [
-    'default_pipeline' => 'api',
+    'default_template' => 'api',
     
     'field_types' => [
         'custom-type' => App\FieldTypes\CustomType::class,
@@ -165,8 +165,8 @@ return [
         'controller' => App\Generators\CustomControllerGenerator::class,
     ],
     
-    'pipelines' => [
-        'web' => App\Pipelines\WebPipeline::class,
+    'templates' => [
+        'web' => App\Templates\WebTemplate::class,
     ],
 ];
 ```

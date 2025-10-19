@@ -1,12 +1,12 @@
 <?php
 
-namespace JCSoriano\LaravelCrudStubs\Parsers;
+namespace JCSoriano\LaravelCrudTemplates\Parsers;
 
 use Illuminate\Support\Collection;
-use JCSoriano\LaravelCrudStubs\DataObjects\Field;
-use JCSoriano\LaravelCrudStubs\DataObjects\Name;
-use JCSoriano\LaravelCrudStubs\Exceptions\InvalidFieldsException;
-use JCSoriano\LaravelCrudStubs\LaravelCrudStubs;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
+use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
+use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class FieldsParser
 {
@@ -63,7 +63,7 @@ class FieldsParser
             $options['enumClass'] = trim($parts[2]);
         }
 
-        $fieldTypes = LaravelCrudStubs::getFieldTypes();
+        $fieldTypes = LaravelCrudTemplates::getFieldTypes();
 
         if (! array_key_exists($fieldType, $fieldTypes)) {
             throw new InvalidFieldsException("Unsupported field type: {$fieldType}");
