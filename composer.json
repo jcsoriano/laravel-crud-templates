@@ -38,8 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "JCSoriano\\LaravelCrudTemplates\\": "src/",
-            "JCSoriano\\LaravelCrudTemplates\\Database\\Factories\\": "database/factories/"
+            "JCSoriano\\LaravelCrudTemplates\\": "src/"
         }
     },
     "autoload-dev": {

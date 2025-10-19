@@ -33,3 +33,6 @@ testbench.yaml
 # Vite / VitePress temp cache
 docs/.vitepress/cache/
 docs/.vitepress/temp/
+
+# Task files
+task.md
