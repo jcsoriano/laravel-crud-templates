@@ -4,7 +4,6 @@ namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class ModelGenerator extends Generator
 {
@@ -24,13 +23,9 @@ class ModelGenerator extends Generator
             return $payload;
         }
 
-        $fillablePrinter = LaravelCrudTemplates::buildPrinter('fillable');
-        $castsPrinter = LaravelCrudTemplates::buildPrinter('casts');
-        $relationsPrinter = LaravelCrudTemplates::buildPrinter('relations');
-
-        $fillableOutput = $fillablePrinter->print($payload);
-        $castsOutput = $castsPrinter->print($payload);
-        $relationsOutput = $relationsPrinter->print($payload);
+        $fillableOutput = $this->print('fillable', $payload);
+        $castsOutput = $this->print('casts', $payload);
+        $relationsOutput = $this->print('relations', $payload);
 
         // Collect namespaces from printers
         $namespaces = collect([

@@ -59,17 +59,18 @@ class CustomFillablePrinter implements Printer
 
 ### Step 2: Register the Printer
 
-Register your printer in a service provider:
+Register your printer in a service provider's `register()` method:
 
 ```php
 use App\Printers\CustomFillablePrinter;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
 
-public function boot()
+public function register()
 {
-    LaravelCrudTemplates::registerPrinter('fillable', CustomFillablePrinter::class);
+    $this->app->bind('laravel-crud-templates::printer::fillable', CustomFillablePrinter::class);
 }
 ```
+
+**Note:** To override an existing printer, bind to the same key as the package default (e.g., `laravel-crud-templates::printer::fillable`).
 
 ### Step 3: The Printer is Used Automatically
 
@@ -183,10 +184,10 @@ class SearchablePrinter implements Printer
 }
 ```
 
-Register it:
+Register it in your service provider's `register()` method:
 
 ```php
-LaravelCrudTemplates::registerPrinter('searchable', SearchablePrinter::class);
+$this->app->bind('laravel-crud-templates::printer::searchable', SearchablePrinter::class);
 ```
 
 Use in a custom model stub:
@@ -205,15 +206,10 @@ public function toSearchableArray(): array
 You can use printers in your custom generators:
 
 ```php
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
-
 public function generate(Payload $payload): Payload
 {
-    // Get a printer
-    $fillablePrinter = LaravelCrudTemplates::buildPrinter('fillable');
-    
-    // Use the printer
-    $fillableOutput = $fillablePrinter->print($payload);
+    // Use a printer (inherited from Generator base class)
+    $fillableOutput = $this->print('fillable', $payload);
     $fillableFields = $fillableOutput->output;
     
     // Add to stub variables

@@ -5,7 +5,6 @@ namespace JCSoriano\LaravelCrudTemplates\Commands;
 use Illuminate\Console\Command;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
 use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 use JCSoriano\LaravelCrudTemplates\Parsers\FieldsParser;
 use JCSoriano\LaravelCrudTemplates\Parsers\TableParser;
 
@@ -60,26 +59,18 @@ class GenerateCrud extends Command
                 }
             }
 
-            // Get template
-            $templates = LaravelCrudTemplates::getTemplates();
-
-            if (! array_key_exists($template, $templates)) {
-                $this->error("Unsupported template: {$template}");
-
-                return self::FAILURE;
-            }
-
-            $templateClass = $templates[$template];
+            // Resolve template from container
+            $templateBinding = "laravel-crud-templates::template::{$template}";
             $options = $this->parseOptions($optionsString);
 
-            $templateInstance = new $templateClass(
-                model: $model = new Model($modelPath),
-                fields: $fields,
-                components: $this->components,
-                force: $this->option('force'),
-                table: $tableName,
-                options: $options,
-            );
+            $templateInstance = app($templateBinding, [
+                'model' => $model = new Model($modelPath),
+                'fields' => $fields,
+                'components' => $this->components,
+                'force' => $this->option('force'),
+                'table' => $tableName,
+                'options' => $options,
+            ]);
 
             // Generate files
             $this->info("Generating CRUD files for {$model->model()->studlyCase()}...");

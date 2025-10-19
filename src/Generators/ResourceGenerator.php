@@ -4,7 +4,6 @@ namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class ResourceGenerator extends Generator
 {
@@ -24,11 +23,8 @@ class ResourceGenerator extends Generator
             return $payload;
         }
 
-        $resourceOnlyPrinter = LaravelCrudTemplates::buildPrinter('resource-only');
-        $resourceRelationPrinter = LaravelCrudTemplates::buildPrinter('resource-relation');
-
-        $resourceOnlyOutput = $resourceOnlyPrinter->print($payload);
-        $resourceRelationsOutput = $resourceRelationPrinter->print($payload);
+        $resourceOnlyOutput = $this->print('resource-only', $payload);
+        $resourceRelationsOutput = $this->print('resource-relation', $payload);
 
         // Collect namespaces from printers
         $namespaces = collect([

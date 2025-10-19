@@ -7,6 +7,32 @@
 
 Laravel CRUD Templates is a powerful package that allows you to quickly generate complete CRUD (Create, Read, Update, Delete) operations for your Laravel applications. With a single command, you can generate controllers, models, policies, requests, resources, migrations, factories, and tests.
 
+## Documentation
+
+📚 **[View Full Documentation](https://laravelcrudtemplates.com)**
+
+### Getting Started
+- [Installation](https://laravelcrudtemplates.com/guide/installation) - Requirements and installation guide
+- [Quick Start](https://laravelcrudtemplates.com/guide/quick-start) - Generate your first CRUD in minutes
+
+### Core Concepts
+- [Field Types](https://laravelcrudtemplates.com/guide/field-types) - Complete list of supported field types
+- [Relationships](https://laravelcrudtemplates.com/guide/relationships) - Working with model relationships
+- [Generate from table](https://laravelcrudtemplates.com/guide/table-introspection) - Generate from existing database tables
+
+### Templates
+- [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
+- [Custom Templates](https://laravelcrudtemplates.com/templates/custom) - Create your own templates
+
+### Advanced
+- [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
+- [Customizing Generators](https://laravelcrudtemplates.com/templates/customizing-generators) - Override file generators
+- [Customizing Printers](https://laravelcrudtemplates.com/templates/customizing-printers) - Customize code output
+- [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
+
+### Help
+- [Troubleshooting](https://laravelcrudtemplates.com/troubleshooting) - Common issues and solutions
+
 ## Features
 
 - **Complete CRUD Generation**: Generate all necessary files for CRUD operations in one command
@@ -14,15 +40,34 @@ Laravel CRUD Templates is a powerful package that allows you to quickly generate
 - **Customizable**: Extend with custom field types, generators, and templates
 - **Multiple Templates**: Support for different CRUD patterns (API, Web, etc.)
 - **Laravel Standards**: Generated code follows Laravel conventions and best practices
-- **Table Introspection**: Can generate fields from existing database tables
+- **Generate from table**: Can generate fields from existing database tables
+
+## Requirements
+
+- PHP 8.4 or higher
+- Laravel 11.0 or 12.0
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer:
 
 ```bash
 composer require jcsoriano/laravel-crud-templates
 ```
+
+The package will automatically register itself via Laravel's package discovery.
+
+### Verify Installation
+
+To verify the installation was successful, you can run:
+
+```bash
+php artisan crud:generate --help
+```
+
+You should see the help output for the `crud:generate` command.
+
+### Publishing Stubs (Optional)
 
 You can publish the stubs to customize them:
 
@@ -32,134 +77,96 @@ php artisan vendor:publish --tag="laravel-crud-templates-stubs"
 
 ## Usage
 
-### Basic Usage
-
-Generate CRUD files for a simple model:
+### Command Signature
 
 ```bash
-php artisan crud:generate Post --fields="title:string,content:text,published:boolean"
+php artisan crud:generate {model} [options]
+```
+
+**Arguments:**
+- `model` - The name of the model (e.g., `Post`, `Content/Post` for namespaced models)
+
+**Options:**
+- `--fields=` - The fields to generate (format: `field1:type1,field2?:type2`)
+- `--table=` - The database table to generate fields from
+- `--template=` - The CRUD template to use (default: `api`)
+- `--options=` - Additional options (format: `key1:value1,key2:value2`)
+- `--force` - Overwrite existing files (default: false, will skip existing files)
+
+### Quick Start Example
+
+Generate a complete blog post CRUD with relationships:
+
+```bash
+php artisan crud:generate Content/Post --template=api --fields="title:string,content:text,published_at:datetime,category:belongsTo,comments:hasMany,status:enum:PublishStatus"
 ```
 
 This will generate:
-- `app/Http/Controllers/Api/PostController.php`
-- `app/Models/Post.php`
-- `app/Policies/PostPolicy.php`
-- `app/Http/Requests/StorePostRequest.php`
-- `app/Http/Requests/UpdatePostRequest.php`
-- `app/Http/Resources/PostResource.php`
-- `database/migrations/{timestamp}_create_posts_table.php`
-- `database/factories/PostFactory.php`
-- `tests/Feature/Api/PostControllerTest.php`
+- `app/Http/Controllers/Api/Content/PostController.php` - RESTful API controller
+- `app/Models/Content/Post.php` - Eloquent model with fillable fields and casts
+- `app/Policies/Content/PostPolicy.php` - Authorization policy
+- `app/Http/Requests/Content/StorePostRequest.php` - Validation for create operations
+- `app/Http/Requests/Content/UpdatePostRequest.php` - Validation for update operations
+- `app/Http/Resources/Content/PostResource.php` - API resource for transforming responses
+- `database/migrations/{timestamp}_create_posts_table.php` - Database migration
+- `database/factories/Content/PostFactory.php` - Model factory for testing
+- `tests/Feature/Api/Content/PostControllerTest.php` - Feature tests
+- API routes automatically added
+- All generated files formatted using Pint
 
-### Nested Models
+### Generated Routes
 
-Generate CRUD files for models with namespaces:
+The generated controller provides the following RESTful API endpoints:
 
-```bash
-php artisan crud:generate Content/Post --fields="title:string,body:text"
+| HTTP Method | URI | Action | Description |
+|-------------|-----|--------|-------------|
+| GET | `/api/posts` | `index` | List all posts (paginated) |
+| POST | `/api/posts` | `store` | Create a new post |
+| GET | `/api/posts/{id}` | `show` | Show a specific post |
+| PUT/PATCH | `/api/posts/{id}` | `update` | Update a post |
+| DELETE | `/api/posts/{id}` | `destroy` | Delete a post |
+
+### Response Format
+
+All API responses follow a consistent JSON format:
+
+**Single Resource:**
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "My Post",
+    "content": "...",
+    "published_at": "2024-01-01T00:00:00.000000Z",
+    "created_at": "2024-01-01T00:00:00.000000Z"
+  }
+}
 ```
 
-This will create the model in `app/Models/Content/Post.php` and organize all other files accordingly.
-
-### Field Types
-
-The package supports various field types:
-
-```bash
-# Basic types
-php artisan crud:generate Product --fields="name:string,price:decimal,description:text,active:boolean,created_date:date,updated_at:datetime,metadata:json"
-
-# Nullable fields (add ? after field name)
-php artisan crud:generate User --fields="name:string,email:string,phone?:string"
-
-# Enum fields (requires enum class specification)
-php artisan crud:generate Order --fields="status:enum:OrderStatus,priority:enum:Priority"
-
-# Relationships
-php artisan crud:generate Post --fields="title:string,category:belongsTo,tags:belongsToMany"
+**Collection (with pagination):**
+```json
+{
+  "data": [
+    { "id": 1, "title": "Post 1" },
+    { "id": 2, "title": "Post 2" }
+  ],
+  "links": { "first": "...", "last": "...", "prev": null, "next": "..." },
+  "meta": { "current_page": 1, "per_page": 15, "total": 50 }
+}
 ```
 
-### Supported Field Types
+### Error Handling
 
-| Type | Migration | Validation Rule | Model Cast | Example |
-|------|-----------|----------------|------------|---------|
-| `string` | `->string('field')` | `string\|max:255` | - | `title:string` |
-| `integer` | `->integer('field')` | `integer` | - | `count:integer` |
-| `decimal` | `->decimal('field', 8, 2)` | `numeric` | `decimal:2` | `price:decimal` |
-| `date` | `->date('field')` | `date` | `immutable_date` | `birth_date:date` |
-| `datetime` | `->dateTime('field')` | `date` | `immutable_datetime` | `published_at:datetime` |
-| `text` | `->text('field')` | `string` | - | `description:text` |
-| `boolean` | `->boolean('field')` | `boolean` | `boolean` | `active:boolean` |
-| `enum` | `->string('field')` | - | `EnumClass::class` | `status:enum:Status` |
-| `json` | `->json('field')` | `array` | `array` | `metadata:json` |
-| `belongsTo` | `->foreignId('model_id')->constrained()` | `exists:table,id` | - | `category:belongsTo` |
-| `hasMany` | - | - | Relationship method | `posts:hasMany` |
-| `belongsToMany` | - | - | Relationship method | `tags:belongsToMany` |
-| `morphTo` | `->morphs('field')` | - | Relationship method | `commentable:morphTo` |
-| `morphMany` | - | - | Relationship method | `comments:morphMany` |
-| `morphToMany` | - | - | Relationship method | `tags:morphToMany` |
+The generated controllers handle errors appropriately:
 
-### Generate from Existing Table
+- **404 Not Found**: When a resource doesn't exist
+- **403 Forbidden**: When authorization fails
+- **422 Unprocessable Entity**: When validation fails
+- **500 Internal Server Error**: For unexpected errors
 
-You can also generate fields from an existing database table:
+## What's Next?
 
-```bash
-php artisan crud:generate Post --table=posts
-```
-
-When using `--table`, the migration file is automatically skipped since the table already exists. 
-
-You can use `--fields` to add relationship fields that can't be detected by inspecting the table (e.g. hasMany fields).
-
-```bash
-php artisan crud:generate Post --table=posts --fields="comments:hasMany"
-```
-
-### File Overwrite Protection
-
-By default, existing files will not be overwritten. Use the `--force` flag to overwrite existing files:
-
-```bash
-php artisan crud:generate Post --fields="title:string" --force
-```
-
-Without `--force`, if a file already exists, you'll see a warning and the file will be skipped.
-
-### Custom Template Types
-
-By default, the package generates API CRUD files. You can specify different template types:
-
-```bash
-php artisan crud:generate Post --fields="title:string" --template=api
-```
-
-## Customization
-
-### Custom Field Types
-
-You can register custom field types in your service provider:
-
-```php
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
-
-LaravelCrudTemplates::registerFieldType('custom-type', App\FieldTypes\CustomFieldType::class);
-```
-
-### Custom Generators
-
-Override existing generators or add new ones:
-
-```php
-LaravelCrudTemplates::registerGenerator('controller', App\Generators\CustomControllerGenerator::class);
-```
-
-### Custom Templates
-
-Create custom templates for different CRUD patterns:
-
-```php
-LaravelCrudTemplates::registerTemplate('web', App\Templates\WebTemplate::class);
-```
+For more advanced usage including how to create your own template, visit the [full documentation](https://laravelcrudtemplates.com).
 
 ## Testing
 

@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class TableParser
 {
@@ -38,24 +37,28 @@ class TableParser
                 continue; // Skip unsupported column types
             }
 
-            $fieldTypes = LaravelCrudTemplates::getFieldTypes();
             $nullable = $this->isNullable($tableName, $column);
+
+            // Resolve the field type class from the container binding
+            $fieldTypeInstance = app("laravel-crud-templates::field-type::{$fieldType}");
 
             $fields->push(new Field(
                 name: new Name($column),
                 required: ! $nullable,
-                typeClass: $fieldTypes[$fieldType],
+                typeClass: get_class($fieldTypeInstance),
                 options: [],
             ));
         }
 
         // Add polymorphic fields
-        $fieldTypes = LaravelCrudTemplates::getFieldTypes();
         foreach ($polymorphicPairs as $baseName => $nullable) {
+            // Resolve the field type class from the container binding
+            $morphToInstance = app('laravel-crud-templates::field-type::morphTo');
+
             $fields->push(new Field(
                 name: new Name($baseName),
                 required: ! $nullable,
-                typeClass: $fieldTypes['morphTo'],
+                typeClass: get_class($morphToInstance),
                 options: [],
             ));
         }

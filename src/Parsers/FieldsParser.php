@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
 use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class FieldsParser
 {
@@ -63,16 +62,13 @@ class FieldsParser
             $options['enumClass'] = trim($parts[2]);
         }
 
-        $fieldTypes = LaravelCrudTemplates::getFieldTypes();
-
-        if (! array_key_exists($fieldType, $fieldTypes)) {
-            throw new InvalidFieldsException("Unsupported field type: {$fieldType}");
-        }
+        // Resolve the field type class from the container binding
+        $fieldTypeInstance = app("laravel-crud-templates::field-type::{$fieldType}");
 
         return new Field(
             name: new Name($fieldName),
             required: $required,
-            typeClass: $fieldTypes[$fieldType],
+            typeClass: get_class($fieldTypeInstance),
             options: $options,
         );
     }

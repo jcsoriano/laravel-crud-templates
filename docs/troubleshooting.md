@@ -35,7 +35,7 @@ SQLSTATE[HY000] [2002] Connection refused
 ```
 
 **Cause:**
-The package can't connect to your database when using table introspection.
+The package can't connect to your database when using generate from table.
 
 **Solution:**
 1. Verify your database connection in `.env`:
@@ -55,7 +55,7 @@ php artisan db:show
 
 3. Ensure your database server is running
 
-4. If using table introspection, make sure the table exists:
+4. If using generate from table, make sure the table exists:
 ```bash
 php artisan db:table posts
 ```

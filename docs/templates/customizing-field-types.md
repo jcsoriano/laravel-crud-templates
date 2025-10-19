@@ -58,17 +58,18 @@ class UuidType extends FieldType
 
 ### Step 2: Register the Field Type
 
-Register your field type in a service provider (e.g., `AppServiceProvider`):
+Register your field type in a service provider's `register()` method (e.g., `AppServiceProvider`):
 
 ```php
 use App\FieldTypes\UuidType;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
 
-public function boot()
+public function register()
 {
-    LaravelCrudTemplates::registerFieldType('uuid', UuidType::class);
+    $this->app->bind('laravel-crud-templates::field-type::uuid', UuidType::class);
 }
 ```
+
+**Note:** To override an existing field type, bind to the same key as the package default (e.g., `laravel-crud-templates::field-type::string`).
 
 ### Step 3: Use Your Custom Field Type
 
@@ -307,10 +308,10 @@ class PhoneType extends FieldType
 }
 ```
 
-Register it:
+Register it in your service provider's `register()` method:
 
 ```php
-LaravelCrudTemplates::registerFieldType('phone', PhoneType::class);
+$this->app->bind('laravel-crud-templates::field-type::phone', PhoneType::class);
 ```
 
 Use it:
@@ -321,12 +322,15 @@ php artisan crud:generate Contact --fields="name:string,phone:phone,mobile?:phon
 
 ## Overriding Existing Field Types
 
-You can override existing field types by registering your own class with the same key:
+You can override existing field types by binding to the same container key in your service provider's `register()` method:
 
 ```php
 use App\FieldTypes\CustomStringType;
 
-LaravelCrudTemplates::registerFieldType('string', CustomStringType::class);
+public function register()
+{
+    $this->app->bind('laravel-crud-templates::field-type::string', CustomStringType::class);
+}
 ```
 
 Now all `string` fields will use your custom implementation.

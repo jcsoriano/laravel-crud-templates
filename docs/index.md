@@ -25,7 +25,7 @@ features:
     details: Built-in API template with support for creating your own custom templates
   - title: Laravel Standards
     details: Generated code follows Laravel conventions and best practices out of the box
-  - title: Table Introspection
+  - title: Generate from table
     details: Generate fields from existing database tables or combine with custom field definitions
 ---
 

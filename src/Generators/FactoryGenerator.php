@@ -4,7 +4,6 @@ namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class FactoryGenerator extends Generator
 {
@@ -24,8 +23,7 @@ class FactoryGenerator extends Generator
             return $payload;
         }
 
-        $factoryPrinter = LaravelCrudTemplates::buildPrinter('factory');
-        $output = $factoryPrinter->print($payload);
+        $output = $this->print('factory', $payload);
 
         // Build proper namespace paths
         $modelNamespace = $this->buildNamespace('App\\Models', $payload);

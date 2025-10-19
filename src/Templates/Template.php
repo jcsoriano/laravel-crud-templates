@@ -8,12 +8,9 @@ use Illuminate\Support\Collection;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Generators\Generator;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 abstract class Template
 {
-    protected array $generators;
-
     protected Payload $payload;
 
     public function __construct(
@@ -24,7 +21,6 @@ abstract class Template
         protected ?string $table = null,
         protected array $options = [],
     ) {
-        $this->generators = LaravelCrudTemplates::getGenerators();
         $this->payload = $this->buildPayload();
     }
 
@@ -68,15 +64,26 @@ abstract class Template
         return [];
     }
 
-    protected function buildGenerator(string $generator): Generator
+    protected function buildGenerator(string|Generator $generator): Generator
     {
-        return app($this->generators[$generator]);
+        // If it's already an instance, return it
+        if ($generator instanceof Generator) {
+            return $generator;
+        }
+
+        // If it's a class name, instantiate directly
+        if (class_exists($generator)) {
+            return app($generator);
+        }
+
+        // Otherwise, treat as a registered key and resolve from container binding
+        return app("laravel-crud-templates::generator::{$generator}");
     }
 
     protected function buildGenerators(array $generators): array
     {
         return array_map(
-            fn (string $generator): Generator => $this->buildGenerator($generator),
+            fn (string|Generator $generator): Generator => $this->buildGenerator($generator),
             $generators,
         );
     }

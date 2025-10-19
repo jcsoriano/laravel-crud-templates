@@ -4,7 +4,6 @@ namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class MigrationGenerator extends Generator
 {
@@ -31,8 +30,7 @@ class MigrationGenerator extends Generator
             return $payload;
         }
 
-        $migrationsPrinter = LaravelCrudTemplates::buildPrinter('migrations');
-        $output = $migrationsPrinter->print($payload);
+        $output = $this->print('migrations', $payload);
 
         LaravelStub::from($this->getStubPath('api.migration.stub'))
             ->to($directory)

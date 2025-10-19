@@ -45,7 +45,7 @@ CREATE TABLE posts (
 );
 ```
 
-Running introspection:
+Running generate from table:
 
 ```bash
 php artisan crud:generate Post --table=posts
@@ -73,7 +73,7 @@ The package will generate:
 
 ## Combining with Custom Fields
 
-You can combine table introspection with additional custom fields:
+You can combine generate from table with additional custom fields:
 
 ```bash
 php artisan crud:generate Post --table=posts --fields="featured:boolean,tags:belongsToMany"
@@ -98,7 +98,7 @@ If the `posts` table has a `status` column, it will be replaced with your enum d
 
 ### 1. Relationships Beyond belongsTo
 
-Table introspection can only detect `belongsTo` relationships (foreign keys on the current table). Other relationship types must be manually specified:
+Generate from table can only detect `belongsTo` relationships (foreign keys on the current table). Other relationship types must be manually specified:
 
 ```bash
 php artisan crud:generate Category \
@@ -133,7 +133,7 @@ CREATE TABLE comments (
 );
 ```
 
-Running introspection will automatically generate:
+Running generate from table will automatically generate:
 ```bash
 php artisan crud:generate Comment --table=comments
 ```
@@ -219,7 +219,7 @@ This prevents creating duplicate migrations for existing tables. All other CRUD 
 
 ## Database Connection
 
-Table introspection uses your default database connection defined in `config/database.php`. Make sure:
+Generate from table uses your default database connection defined in `config/database.php`. Make sure:
 
 1. Your database connection is properly configured
 2. The database is accessible

@@ -330,6 +330,6 @@ This generates a product CRUD with:
 ## Next Steps
 
 - Learn about [Relationships](/guide/relationships) to connect models
-- Explore [Table Introspection](/guide/table-introspection) for existing tables
+- Explore [Generate from table](/guide/table-introspection) for existing tables
 - Understand how to create [Custom Field Types](/templates/customizing-field-types)
 

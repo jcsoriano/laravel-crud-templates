@@ -106,7 +106,7 @@ php artisan crud:generate Content/Post --fields="..." --force
 ```
 :::
 
-## Understanding Generated Code
+## Features
 
 ### Model Enhancements
 
@@ -223,6 +223,6 @@ Now that you've generated your first CRUD, explore more advanced features:
 
 - Learn about all available [Field Types](/guide/field-types)
 - Add [Relationships](/guide/relationships) between models
-- Use [Table Introspection](/guide/table-introspection) to generate from existing tables
+- Use [Generate from table](/guide/table-introspection) to generate from existing tables
 - Explore [Templates](/templates/api) to understand the generated structure
 

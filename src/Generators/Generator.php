@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 abstract class Generator
@@ -67,5 +68,11 @@ abstract class Generator
         return $namespaces->map(
             fn (string $namespace): string => 'use '.Str::finish($namespace, ';'),
         )->unique()->sort()->implode("\n");
+    }
+
+    protected function print(string $printer, Payload $payload): Output
+    {
+        return app("laravel-crud-templates::printer::{$printer}")
+            ->print($payload);
     }
 }

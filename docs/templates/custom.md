@@ -69,17 +69,18 @@ class WebTemplate extends Template
 
 ### Step 2: Register the Template
 
-Register your template in a service provider:
+Register your template in a service provider's `register()` method:
 
 ```php
 use App\Templates\WebTemplate;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
 
-public function boot()
+public function register()
 {
-    LaravelCrudTemplates::registerTemplate('web', WebTemplate::class);
+    $this->app->bind('laravel-crud-templates::template::web', WebTemplate::class);
 }
 ```
+
+**Note:** To override an existing template (like 'api'), bind to the same key as the package default.
 
 ### Step 3: Use Your Template
 
@@ -257,24 +258,27 @@ class WebControllerGenerator extends Generator
 
 ### 3. Register Everything
 
+Register in your service provider's `register()` method:
+
 ```php
 use App\Templates\WebTemplate;
 use App\Generators\WebControllerGenerator;
 use App\Generators\ViewIndexGenerator;
 // ... other generators
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
 
-public function boot()
+public function register()
 {
     // Register template
-    LaravelCrudTemplates::registerTemplate('web', WebTemplate::class);
+    $this->app->bind('laravel-crud-templates::template::web', WebTemplate::class);
     
     // Register generators
-    LaravelCrudTemplates::registerGenerator('web-controller', WebControllerGenerator::class);
-    LaravelCrudTemplates::registerGenerator('view-index', ViewIndexGenerator::class);
+    $this->app->bind('laravel-crud-templates::generator::web-controller', WebControllerGenerator::class);
+    $this->app->bind('laravel-crud-templates::generator::view-index', ViewIndexGenerator::class);
     // ... register other generators
 }
 ```
+
+Alternatively, you can use custom generators directly in your template without binding them (see below).
 
 ### 4. Create Stubs
 
@@ -388,20 +392,25 @@ protected function variables(): array
 
 ## Reusing Existing Generators
 
-You don't have to create all generators from scratch. Reuse existing ones:
+You don't have to create all generators from scratch. Mix existing package generators with your custom ones:
 
 ```php
+use App\Generators\CustomServiceGenerator;
+
 public function template(): array
 {
     return $this->buildGenerators([
         'controller',      // Use existing API controller generator
         'model',          // Use existing model generator
-        'custom-service', // Your custom generator
+        'custom-service', // Your registered custom generator
+        CustomServiceGenerator::class, // Or use directly without binding
         'migration',      // Use existing migration generator
         'pint',          // Use existing pint generator
     ]);
 }
 ```
+
+**Tip:** You can use generator class names directly without registering them if you're not overriding package defaults.
 
 ## Example Templates
 

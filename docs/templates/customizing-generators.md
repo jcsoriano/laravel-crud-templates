@@ -78,38 +78,44 @@ class CustomControllerGenerator extends Generator
 
 ### Step 2: Register the Generator
 
-Register your generator in a service provider:
+Register your generator in a service provider's `register()` method:
 
 ```php
 use App\Generators\CustomControllerGenerator;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
 
-public function boot()
+public function register()
 {
     // Override existing controller generator
-    LaravelCrudTemplates::registerGenerator('controller', CustomControllerGenerator::class);
+    $this->app->bind('laravel-crud-templates::generator::controller', CustomControllerGenerator::class);
     
     // Or register a new generator
-    LaravelCrudTemplates::registerGenerator('custom-type', CustomControllerGenerator::class);
+    $this->app->bind('laravel-crud-templates::generator::custom-type', CustomControllerGenerator::class);
 }
 ```
 
+**Note:** To override an existing generator, bind to the same key. To create a new generator that doesn't override a package default, you can either register it with a binding or use it directly in your template without binding (see Step 3).
+
 ### Step 3: Use the Generator in a Template
 
-If you created a new generator, add it to your template:
+If you created a new generator, add it to your template. You can use either the registered key or the class name directly:
 
 ```php
+use App\Generators\CustomControllerGenerator;
+
 protected function template(): array
 {
     return $this->buildGenerators([
         'controller',
         'model',
-        'custom-type', // Your new generator
+        'custom-type', // Your registered generator (if you bound it)
+        CustomControllerGenerator::class, // Or use directly without binding
         'migration',
         // ... other generators
     ]);
 }
 ```
+
+**Tip:** If you're not overriding an existing generator, you can use the class name directly without registering a binding.
 
 ## The Payload Object
 
@@ -271,17 +277,20 @@ class {{ MODEL }}Service
 Register and use it:
 
 ```php
-// Register
-LaravelCrudTemplates::registerGenerator('service', ServiceGenerator::class);
+// In your AppServiceProvider's register() method
+$this->app->bind('laravel-crud-templates::generator::service', ServiceGenerator::class);
 
 // Create custom template that uses it
+use App\Generators\ServiceGenerator;
+
 class CustomApiTemplate extends Template
 {
     public function template(): array
     {
         return $this->buildGenerators([
             'controller',
-            'service',  // Your new generator
+            'service',  // Your registered generator
+            // Or use directly: ServiceGenerator::class
             'model',
             'migration',
             // ...
@@ -328,10 +337,10 @@ class CustomControllerGenerator extends BaseControllerGenerator
 }
 ```
 
-Register it:
+Register it in your service provider's `register()` method:
 
 ```php
-LaravelCrudTemplates::registerGenerator('controller', CustomControllerGenerator::class);
+$this->app->bind('laravel-crud-templates::generator::controller', CustomControllerGenerator::class);
 ```
 
 ## Working with Printers
@@ -339,24 +348,23 @@ LaravelCrudTemplates::registerGenerator('controller', CustomControllerGenerator:
 Printers generate specific parts of files (like fillable arrays, casts, etc.). You can use printers in your generators:
 
 ```php
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
-
 public function generate(Payload $payload): Payload
 {
-    // Get a printer
-    $fillablePrinter = LaravelCrudTemplates::buildPrinter('fillable');
-    
-    // Use the printer
-    $fillableFields = $fillablePrinter->print($payload->fields);
+    // Use a printer (inherited from Generator base class)
+    $fillableOutput = $this->print('fillable', $payload);
+    $fillableFields = $fillableOutput->output;
     
     // Add to variables
-    $payload->variables()['FILLABLE'] = $fillableFields;
+    $variables = [
+        ...$payload->variables(),
+        'FILLABLE' => $fillableFields,
+    ];
     
     // ... rest of generation logic
 }
 ```
 
-Available printers:
+Available printers (used via the `print()` method):
 - `casts` - Model type casts
 - `factory` - Factory field definitions
 - `fillable` - Fillable array

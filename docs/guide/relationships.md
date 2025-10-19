@@ -239,7 +239,7 @@ public function toArray($request)
 
 ## Next Steps
 
-- Learn about [Table Introspection](/guide/table-introspection) to generate from existing database schemas
+- Learn about [Generate from table](/guide/table-introspection) to generate from existing database schemas
 - Understand the [API Template](/templates/api) structure
 - Explore [Customizing Field Types](/templates/customizing-field-types) to create custom relationship types
 

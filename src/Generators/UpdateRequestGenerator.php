@@ -4,7 +4,6 @@ namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
 class UpdateRequestGenerator extends Generator
 {
@@ -24,8 +23,7 @@ class UpdateRequestGenerator extends Generator
             return $payload;
         }
 
-        $rulesPrinter = LaravelCrudTemplates::buildPrinter('rules');
-        $rulesOutput = $rulesPrinter->print($payload);
+        $rulesOutput = $this->print('rules', $payload);
 
         // Collect namespaces from printer
         $namespaces = collect([

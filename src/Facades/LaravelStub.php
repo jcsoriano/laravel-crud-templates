@@ -14,4 +14,3 @@ class LaravelStub extends Facade
         return \JCSoriano\LaravelCrudTemplates\LaravelStub::class;
     }
 }
-
