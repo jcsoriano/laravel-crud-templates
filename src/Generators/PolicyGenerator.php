@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class PolicyGenerator extends Generator
@@ -37,7 +37,7 @@ class PolicyGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Policy', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Policy', $directory, $fileName, $payload);
 
         return $payload;
     }

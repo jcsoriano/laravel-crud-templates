@@ -33,11 +33,13 @@ abstract class Generator
         return $next($this->generate($payload));
     }
 
-    protected function printSuccess(string $type, string $directory, string $fileName, Payload $payload): void
+    protected function logGeneratedFile(string $type, string $directory, string $fileName, Payload $payload): void
     {
         $path = $directory.'/'.$fileName.'.php';
 
         $payload->components->info(sprintf('%s [%s] created successfully.', $type, $path));
+
+        $payload->data['files'][] = $path;
     }
 
     protected function buildNamespace(string $namespace, Payload $payload): string

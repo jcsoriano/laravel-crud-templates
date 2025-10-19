@@ -27,5 +27,9 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
         $this->app->singleton(LaravelCrudTemplates::class, function () {
             return new LaravelCrudTemplates;
         });
+
+        $this->app->singleton(LaravelStub::class, function () {
+            return new LaravelStub;
+        });
     }
 }

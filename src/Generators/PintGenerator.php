@@ -14,8 +14,18 @@ class PintGenerator extends Generator
             return $payload;
         }
 
-        // Run Pint with --dirty flag to only format changed files
-        exec($pintPath.' --dirty 2>&1', $output, $returnCode);
+        // Get tracked files
+        $files = $payload->data['files'] ?? [];
+
+        if (empty($files)) {
+            $payload->components->info('No files to format.');
+
+            return $payload;
+        }
+
+        // Run Pint on specific files
+        $filesArg = implode(' ', array_map('escapeshellarg', $files));
+        exec($pintPath.' '.$filesArg.' 2>&1', $output, $returnCode);
 
         $payload->components->info('Code formatting completed successfully.');
 

@@ -46,6 +46,8 @@ class ApiRouteGenerator extends Generator
 
         $payload->components->info(sprintf('Route [%s] registered successfully.', $apiRoutesPath));
 
+        $payload->data['files'][] = $apiRoutesPath;
+
         return $payload;
     }
 }

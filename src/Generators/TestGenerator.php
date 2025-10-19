@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
@@ -41,7 +41,7 @@ class TestGenerator extends Generator
             "{$modelNamespace}\\{$modelName}",
             'App\Models\User',
             'Illuminate\Foundation\Testing\RefreshDatabase',
-            'Illuminate\Testing\TestResponse',
+            'Illuminate\Testing\Fluent\AssertableJson',
             'Tests\TestCase',
         ]);
 
@@ -57,7 +57,7 @@ class TestGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Test', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Test', $directory, $fileName, $payload);
 
         return $payload;
     }

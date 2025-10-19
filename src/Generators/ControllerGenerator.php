@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class ControllerGenerator extends Generator
@@ -49,7 +49,7 @@ class ControllerGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Controller', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Controller', $directory, $fileName, $payload);
 
         return $payload;
     }

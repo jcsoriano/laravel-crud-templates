@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
@@ -39,7 +39,7 @@ class UpdateRequestGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Request', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Request', $directory, $fileName, $payload);
 
         return $payload;
     }

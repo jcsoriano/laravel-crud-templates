@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
@@ -44,7 +44,7 @@ class ResourceGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Resource', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Resource', $directory, $fileName, $payload);
 
         return $payload;
     }

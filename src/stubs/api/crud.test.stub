@@ -18,11 +18,14 @@ class {{ MODEL }}ControllerTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    private function assertJsonStructure(AssertableJson $json): void
+    private function assertJsonStructure(AssertableJson $json, string $path = 'data'): void
     {
-        $json->assertJsonStructure([
-            {{ TEST_STRUCTURE }}
-        ]);
+        $json->has(
+            $path,
+            fn (AssertableJson $json) => $json->hasAll([
+                {{ TEST_STRUCTURE }}
+            ])->etc(),
+        )->etc();
     }
 
     public function test_can_list_{{ MODEL_SNAKE_PLURAL }}(): void
@@ -32,10 +35,7 @@ class {{ MODEL }}ControllerTest extends TestCase
         $this->getJson('/api/{{ MODEL_KEBAB_PLURAL }}')
             ->assertOk()
             ->assertJson(
-                fn (AssertableJson $json) => $json->has(
-                    'data.0',
-                    fn (AssertableJson $json) => $this->assertJsonStructure($json),
-                ),
+                fn (AssertableJson $json) => $this->assertJsonStructure($json, 'data.0'),
             );
     }
 

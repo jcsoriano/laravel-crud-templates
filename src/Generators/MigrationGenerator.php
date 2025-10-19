@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
@@ -33,7 +33,7 @@ class MigrationGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Migration', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Migration', $directory, $fileName, $payload);
 
         return $payload;
     }

@@ -2,7 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
-use Binafy\LaravelStub\Facades\LaravelStub;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplates;
 
@@ -43,7 +43,7 @@ class FactoryGenerator extends Generator
             ->conditions($payload->conditions())
             ->generate();
 
-        $this->printSuccess('Factory', $directory, $fileName, $payload);
+        $this->logGeneratedFile('Factory', $directory, $fileName, $payload);
 
         return $payload;
     }
