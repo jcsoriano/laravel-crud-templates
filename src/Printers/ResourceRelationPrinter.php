@@ -25,8 +25,8 @@ class ResourceRelationPrinter implements Printer
                 }
 
                 // Add resource class namespace for relations
-                $resourceName = $field->name->studlyCase();
-                $namespaces->push("App\\Http\\Resources\\{$resourceName}Resource");
+                $relatedNamespace = $field->relatedClass('App\\Http\\Resources');
+                $namespaces->push($relatedNamespace.'Resource');
             }
         }
 

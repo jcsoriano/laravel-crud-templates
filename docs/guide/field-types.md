@@ -263,6 +263,10 @@ php artisan crud:generate Order --fields="status:enum:OrderStatus,priority:enum:
 You must create the enum class before generating the CRUD. The enum class should exist in your application.
 :::
 
+::: tip Custom Model Paths for Relationships
+Relationship field types (belongsTo, hasMany, etc.) also support specifying custom model paths with namespaces. See the [Relationships guide](/guide/relationships#custom-model-paths) for details.
+:::
+
 ---
 
 ### JSON

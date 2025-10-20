@@ -49,7 +49,10 @@ class {{ MODEL }}ControllerTest extends TestCase
                 fn (AssertableJson $json) => $this->assertJsonStructure($json),
             );
 
-        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $payload);
+        $this->assertDatabaseHas(
+            '{{ MODEL_SNAKE_PLURAL }}',
+            $this->prepareForDbAssertion($payload),
+        );
     }
 
     public function test_can_show_{{ MODEL_SNAKE }}(): void
@@ -74,8 +77,9 @@ class {{ MODEL }}ControllerTest extends TestCase
                 fn (AssertableJson $json) => $this->assertJsonStructure($json),
             );
 
-        $payload['id'] = ${{ MODEL_CAMEL }}->id;
-        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $payload);
+        $dbAssertion = $this->prepareForDbAssertion($payload);
+        $dbAssertion['id'] = ${{ MODEL_CAMEL }}->id;
+        $this->assertDatabaseHas('{{ MODEL_SNAKE_PLURAL }}', $dbAssertion);
     }
 
     public function test_can_delete_{{ MODEL_SNAKE }}(): void
@@ -111,5 +115,12 @@ class {{ MODEL }}ControllerTest extends TestCase
             'team_id' => $this->user->current_team_id,
         ]);
         {{ endif }}
+    }
+
+    private function prepareForDbAssertion(array $payload): array
+    {
+        return [
+            {{ DB_ASSERTION_COLUMNS }}
+        ];
     }
 }

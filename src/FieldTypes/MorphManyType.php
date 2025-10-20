@@ -3,14 +3,18 @@
 namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\ParsesRelatedModel;
 
 class MorphManyType extends FieldType
 {
+    use ParsesRelatedModel;
+
     public function relation(): Output
     {
         $name = $this->field->name;
         $relationName = $name->pluralCamelCase();
-        $modelName = $name->studlyCase();
+        $modelName = $this->getModelName();
+        $modelClass = $this->getModelClass();
 
         $output = <<<OUTPUT
     public function {$relationName}(): MorphMany
@@ -20,7 +24,7 @@ class MorphManyType extends FieldType
 OUTPUT;
 
         $namespaces = collect([
-            "App\\Models\\{$modelName}",
+            $modelClass,
             'Illuminate\\Database\\Eloquent\\Relations\\MorphMany',
         ]);
 
@@ -32,7 +36,7 @@ OUTPUT;
         $name = $this->field->name;
         $fieldName = $name->pluralSnakeCase();
         $relationName = $name->pluralCamelCase();
-        $resourceName = $name->studlyCase();
+        $resourceName = $this->getModelName();
 
         return [
             $fieldName => "{$resourceName}Resource::collection(\$this->whenLoaded('{$relationName}'))",

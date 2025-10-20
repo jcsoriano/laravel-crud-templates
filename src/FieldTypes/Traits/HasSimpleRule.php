@@ -11,8 +11,9 @@ trait HasSimpleRule
     {
         $field = $this->field;
         $required = $field->required ? 'required' : 'nullable';
-        $rulesString = implode("', '", Arr::wrap($rules));
-        $output = "'{$field->name->snakeCase()}' => ['{$required}', {$rulesString}]";
+        $rules = [$required, ...Arr::wrap($rules)];
+        $rulesString = "'".implode("', '", $rules)."'";
+        $output = "'{$field->name->snakeCase()}' => [{$rulesString}]";
 
         return new Output($output);
     }

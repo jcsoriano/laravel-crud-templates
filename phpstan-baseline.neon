@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Connection\:\:getDoctrineSchemaManager\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Parsers/TableParser.php

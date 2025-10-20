@@ -17,13 +17,16 @@ You specified a field type that doesn't exist or isn't registered.
 **Solution:**
 1. Check for typos in your field type
 2. Verify you're using a supported field type (see [Field Types](/guide/field-types))
-3. If using a custom field type, ensure it's properly registered:
+3. If using a custom field type, ensure it's properly registered in a service provider's `register()` method:
 
 ```php
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelCrudTemplates;
-
-LaravelCrudTemplates::registerFieldType('your-type', YourFieldType::class);
+public function register()
+{
+    $this->app->bind('laravel-crud-templates::field-type::your-type', YourFieldType::class);
+}
 ```
+
+See [Customizing Field Types](/templates/customizing-field-types) for details.
 
 ---
 
@@ -178,4 +181,69 @@ enum OrderStatus: string
 2. Then run the generation:
 ```bash
 php artisan crud:generate Order --fields="status:enum:OrderStatus"
+```
+
+---
+
+### Unresolvable Dependency Error
+
+**Error Message:**
+```
+Unresolvable dependency resolving [Parameter #0 [ <required> string $name ]] 
+in class JCSoriano\LaravelCrudTemplates\DataObjects\Name
+```
+
+**Cause:**
+This error can occur if you're binding field types or templates incorrectly in your service provider, causing Laravel to try to instantiate Data Transfer Objects (DTOs) with missing constructor parameters.
+
+**Solution:**
+Ensure you're binding field types and templates correctly. The package expects class name strings, not instantiated objects.
+
+**Correct binding:**
+```php
+public function register()
+{
+    // Field types - bind to class name
+    $this->app->bind('laravel-crud-templates::field-type::custom', CustomFieldType::class);
+    
+    // Templates - bind to class name
+    $this->app->bind('laravel-crud-templates::template::custom', CustomTemplate::class);
+}
+```
+
+**Incorrect binding (don't do this):**
+```php
+public function register()
+{
+    // ❌ Don't try to instantiate with dependencies
+    $this->app->bind('laravel-crud-templates::field-type::custom', function () {
+        return new CustomFieldType(new Field(...)); // Wrong!
+    });
+}
+```
+
+**Note:** Field types are instantiated internally by the parsers when they have all the required data. You should only bind the class name.
+
+---
+
+### Duplicate Route Definitions
+
+**Error Message:**
+```
+Illuminate\Routing\Exceptions\RouteAlreadyDefinedException
+```
+
+**Cause:**
+Running the CRUD generator multiple times for the same model can create duplicate route definitions.
+
+**Solution:**
+1. Check your `routes/api.php` file for duplicate route registrations
+2. Remove duplicate entries
+3. Consider using route groups to organize your API routes:
+
+```php
+Route::prefix('api/v1')->group(function () {
+    Route::apiResource('posts', PostController::class);
+    // ... other routes
+});
 ```

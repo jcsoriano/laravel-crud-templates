@@ -2,6 +2,7 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
+use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
@@ -38,6 +39,12 @@ class ControllerGenerator extends Generator
             'Illuminate\Support\Facades\Gate',
         ]);
 
+        $relationsList = $payload->fields->filter(
+            fn (Field $field): bool => method_exists($field->typeClass, 'relation')
+        )->map(
+            fn (Field $field): string => "'{$field->name->camelCase()}'",
+        )->join(",\n            ");
+
         $scope = $payload->options['scope'] ?? null;
         if (in_array($scope, ['user', 'team'])) {
             $namespaces->push('Illuminate\Support\Facades\Auth');
@@ -49,6 +56,7 @@ class ControllerGenerator extends Generator
             ->ext('php')
             ->replaces([
                 ...$payload->variables(),
+                'RELATIONS_LIST' => $relationsList,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
             ])
             ->conditions($payload->conditions())

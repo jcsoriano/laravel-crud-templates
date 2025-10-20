@@ -198,6 +198,52 @@ php artisan crud:generate Post --fields="title:string,tags:morphToMany"
 
 ---
 
+## Custom Model Paths
+
+By default, relationship field names determine the related model (e.g., `category` relates to `Category` model). You can specify a custom model with namespace depth using a third parameter:
+
+**Syntax:**
+```bash
+fieldName:relationshipType:Namespace/ModelName
+```
+
+The forward slash (`/`) separates namespace segments and maps to `App\Models\Namespace\ModelName`.
+
+**Supported relationship types:**
+- `belongsTo`
+- `hasMany`
+- `belongsToMany`
+- `morphMany`
+- `morphToMany`
+
+**Examples:**
+
+```bash
+# Using default naming (field name determines model)
+--fields="category:belongsTo"  # → App\Models\Category
+
+# Using custom model path
+--fields="category:belongsTo:Content/PostCategory"  # → App\Models\Content\PostCategory
+
+# Multiple relationships with custom paths
+php artisan crud:generate Post \
+  --fields="category:belongsTo:Content/PostCategory,author:belongsTo:Users/Author,tags:belongsToMany:Taxonomy/Tag"
+```
+
+**Real-world example:**
+
+```bash
+php artisan crud:generate Article \
+  --fields="title:string,content:text,blog:belongsTo:Content/Blog,author:belongsTo:Users/Author,comments:morphMany:Social/Comment"
+```
+
+This creates relationships to:
+- `App\Models\Content\Blog`
+- `App\Models\Users\Author`
+- `App\Models\Social\Comment`
+
+---
+
 ## Nullable Relationships
 
 Make a relationship optional by adding `?`:

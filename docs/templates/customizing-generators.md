@@ -373,6 +373,7 @@ Available printers (used via the `print()` method):
 - `resource-only` - Resource fields (non-relations)
 - `resource-relation` - Resource relationship fields
 - `rules` - Validation rules
+- `dbAssertions` - Database assertion columns
 
 ## Conditional Generation
 

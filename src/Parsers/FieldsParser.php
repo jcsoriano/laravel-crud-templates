@@ -4,6 +4,7 @@ namespace JCSoriano\LaravelCrudTemplates\Parsers;
 
 use Illuminate\Support\Collection;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
 use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
 
@@ -62,14 +63,21 @@ class FieldsParser
             $options['enumClass'] = trim($parts[2]);
         }
 
-        // Resolve the field type class from the container binding
-        $fieldTypeInstance = app("laravel-crud-templates::field-type::{$fieldType}");
+        // Handle relationships with optional model class specification
+        $relationshipTypes = [
+            'belongsTo', 'hasMany', 'belongsToMany', 'morphMany', 'morphToMany',
+        ];
+        $modelClass = in_array($fieldType, $relationshipTypes) && count($parts) >= 3
+            ? trim($parts[2])
+            : null;
 
         return new Field(
             name: new Name($fieldName),
             required: $required,
-            typeClass: get_class($fieldTypeInstance),
+            // Resolve the field type class from the container binding
+            typeClass: app("laravel-crud-templates::field-type::{$fieldType}"),
             options: $options,
+            model: $modelClass ? new Model($modelClass) : null,
         );
     }
 }

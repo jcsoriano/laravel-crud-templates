@@ -39,26 +39,22 @@ class TableParser
 
             $nullable = $this->isNullable($tableName, $column);
 
-            // Resolve the field type class from the container binding
-            $fieldTypeInstance = app("laravel-crud-templates::field-type::{$fieldType}");
-
             $fields->push(new Field(
                 name: new Name($column),
                 required: ! $nullable,
-                typeClass: get_class($fieldTypeInstance),
+                // Resolve the field type class from the container binding
+                typeClass: app("laravel-crud-templates::field-type::{$fieldType}"),
                 options: [],
             ));
         }
 
         // Add polymorphic fields
         foreach ($polymorphicPairs as $baseName => $nullable) {
-            // Resolve the field type class from the container binding
-            $morphToInstance = app('laravel-crud-templates::field-type::morphTo');
-
             $fields->push(new Field(
                 name: new Name($baseName),
                 required: ! $nullable,
-                typeClass: get_class($morphToInstance),
+                // Resolve the field type class from the container binding
+                typeClass: app('laravel-crud-templates::field-type::morphTo'),
                 options: [],
             ));
         }

@@ -39,6 +39,8 @@ class TestGenerator extends Generator
         $testStructure->push('created_at', 'updated_at');
         $testStructureString = $testStructure->map(fn ($field) => "'{$field}'")->join(",\n                ");
 
+        $dbAssertionsOutput = $this->print('dbAssertions', $payload);
+
         // Build proper namespace paths
         $modelNamespace = $this->buildNamespace('App\\Models', $payload);
 
@@ -48,7 +50,7 @@ class TestGenerator extends Generator
             'Illuminate\Foundation\Testing\RefreshDatabase',
             'Illuminate\Testing\Fluent\AssertableJson',
             'Tests\TestCase',
-        ]);
+        ])->merge($dbAssertionsOutput->namespaces);
 
         LaravelStub::from($this->getStubPath('api.test.stub'))
             ->to($directory)
@@ -58,6 +60,7 @@ class TestGenerator extends Generator
                 ...$payload->variables(),
                 'TEST_STRUCTURE' => $testStructureString,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
+                'DB_ASSERTION_COLUMNS' => $dbAssertionsOutput->output,
             ])
             ->conditions($payload->conditions())
             ->generate();

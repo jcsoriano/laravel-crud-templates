@@ -21,7 +21,10 @@ class FactoryPrinter implements Printer
             if (method_exists($fieldType, 'factory')) {
                 $output = $fieldType->factory();
                 $fakeData = $output->output;
-                $factoryFields->push("'{$field->name->snakeCase()}' => {$fakeData},");
+                $column = method_exists($fieldType, 'column')
+                    ? $fieldType->column()
+                    : $field->name->snakeCase();
+                $factoryFields->push("'{$column}' => {$fakeData},");
 
                 // Merge namespaces from the factory output
                 if ($output->namespaces) {

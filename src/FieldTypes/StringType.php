@@ -22,7 +22,7 @@ class StringType extends FieldType
 
     public function rule(): Output
     {
-        return $this->buildSimpleRule('string|max:255');
+        return $this->buildSimpleRule(['string', 'max:255']);
     }
 
     public function factory(): Output

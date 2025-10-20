@@ -30,6 +30,7 @@ use JCSoriano\LaravelCrudTemplates\Generators\StoreRequestGenerator;
 use JCSoriano\LaravelCrudTemplates\Generators\TestGenerator;
 use JCSoriano\LaravelCrudTemplates\Generators\UpdateRequestGenerator;
 use JCSoriano\LaravelCrudTemplates\Printers\CastsPrinter;
+use JCSoriano\LaravelCrudTemplates\Printers\DbAssertionPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\FactoryPrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\FillablePrinter;
 use JCSoriano\LaravelCrudTemplates\Printers\MigrationsPrinter;
@@ -100,7 +101,10 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
         ];
 
         foreach ($fieldTypes as $key => $class) {
-            $this->app->bind("laravel-crud-templates::field-type::{$key}", $class);
+            // Bind as class name string. Field types are instantiated later by parsers
+            // when they have the required Field data. This prevents unresolvable
+            // dependency errors when resolving from the container.
+            $this->app->bind("laravel-crud-templates::field-type::{$key}", fn () => $class);
         }
     }
 
@@ -132,7 +136,10 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
         ];
 
         foreach ($templates as $key => $class) {
-            $this->app->bind("laravel-crud-templates::template::{$key}", $class);
+            // Bind as class name string. Templates are instantiated by the command
+            // with the required parameters (model, fields, etc.). This prevents
+            // unresolvable dependency errors when resolving from the container.
+            $this->app->bind("laravel-crud-templates::template::{$key}", fn () => $class);
         }
     }
 
@@ -147,6 +154,7 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
             'resource-only' => ResourceOnlyPrinter::class,
             'resource-relation' => ResourceRelationPrinter::class,
             'rules' => RulesPrinter::class,
+            'dbAssertions' => DbAssertionPrinter::class,
         ];
 
         foreach ($printers as $key => $class) {

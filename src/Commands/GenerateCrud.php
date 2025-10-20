@@ -59,18 +59,18 @@ class GenerateCrud extends Command
                 }
             }
 
-            // Resolve template from container
-            $templateBinding = "laravel-crud-templates::template::{$template}";
+            // Resolve template class from container
+            $templateClass = app("laravel-crud-templates::template::{$template}");
             $options = $this->parseOptions($optionsString);
 
-            $templateInstance = app($templateBinding, [
-                'model' => $model = new Model($modelPath),
-                'fields' => $fields,
-                'components' => $this->components,
-                'force' => $this->option('force'),
-                'table' => $tableName,
-                'options' => $options,
-            ]);
+            $templateInstance = new $templateClass(
+                model: $model = new Model($modelPath),
+                fields: $fields,
+                components: $this->components,
+                force: $this->option('force'),
+                table: $tableName,
+                options: $options,
+            );
 
             // Generate files
             $this->info("Generating CRUD files for {$model->model()->studlyCase()}...");

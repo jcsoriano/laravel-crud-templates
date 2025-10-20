@@ -97,6 +97,7 @@ Stubs use placeholders that are replaced with actual values during generation. H
 | `{{ RULES }}` | Validation rules array |
 | `{{ FACTORY }}` | Factory field definitions |
 | `{{ RESOURCE }}` | Resource array fields |
+| `{{ DB_ASSERTION_COLUMNS }}` | Database assertion columns for tests |
 
 ### Conditional Blocks
 

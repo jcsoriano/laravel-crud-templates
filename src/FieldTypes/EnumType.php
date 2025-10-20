@@ -36,7 +36,10 @@ class EnumType extends FieldType
         $required = $field->required ? 'required' : 'nullable';
         $output = "'{$field->name->snakeCase()}' => ['bail', '{$required}', Rule::enum({$enumClass}::class)]";
 
-        return new Output($output, collect(["App\\Enums\\{$enumClass}"]));
+        return new Output($output, collect([
+            "App\\Enums\\{$enumClass}",
+            'Illuminate\\Validation\\Rule',
+        ]));
     }
 
     public function factory(): Output

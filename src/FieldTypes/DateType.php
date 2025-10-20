@@ -36,4 +36,14 @@ class DateType extends FieldType
     {
         return new Output('fake()->date()');
     }
+
+    public function dbAssertion(): Output
+    {
+        $field = $this->field->name->snakeCase();
+
+        return new Output(
+            "'{$field}' => Carbon::parse(\$payload['{$field}'])->format('Y-m-d')",
+            collect(['Illuminate\\Support\\Carbon']),
+        );
+    }
 }

@@ -15,51 +15,52 @@ class {{ MODEL }}Controller extends Controller
             'per_page' => 'nullable|integer|min:1',
         ]);
 
-        return {{ MODEL }}Resource::collection(
-            {{ if scopeUser }}
-            {{ MODEL }}::where('user_id', Auth::id())
-                ->paginate($request->integer('per_page')),
-            {{ endif }}
-            {{ if scopeTeam }}
-            {{ MODEL }}::where('team_id', Auth::user()->current_team_id)
-                ->paginate($request->integer('per_page')),
-            {{ endif }}
-            {{ if scopeNone }}
-            {{ MODEL }}::paginate(
-                $request->integer('per_page'),
-            ),
-            {{ endif }}
-        );
+        {{ if scopeUser }}
+        $results = {{ MODEL }}::with($this->relations())
+            ->where('user_id', Auth::id())
+            ->paginate($request->integer('per_page'));
+        {{ endif }}
+        {{ if scopeTeam }}
+        $results = {{ MODEL }}::with($this->relations())
+            ->where('team_id', Auth::user()->current_team_id)
+            ->paginate($request->integer('per_page'));
+        {{ endif }}
+        {{ if scopeNone }}
+        $results = {{ MODEL }}::with($this->relations())
+            ->paginate($request->integer('per_page'));
+        {{ endif }}
+
+        return {{ MODEL }}Resource::collection($results);
     }
 
     public function store(Store{{ MODEL }}Request $request)
     {
         Gate::authorize('create', {{ MODEL }}::class);
 
-        return {{ MODEL }}Resource::make(
-            {{ if scopeNone }}
-            {{ MODEL }}::create(
-                $request->validated(),
-            ),
-            {{ endif }}
-            {{ if scopeUser }}
-            {{ MODEL }}::create([
-                ...$request->validated(),
-                'user_id' => Auth::id(),
-            ]),
-            {{ endif }}
-            {{ if scopeTeam }}
-            {{ MODEL }}::create([
-                ...$request->validated(),
-                'team_id' => Auth::user()->current_team_id,
-            ]),
-            {{ endif }}
-        );
+        {{ if scopeNone }}
+        ${{ MODEL_CAMEL }} = {{ MODEL }}::create($request->validated());
+        {{ endif }}
+        {{ if scopeUser }}
+        ${{ MODEL_CAMEL }} = {{ MODEL }}::create([
+            ...$request->validated(),
+            'user_id' => Auth::id(),
+        ]);
+        {{ endif }}
+        {{ if scopeTeam }}
+        ${{ MODEL_CAMEL }} = {{ MODEL }}::create([
+            ...$request->validated(),
+            'team_id' => Auth::user()->current_team_id,
+        ]);
+        {{ endif }}
+
+        return $this->show($request, ${{ MODEL_CAMEL }});
     }
 
     public function show(Request $request, {{ MODEL }} ${{ MODEL_CAMEL }})
     {
         Gate::authorize('view', ${{ MODEL_CAMEL }});
+
+        ${{ MODEL_CAMEL }}->load($this->relations());
 
         return {{ MODEL }}Resource::make(${{ MODEL_CAMEL }});
     }
@@ -68,19 +69,24 @@ class {{ MODEL }}Controller extends Controller
     {
         Gate::authorize('update', ${{ MODEL_CAMEL }});
 
-        return {{ MODEL }}Resource::make(
-            tap(${{ MODEL_CAMEL }})->update(
-                $request->validated(),
-            ),
-        );
+        ${{ MODEL_CAMEL }}->update($request->validated());
+
+        return $this->show($request, ${{ MODEL_CAMEL }});
     }
 
     public function destroy(Request $request, {{ MODEL }} ${{ MODEL_CAMEL }})
     {
         Gate::authorize('delete', ${{ MODEL_CAMEL }});
 
-        return {{ MODEL }}Resource::make(
-            tap(${{ MODEL_CAMEL }})->delete(),
-        );
+        ${{ MODEL_CAMEL }}->delete();
+
+        return $this->show($request, ${{ MODEL_CAMEL }});
+    }
+
+    private function relations(): array
+    {
+        return [
+            {{ RELATIONS_LIST }}
+        ];
     }
 }

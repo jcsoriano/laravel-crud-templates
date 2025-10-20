@@ -14,6 +14,7 @@ CRUD Templates for Laravel includes these built-in printers:
 - `resource-only` - Resource fields (non-relationships)
 - `resource-relation` - Resource relationship fields
 - `rules` - Validation rules
+- `dbAssertions` - Database assertion columns for tests
 
 ## How Printers Work
 
