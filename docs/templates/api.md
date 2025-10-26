@@ -2,10 +2,6 @@
 
 CRUD Templates for Laravel comes with the API template out of the box. It generates a complete RESTful API with all necessary components following Laravel best practices.
 
-## Overview
-
-The API template creates a full-stack CRUD implementation designed for building JSON APIs. It follows RESTful conventions and includes proper authorization, validation, and testing.
-
 ## Using the Template
 
 The API template is the default, so you don't need to specify it:
@@ -18,60 +14,6 @@ But you can also explicitly specify it:
 
 ```bash
 php artisan crud:generate Post --template=api --fields="title:string"
-```
-
-## Scopes
-
-The API template supports scoping resources to users or teams using the `--options` flag:
-
-### No Scope (Default)
-
-Resources are not scoped to any user or team:
-
-```bash
-php artisan crud:generate Post --template=api --fields="title:string"
-```
-
-### User Scope
-
-Resources are automatically scoped to the authenticated user:
-
-```bash
-php artisan crud:generate Post --template=api --fields="title:string" --options="scope:user"
-```
-
-This adds `user_id` filtering in the controller's `index()` and `store()` methods:
-
-```php
-// Index: Only show posts belonging to the authenticated user
-Post::where('user_id', Auth::id())->paginate($request->integer('per_page'))
-
-// Store: Automatically set user_id
-Post::create([
-    ...$request->validated(),
-    'user_id' => Auth::id(),
-])
-```
-
-### Team Scope
-
-Resources are automatically scoped to the user's current team:
-
-```bash
-php artisan crud:generate Post --template=api --fields="title:string" --options="scope:team"
-```
-
-This adds `team_id` filtering:
-
-```php
-// Index: Only show posts belonging to the user's team
-Post::where('team_id', Auth::user()->current_team_id)->paginate($request->integer('per_page'))
-
-// Store: Automatically set team_id
-Post::create([
-    ...$request->validated(),
-    'team_id' => Auth::user()->current_team_id,
-])
 ```
 
 ## Generated Files
@@ -148,10 +90,10 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'published' => 'required|boolean',
-            'category_id' => 'required|exists:categories,id',
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'published' => ['required', 'boolean'],
+            'category_id' => ['bail', 'required', 'exists:categories,id'],
         ];
     }
 }
@@ -164,18 +106,14 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string|max:255',
-            'content' => 'sometimes|string',
-            'published' => 'sometimes|boolean',
-            'category_id' => 'sometimes|exists:categories,id',
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'published' => ['required', 'boolean'],
+            'category_id' => ['bail', 'required', 'exists:categories,id'],
         ];
     }
 }
 ```
-
-::: tip Validation Differences
-Store requests use `required` while update requests use `sometimes` to allow partial updates.
-:::
 
 ### 5. API Resource (`app/Http/Resources/{Model}Resource.php`)
 
@@ -278,18 +216,156 @@ This creates all five RESTful endpoints:
 
 Laravel Pint is automatically run to format all generated files according to Laravel's coding standards.
 
-## Customization
+## Scopes
 
-You can customize the API template in several ways:
+The API template supports scoping resources to users or teams using the `--options` flag:
 
-1. **[Customize Stubs](/templates/customizing-stubs)** - Modify the generated code structure
-2. **[Customize Generators](/templates/customizing-generators)** - Override individual generators
-3. **[Create Your Own Template](/templates/custom)** - Build a completely custom template
+### No Scope (Default)
+
+Resources are not scoped to any user or team:
+
+```bash
+php artisan crud:generate Post --template=api --fields="title:string"
+```
+
+The generated policy methods return `Response::allow()` by default:
+
+```php
+public function update(User $user, Post $post): bool|Response
+{
+    return Response::allow(); // Customize with your authorization logic
+}
+```
+
+You should customize the policy to implement your authorization logic based on roles, permissions, or other criteria.
+
+### User Scope
+
+Resources are automatically scoped to the authenticated user:
+
+```bash
+php artisan crud:generate Post --template=api --fields="title:string" --options="scope:user"
+```
+
+A `user_id` foreign key is automatically added to the migration:
+
+```php
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->foreignId('user_id')->constrained();
+    $table->timestamps();
+});
+```
+
+This adds `user_id` filtering in the controller's `index()` and `store()` methods:
+
+```php
+// Index: Only show posts belonging to the authenticated user
+Post::where('user_id', Auth::id())
+    ->paginate($request->integer('per_page'))
+
+// Store: Automatically set user_id
+Post::create([
+    ...$request->validated(),
+    'user_id' => Auth::id(),
+])
+```
+
+The generated policy methods verify that the authenticated user owns the resource:
+
+```php
+public function update(User $user, Post $post): bool|Response
+{
+    return $post->user_id === $user->id;
+}
+
+public function delete(User $user, Post $post): bool|Response
+{
+    return $post->user_id === $user->id;
+}
+```
+
+### Team Scope
+
+Resources are automatically scoped to the user's current team:
+
+```bash
+php artisan crud:generate Post --template=api --fields="title:string" --options="scope:team"
+```
+
+A `team_id` foreign key is automatically added to the migration:
+
+```php
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->foreignId('team_id')->constrained();
+    $table->timestamps();
+});
+```
+
+::: warning Teams Table Required
+The `teams` table must already exist in your database before running this migration, as the foreign key constraint references it.
+:::
+
+This adds `team_id` filtering:
+
+```php
+// Index: Only show posts belonging to the user's team
+Post::where('team_id', Auth::user()->current_team_id)
+    ->paginate($request->integer('per_page'))
+
+// Store: Automatically set team_id
+Post::create([
+    ...$request->validated(),
+    'team_id' => Auth::user()->current_team_id,
+])
+```
+
+The generated policy methods verify that the user's team owns the resource:
+
+```php
+public function update(User $user, Post $post): bool|Response
+{
+    return $post->team_id === $user->current_team_id;
+}
+
+public function delete(User $user, Post $post): bool|Response
+{
+    return $post->team_id === $user->current_team_id;
+}
+```
+
+::: warning User Model Requirement
+Your `User` model must have a `current_team_id` column for team scoping to work.
+:::
+
+## Skipping Files
+
+You can skip specific files using the `--skip` option. This is useful when you want to customize certain parts of the generated code, for example if they have already been created prior to running the command.
+
+### Available Generators to Skip
+
+All generators listed in the [Generated Files](#generated-files) section can be skipped:
+
+- `controller` - Skip the controller generation
+- `model` - Skip the model generation
+- `policy` - Skip the policy generation
+- `store-request` - Skip the store request generation
+- `update-request` - Skip the update request generation
+- `resource` - Skip the resource generation
+- `migration` - Skip the migration generation
+- `factory` - Skip the factory generation
+- `test` - Skip the test generation
+- `api-route` - Skip the route registration
+- `pint` - Skip code formatting
 
 ## Next Steps
+
+Now that you've learned about the API template, read about how you can customize it (or any template) to fit your project's conventions.
 
 - Learn about [Customizing Stubs](/templates/customizing-stubs) to modify generated code
 - Explore [Customizing Field Types](/templates/customizing-field-types) for custom fields
 - Understand [Customizing Generators](/templates/customizing-generators) to change generation logic
 - Create [Your Own Template](/templates/custom) for different patterns
-

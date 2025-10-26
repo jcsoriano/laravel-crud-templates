@@ -24,6 +24,16 @@ Multiple fields are separated by commas:
 
 ## Supported Field Types
 
+- [String](#string)
+- [Integer](#integer)
+- [Decimal](#decimal)
+- [Date](#date)
+- [DateTime](#datetime)
+- [Text](#text)
+- [Boolean](#boolean)
+- [Enum](#enum)
+- [JSON](#json)
+
 ### String
 
 Creates a varchar column with a maximum of 255 characters.
@@ -40,7 +50,7 @@ $table->string('name');
 
 **Validation:**
 ```php
-'name' => 'required|string|max:255'
+'name' => ['required', 'string', 'max:255']
 ```
 
 **Model Cast:** None (default string handling)
@@ -68,7 +78,7 @@ $table->integer('age');
 
 **Validation:**
 ```php
-'age' => 'required|integer'
+'age' => ['required', 'integer']
 ```
 
 **Model Cast:** None (default integer handling)
@@ -96,7 +106,7 @@ $table->decimal('price', 8, 2);
 
 **Validation:**
 ```php
-'price' => 'required|numeric'
+'price' => ['required', 'numeric']
 ```
 
 **Model Cast:**
@@ -127,7 +137,7 @@ $table->date('birth_date');
 
 **Validation:**
 ```php
-'birth_date' => 'required|date'
+'birth_date' => ['required', 'date']
 ```
 
 **Model Cast:**
@@ -158,7 +168,7 @@ $table->dateTime('published_at');
 
 **Validation:**
 ```php
-'published_at' => 'required|date'
+'published_at' => ['required', 'date']
 ```
 
 **Model Cast:**
@@ -189,7 +199,7 @@ $table->text('description');
 
 **Validation:**
 ```php
-'description' => 'required|string'
+'description' => ['required', 'string']
 ```
 
 **Model Cast:** None
@@ -217,7 +227,7 @@ $table->boolean('is_active');
 
 **Validation:**
 ```php
-'is_active' => 'required|boolean'
+'is_active' => ['required', 'boolean']
 ```
 
 **Model Cast:**
@@ -247,7 +257,9 @@ $table->string('status');
 ```
 
 **Validation:**
-None (validation handled by enum)
+```php
+'status' => ['required', Rule::enum(StatusEnum::class)]
+```
 
 **Model Cast:**
 ```php
@@ -260,11 +272,7 @@ php artisan crud:generate Order --fields="status:enum:OrderStatus,priority:enum:
 ```
 
 ::: warning Enum Requirements
-You must create the enum class before generating the CRUD. The enum class should exist in your application.
-:::
-
-::: tip Custom Model Paths for Relationships
-Relationship field types (belongsTo, hasMany, etc.) also support specifying custom model paths with namespaces. See the [Relationships guide](/guide/relationships#custom-model-paths) for details.
+You must create the enum class before generating the CRUD. The enum class should exist in the `App\Enums` namespace.
 :::
 
 ---
@@ -285,7 +293,7 @@ $table->json('metadata');
 
 **Validation:**
 ```php
-'metadata' => 'required|array'
+'metadata' => ['required', 'array']
 ```
 
 **Model Cast:**
@@ -309,9 +317,8 @@ php artisan crud:generate User --fields="name:string,phone?:string,bio?:text"
 ```
 
 This will:
-- Make the column nullable in the migration
-- Remove `required` from validation rules
-- Allow `null` values in the model
+- Make the column `->nullable()` in the migration
+- Replace `required` with `nullable` in validation rules
 
 ## Complete Example
 
@@ -334,6 +341,6 @@ This generates a product CRUD with:
 ## Next Steps
 
 - Learn about [Relationships](/guide/relationships) to connect models
-- Explore [Generate from table](/guide/table-introspection) for existing tables
+- Explore [Generate from Schema](/guide/generate-from-schema) for existing tables
 - Understand how to create [Custom Field Types](/templates/customizing-field-types)
 

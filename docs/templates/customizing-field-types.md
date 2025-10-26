@@ -224,7 +224,7 @@ use HasSimpleRule;
 public function rule(): Output
 {
     return $this->buildSimpleRule('string|max:255');
-    // Produces: 'field_name' => 'required|string|max:255'
+    // Produces: 'field_name' => ['required', 'string', 'max:255']
 }
 ```
 

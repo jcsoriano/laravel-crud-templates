@@ -9,7 +9,18 @@ php artisan crud:generate Post \
   --fields="title:string,content:text,published:boolean,category:belongsTo,author:belongsTo,tags:belongsToMany,comments:morphMany"
 ```
 
+::: warning Related Models Must Exist
+When generating relationships, the related models must already exist in the `app/Models` directory. For example, if you're creating a `Post` model with a `category:belongsTo` relationship, the `Category` model must be created first.
+:::
+
 ## Relationship Types
+
+- [belongsTo](#belongsto)
+- [hasMany](#hasmany)
+- [belongsToMany](#belongstomany)
+- [morphTo](#morphto)
+- [morphMany](#morphmany)
+- [morphToMany](#morphtomany)
 
 ### belongsTo
 
@@ -31,7 +42,7 @@ This creates:
 
 **Model Relationship:**
 ```php
-public function category()
+public function category(): BelongsTo
 {
     return $this->belongsTo(Category::class);
 }
@@ -39,7 +50,7 @@ public function category()
 
 **Validation:**
 ```php
-'category_id' => 'required|exists:categories,id'
+'category_id' => ['required', 'exists:categories,id']
 ```
 
 **Example:**
@@ -67,7 +78,7 @@ No migration column is created (the foreign key is on the related model).
 
 **Model Relationship:**
 ```php
-public function posts()
+public function posts(): HasMany
 {
     return $this->hasMany(Post::class);
 }
@@ -94,7 +105,7 @@ No migration column is created (requires a separate pivot table).
 
 **Model Relationship:**
 ```php
-public function tags()
+public function tags(): BelongsToMany
 {
     return $this->belongsToMany(Tag::class);
 }
@@ -131,7 +142,7 @@ This creates:
 
 **Model Relationship:**
 ```php
-public function commentable()
+public function commentable(): MorphTo
 {
     return $this->morphTo();
 }
@@ -158,7 +169,7 @@ No migration column is created.
 
 **Model Relationship:**
 ```php
-public function comments()
+public function comments(): MorphMany
 {
     return $this->morphMany(Comment::class, 'commentable');
 }
@@ -185,7 +196,7 @@ No migration column is created.
 
 **Model Relationship:**
 ```php
-public function tags()
+public function tags(): MorphToMany
 {
     return $this->morphToMany(Tag::class, 'taggable');
 }
@@ -261,7 +272,7 @@ $table->foreignId('category_id')->nullable()->constrained();
 And updates validation:
 
 ```php
-'category_id' => 'nullable|exists:categories,id'
+'category_id' => ['nullable', 'exists:categories,id']
 ```
 
 ## API Resources with Relationships
@@ -285,7 +296,7 @@ public function toArray($request)
 
 ## Next Steps
 
-- Learn about [Generate from table](/guide/table-introspection) to generate from existing database schemas
+- Learn about [Generate from Schema](/guide/generate-from-schema) to generate from existing database schemas
 - Understand the [API Template](/templates/api) structure
 - Explore [Customizing Field Types](/templates/customizing-field-types) to create custom relationship types
 

@@ -26,7 +26,7 @@ export default defineConfig({
         items: [
           { text: 'Field Types', link: '/guide/field-types' },
           { text: 'Relationships', link: '/guide/relationships' },
-          { text: 'Generate from Table', link: '/guide/table-introspection' }
+          { text: 'Generate from Schema', link: '/guide/generate-from-schema' }
         ]
       },
       {

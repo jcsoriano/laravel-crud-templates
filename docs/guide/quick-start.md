@@ -17,6 +17,7 @@ php artisan crud:generate {model} [options]
 - `--fields=` - The fields to generate (format: `field1:type1,field2?:type2`)
 - `--table=` - The database table to generate fields from
 - `--template=` - The CRUD template to use (default: `api`)
+- `--skip=` - Comma-separated list of generators to skip (e.g., `test,factory`)
 - `--options=` - Additional options (format: `key1:value1,key2:value2`)
 - `--force` - Overwrite existing files (default: false, will skip existing files)
 
@@ -36,7 +37,7 @@ This example demonstrates multiple field types including relationships, datetime
 
 ## Generated Routes
 
-This single command will generate the following fully functioning routes for you:
+This single command will generate the following fully functioning RESTful API:
 
 | HTTP Method | URI | Action | Description |
 |-------------|-----|--------|-------------|
@@ -50,24 +51,28 @@ This single command will generate the following fully functioning routes for you
 
 All responses follow a consistent JSON format:
 
-**Single Resource:**
+### Single Resource:
 ```json
 {
   "data": {
     "id": 1,
     "title": "My Post",
     "content": "...",
-    "created_at": "2024-01-01T00:00:00.000000Z"
+    "category": { "...": "..." },
+    "comments": [ { "...": "..." } ],
+    "status": "published",
+    "published_at": "2024-01-01T00:00:00.000000Z",
+    "created_at": "2024-01-01T00:00:00.000000Z",
+    "updated_at": "2024-01-01T00:00:00.000000Z"
   }
 }
 ```
 
-**Collection:**
+### Collection (with pagination):
 ```json
 {
   "data": [
-    { "id": 1, "title": "Post 1" },
-    { "id": 2, "title": "Post 2" }
+    { "The Post object as above" },
   ],
   "links": { "first": "...", "last": "...", "prev": null, "next": "..." },
   "meta": { "current_page": 1, "per_page": 15, "total": 50 }
@@ -76,7 +81,7 @@ All responses follow a consistent JSON format:
 
 ## Error Handling
 
-The generated controllers handle errors appropriately:
+The generated routes will handle errors appropriately:
 
 - **404 Not Found**: When a resource doesn't exist
 - **403 Forbidden**: When authorization fails
@@ -106,20 +111,22 @@ php artisan crud:generate Content/Post --fields="..." --force
 ```
 :::
 
-## Features
+::: warning Related Model or Enum Requirement
+When including relations and enums in `--fields=`, the related model or enum must already exist.
+:::
 
-### Model Enhancements
+## Model Enhancements
 
-The generated `Post` model includes several automatic enhancements:
+The generated `Post` model will include several automatic enhancements:
 
-**Relationship Methods:**
+#### Relationship Methods:
 ```php
-public function category()
+public function category(): BelongsTo
 {
     return $this->belongsTo(Category::class);
 }
 
-public function comments()
+public function comments(): HasMany
 {
     return $this->hasMany(Comment::class);
 }
@@ -192,30 +199,14 @@ The request classes automatically include appropriate validation:
 public function rules(): array
 {
     return [
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-        'published_at' => 'required|date',
-        'category_id' => 'required|exists:categories,id',
+        'title' => ['required', 'string', 'max:255'],
+        'content' => ['required', 'string'],
+        'published_at' => ['required', 'date'],
+        'category_id' => ['bail', 'required', 'exists:categories,id'],
         'status' => ['required', Rule::enum(PublishStatus::class)],
     ];
 }
 ```
-
-::: tip Enum Requirement
-Before running the generation, make sure the `PublishStatus` enum exists at `app/Enums/PublishStatus.php`:
-```php
-<?php
-
-namespace App\Enums;
-
-enum PublishStatus: string
-{
-    case Draft = 'draft';
-    case Published = 'published';
-    case Archived = 'archived';
-}
-```
-:::
 
 ## Next Steps
 
@@ -223,6 +214,6 @@ Now that you've generated your first CRUD, explore more advanced features:
 
 - Learn about all available [Field Types](/guide/field-types)
 - Add [Relationships](/guide/relationships) between models
-- Use [Generate from table](/guide/table-introspection) to generate from existing tables
+- Use [Generate from Schema](/guide/generate-from-schema) to generate from existing tables
 - Explore [Templates](/templates/api) to understand the generated structure
 

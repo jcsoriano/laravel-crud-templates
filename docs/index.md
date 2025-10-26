@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "CRUD Templates for Laravel"
-  text: "Create your own CRUD templates easily."
-  tagline: The most customizable CRUD generator for Laravel.
+  name: CRUD Templates for Laravel
+  text: 0 to 90% done in seconds.
+  tagline: Generate routes, controllers, models, policies, requests, resources, migrations, factories, and tests with a single command.
   actions:
     - theme: brand
       text: Get Started
@@ -15,17 +15,18 @@ hero:
       link: https://github.com/jcsoriano/laravel-crud-templates
 
 features:
-  - title: Complete CRUD Generation
-    details: Generate controllers, models, policies, requests, resources, migrations, factories, and tests with a single command
-  - title: Flexible Field Types
-    details: Support for various field types including strings, integers, dates, enums, relationships, and more
-  - title: Customizable
-    details: Extend with custom field types, generators, and templates to match your project's needs
-  - title: Multiple Templates
-    details: Built-in API template with support for creating your own custom templates
-  - title: Laravel Standards
-    details: Generated code follows Laravel conventions and best practices out of the box
-  - title: Generate from table
-    details: Generate fields from existing database tables or combine with custom field definitions
+  - title: Specify fields
+    details: Generate appropriate migrations, faker data definitions, and validation rules for fields you specify.
+  - title: Generate from schema
+    details: Build out fully functioning CRUD routes with appropriate form requests, factories, and model definitions from existing database schemas
+  - title: Relationships
+    details: Generate relationship methods, `Rule::exists()` validation rules, and `->whenLoaded()` fields for API resources.
+  - title: Feature Tests
+    details: Generate feature tests, giving you a great starting point for more test cases and making TDD easier.
+  - title: Fully customizable
+    details: Modify stubs, override default field type behavior, or create your own templates to fit your project's conventions perfectly.
+  - title: Fully extensible
+    details: Extend with custom field types, file types, and templates for infinite possibilities.
+
 ---
 
