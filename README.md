@@ -61,7 +61,7 @@ php artisan crud:generate Content/Post --template=api --fields="title:string,con
 
 ### Generated Files
 
-This command will generate the following files:
+This command generates all the files needed to complete the CRUD feature, from routes, to validation, to authorization, to API responses, to migrations, to factories, to tests, and more.
 
 - `app/Http/Controllers/Api/Content/PostController.php` - RESTful API controller
 - `app/Models/Content/Post.php` - Eloquent model with fillable fields and casts, a belongsTo relation with the Category model, and a hasMany relation with the Comment model.
@@ -77,7 +77,7 @@ This command will generate the following files:
 
 ### Generated Routes
 
-It will automatically register the following routes in your `routes/api.php` file:
+The command automatically registers the following routes in your `routes/api.php` file:
 
 | HTTP Method | URI | Action | Description |
 |-------------|-----|--------|-------------|
@@ -117,6 +117,24 @@ It will automatically register the following routes in your `routes/api.php` fil
 }
 ```
 
+### Validation Rules
+
+The request classes automatically include appropriate validation:
+
+**StorePostRequest:**
+```php
+public function rules(): array
+{
+    return [
+        'title' => ['required', 'string', 'max:255'],
+        'content' => ['required', 'string'],
+        'published_at' => ['required', 'date'],
+        'category_id' => ['bail', 'required', 'exists:categories,id'],
+        'status' => ['required', Rule::enum(PublishStatus::class)],
+    ];
+}
+```
+
 ### Model Enhancements
 
 The generated `Post` model will include several automatic enhancements:
@@ -153,29 +171,6 @@ protected $fillable = [
 ];
 ```
 
-### Resource Transformation
-
-The generated `PostResource` automatically includes relationships:
-
-```php
-public function toArray($request): array
-{
-    return [
-        ...$this->only([
-            'id',
-            'title',
-            'content',
-            'published_at',
-            'status',
-            'created_at',
-            'updated_at',
-        ]),
-        'category' => new CategoryResource($this->whenLoaded('category')),
-        'comments' => CommentResource::collection($this->whenLoaded('comments')),
-    ];
-}
-```
-
 ### Migration with Foreign Keys
 
 The migration includes proper foreign key constraints:
@@ -192,20 +187,17 @@ Schema::create('posts', function (Blueprint $table) {
 });
 ```
 
-### Validation Rules
+### API Resource
 
-The request classes automatically include appropriate validation:
+The generated `PostResource` automatically includes relationships:
 
-**StorePostRequest:**
 ```php
-public function rules(): array
+public function toArray($request): array
 {
     return [
-        'title' => ['required', 'string', 'max:255'],
-        'content' => ['required', 'string'],
-        'published_at' => ['required', 'date'],
-        'category_id' => ['bail', 'required', 'exists:categories,id'],
-        'status' => ['required', Rule::enum(PublishStatus::class)],
+        ...
+        'category' => new CategoryResource($this->whenLoaded('category')),
+        'comments' => CommentResource::collection($this->whenLoaded('comments')),
     ];
 }
 ```
@@ -227,11 +219,11 @@ public function rules(): array
 - [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
 - [Custom Templates](https://laravelcrudtemplates.com/templates/custom) - Create your own templates
 
-### Advanced
+### Customization
+- [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
 - [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
 - [Customizing Generators](https://laravelcrudtemplates.com/templates/customizing-generators) - Override file generators
 - [Customizing Printers](https://laravelcrudtemplates.com/templates/customizing-printers) - Customize code output
-- [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
 
 ## Coming Soon
 
