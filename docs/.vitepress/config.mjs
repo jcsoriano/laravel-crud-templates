@@ -55,5 +55,23 @@ export default defineConfig({
     search: {
       provider: 'local'
     }
-  }
+  },
+
+  head: [
+    [
+      'script',
+      { 
+        async: '',
+        src: 'https://www.googletagmanager.com/gtag/js?id=G-QJVB3KT1FF' 
+      }
+    ],
+    [
+      'script',
+      {},
+      `window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QJVB3KT1FF');`
+    ]
+  ]
 })
