@@ -5,42 +5,13 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-templates/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/jcsoriano/laravel-crud-templates/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/jcsoriano/laravel-crud-templates.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-templates)
 
-Laravel CRUD Templates is a powerful package that allows you to quickly generate complete CRUD (Create, Read, Update, Delete) operations for your Laravel applications. With a single command, you can generate controllers, models, policies, requests, resources, migrations, factories, and tests.
+CRUD Templates for Laravel allows you to generate controllers, models, policies, requests, resources, migrations, factories, and even tests - all the files you need to complete CRUD features with a single command. You can completely modify the template or create your own templates to fit your project's conventions perfectly.
 
-## Documentation
+## FAQs
 
-📚 **[View Full Documentation](https://laravelcrudtemplates.com)**
-
-### Getting Started
-- [Installation](https://laravelcrudtemplates.com/guide/installation) - Requirements and installation guide
-- [Quick Start](https://laravelcrudtemplates.com/guide/quick-start) - Generate your first CRUD in minutes
-
-### Core Concepts
-- [Field Types](https://laravelcrudtemplates.com/guide/field-types) - Complete list of supported field types
-- [Relationships](https://laravelcrudtemplates.com/guide/relationships) - Working with model relationships
-- [Generate from table](https://laravelcrudtemplates.com/guide/table-introspection) - Generate from existing database tables
-
-### Templates
-- [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
-- [Custom Templates](https://laravelcrudtemplates.com/templates/custom) - Create your own templates
-
-### Advanced
-- [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
-- [Customizing Generators](https://laravelcrudtemplates.com/templates/customizing-generators) - Override file generators
-- [Customizing Printers](https://laravelcrudtemplates.com/templates/customizing-printers) - Customize code output
-- [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
-
-### Help
-- [Troubleshooting](https://laravelcrudtemplates.com/troubleshooting) - Common issues and solutions
-
-## Features
-
-- **Complete CRUD Generation**: Generate all necessary files for CRUD operations in one command
-- **Flexible Field Types**: Support for various field types including relationships
-- **Customizable**: Extend with custom field types, generators, and templates
-- **Multiple Templates**: Support for different CRUD patterns (API, Web, etc.)
-- **Laravel Standards**: Generated code follows Laravel conventions and best practices
-- **Generate from table**: Can generate fields from existing database tables
+1. **Why do I need this if AI can generate the files for me?** AI is nondeterministic. Sometimes, it won't follow your conventions perfectly, sometimes it may miss things. This generates all of the files for you programmatically - it will be complete and exact, and a great base for further work with your AI.
+2. **What if the generated files don't fit my project's conventions?** Everything is customizable. You can modify the stubs, add more file types to generate, or even create your own CRUD templates - create multiple for different scenarios!
+3. **Won't this take over my job?** This will take over the _grunt_ work of your job - generating the first 80% of the code that you probably don't like doing anyway, and leaving you to focus on the unique logic that makes your project special - the last 20%. 
 
 ## Requirements
 
@@ -57,16 +28,6 @@ composer require jcsoriano/laravel-crud-templates
 
 The package will automatically register itself via Laravel's package discovery.
 
-### Verify Installation
-
-To verify the installation was successful, you can run:
-
-```bash
-php artisan crud:generate --help
-```
-
-You should see the help output for the `crud:generate` command.
-
 ### Publishing Stubs (Optional)
 
 You can publish the stubs to customize them:
@@ -75,36 +36,36 @@ You can publish the stubs to customize them:
 php artisan vendor:publish --tag="laravel-crud-templates-stubs"
 ```
 
-## Usage
+## The Command
 
-### Command Signature
+To generate a CRUD feature, you may use this command:
 
-```bash
-php artisan crud:generate {model} [options]
+```
+php artisan crud:generate
+  {model : The name of the model}
+  {--fields= : The fields to generate. Format: field1:type1,field2?:type2}
+  {--table= : The database table to generate the fields from}
+  {--template=api : The CRUD template to generate}
+  {--skip= : List of files you want to skip}
+  {--options= : Other options to pass to the generator. Format: key1:value1,key2:value2}
+  {--force : Overwrite existing files}
 ```
 
-**Arguments:**
-- `model` - The name of the model (e.g., `Post`, `Content/Post` for namespaced models)
+## Quick Start Example
 
-**Options:**
-- `--fields=` - The fields to generate (format: `field1:type1,field2?:type2`)
-- `--table=` - The database table to generate fields from
-- `--template=` - The CRUD template to use (default: `api`)
-- `--options=` - Additional options (format: `key1:value1,key2:value2`)
-- `--force` - Overwrite existing files (default: false, will skip existing files)
+Sample command to generate a fully functioning RESTful API:
 
-### Quick Start Example
-
-Generate a complete blog post CRUD with relationships:
-
-```bash
-php artisan crud:generate Content/Post --template=api --fields="title:string,content:text,published_at:datetime,category:belongsTo,comments:hasMany,status:enum:PublishStatus"
+```
+php artisan crud:generate Content/Post --template=api --fields="title:string,content:text,published_at:datetime,category:belongsTo,comments:hasMany,status:enum:PublishStatus" --options="scope:user"
 ```
 
-This will generate:
+### Generated Files
+
+This command will generate the following files:
+
 - `app/Http/Controllers/Api/Content/PostController.php` - RESTful API controller
-- `app/Models/Content/Post.php` - Eloquent model with fillable fields and casts
-- `app/Policies/Content/PostPolicy.php` - Authorization policy
+- `app/Models/Content/Post.php` - Eloquent model with fillable fields and casts, a belongsTo relation with the Category model, and a hasMany relation with the Comment model.
+- `app/Policies/PostPolicy.php` - Authorization policy, scoped to the authenticated user.
 - `app/Http/Requests/Content/StorePostRequest.php` - Validation for create operations
 - `app/Http/Requests/Content/UpdatePostRequest.php` - Validation for update operations
 - `app/Http/Resources/Content/PostResource.php` - API resource for transforming responses
@@ -116,7 +77,7 @@ This will generate:
 
 ### Generated Routes
 
-The generated controller provides the following RESTful API endpoints:
+It will automatically register the following routes in your `routes/api.php` file:
 
 | HTTP Method | URI | Action | Description |
 |-------------|-----|--------|-------------|
@@ -128,51 +89,156 @@ The generated controller provides the following RESTful API endpoints:
 
 ### Response Format
 
-All API responses follow a consistent JSON format:
-
-**Single Resource:**
+#### Single Resource:
 ```json
 {
   "data": {
     "id": 1,
     "title": "My Post",
     "content": "...",
+    "category": { "...": "..." },
+    "comments": [ { "...": "..." } ],
+    "status": "published",
     "published_at": "2024-01-01T00:00:00.000000Z",
-    "created_at": "2024-01-01T00:00:00.000000Z"
+    "created_at": "2024-01-01T00:00:00.000000Z",
+    "updated_at": "2024-01-01T00:00:00.000000Z"
   }
 }
 ```
 
-**Collection (with pagination):**
+#### Collection (with pagination):
 ```json
 {
   "data": [
-    { "id": 1, "title": "Post 1" },
-    { "id": 2, "title": "Post 2" }
+    { "The Post object as above" },
   ],
   "links": { "first": "...", "last": "...", "prev": null, "next": "..." },
   "meta": { "current_page": 1, "per_page": 15, "total": 50 }
 }
 ```
 
-### Error Handling
+### Model Enhancements
 
-The generated controllers handle errors appropriately:
+The generated `Post` model will include several automatic enhancements:
 
-- **404 Not Found**: When a resource doesn't exist
-- **403 Forbidden**: When authorization fails
-- **422 Unprocessable Entity**: When validation fails
-- **500 Internal Server Error**: For unexpected errors
+#### Relationship Methods:
+```php
+public function category(): BelongsTo
+{
+    return $this->belongsTo(Category::class);
+}
 
-## What's Next?
-
-For more advanced usage including how to create your own template, visit the [full documentation](https://laravelcrudtemplates.com).
-
-## Testing
-
-```bash
-composer test
+public function comments(): HasMany
+{
+    return $this->hasMany(Comment::class);
+}
 ```
+
+#### Type Casting:
+```php
+protected $casts = [
+    'published_at' => 'immutable_datetime',  // Automatic datetime casting
+    'status' => PublishStatus::class,        // Enum casting
+];
+```
+
+#### Fillable Fields:
+```php
+protected $fillable = [
+    'title',
+    'content',
+    'published_at',
+    'category_id',
+    'status',
+];
+```
+
+### Resource Transformation
+
+The generated `PostResource` automatically includes relationships:
+
+```php
+public function toArray($request): array
+{
+    return [
+        ...$this->only([
+            'id',
+            'title',
+            'content',
+            'published_at',
+            'status',
+            'created_at',
+            'updated_at',
+        ]),
+        'category' => new CategoryResource($this->whenLoaded('category')),
+        'comments' => CommentResource::collection($this->whenLoaded('comments')),
+    ];
+}
+```
+
+### Migration with Foreign Keys
+
+The migration includes proper foreign key constraints:
+
+```php
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('content');
+    $table->dateTime('published_at');
+    $table->foreignId('category_id')->constrained();
+    $table->string('status');
+    $table->timestamps();
+});
+```
+
+### Validation Rules
+
+The request classes automatically include appropriate validation:
+
+**StorePostRequest:**
+```php
+public function rules(): array
+{
+    return [
+        'title' => ['required', 'string', 'max:255'],
+        'content' => ['required', 'string'],
+        'published_at' => ['required', 'date'],
+        'category_id' => ['bail', 'required', 'exists:categories,id'],
+        'status' => ['required', Rule::enum(PublishStatus::class)],
+    ];
+}
+```
+
+## Documentation
+
+📚 **[View Full Documentation](https://laravelcrudtemplates.com)**
+
+### Getting Started
+- [Installation](https://laravelcrudtemplates.com/guide/installation) - Requirements and installation guide
+- [Quick Start](https://laravelcrudtemplates.com/guide/quick-start) - Generate your first CRUD in minutes
+
+### Core Concepts
+- [Field Types](https://laravelcrudtemplates.com/guide/field-types) - Complete list of supported field types
+- [Relationships](https://laravelcrudtemplates.com/guide/relationships) - Working with model relationships
+- [Generate from Schema](https://laravelcrudtemplates.com/guide/generate-from-schema) - Generate from existing database tables
+
+### Templates
+- [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
+- [Custom Templates](https://laravelcrudtemplates.com/templates/custom) - Create your own templates
+
+### Advanced
+- [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
+- [Customizing Generators](https://laravelcrudtemplates.com/templates/customizing-generators) - Override file generators
+- [Customizing Printers](https://laravelcrudtemplates.com/templates/customizing-printers) - Customize code output
+- [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
+
+## Coming Soon
+
+1. **Filament CRUD Generator** - a Filament GUI for generating CRUD features
+2. **Livewire CRUD Generator** - a CRUD template built for the Livewire starter kit
+3. **Vue CRUD Generator** - a CRUD template built for the Vue starter kit
+4. **React CRUD Generator** - a CRUD template built for the React starter kit
 
 ## Changelog
 
