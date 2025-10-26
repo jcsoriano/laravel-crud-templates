@@ -20,10 +20,10 @@ CRUD Templates for Laravel allows you to generate controllers, models, policies,
 
 ## Installation
 
-You can install the package via Composer:
+You can install the package via Composer as a dev dependency:
 
 ```bash
-composer require jcsoriano/laravel-crud-templates
+composer require --dev jcsoriano/laravel-crud-templates
 ```
 
 The package will automatically register itself via Laravel's package discovery.

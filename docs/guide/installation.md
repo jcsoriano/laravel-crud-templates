@@ -9,10 +9,10 @@ CRUD Templates for Laravel has the following requirements:
 
 ## Install via Composer
 
-You can install the package via Composer:
+You can install the package via Composer as a dev dependency:
 
 ```bash
-composer require jcsoriano/laravel-crud-templates
+composer require --dev jcsoriano/laravel-crud-templates
 ```
 
 The package will automatically register itself via Laravel's package discovery.
