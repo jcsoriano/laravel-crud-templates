@@ -17,6 +17,7 @@ class Payload
         public array $variables = [],
         public array $conditions = [],
         public array $data = [],
+        public array $skip = [],
     ) {}
 
     public function variables(): array

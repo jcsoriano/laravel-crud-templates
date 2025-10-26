@@ -20,6 +20,7 @@ abstract class Template
         protected bool $force = false,
         protected ?string $table = null,
         protected array $options = [],
+        protected array $skip = [],
     ) {
         $this->payload = $this->buildPayload();
     }
@@ -38,6 +39,7 @@ abstract class Template
             variables: $this->variables(),
             conditions: $this->conditions(),
             data: $this->data(),
+            skip: $this->skip,
         );
     }
 
@@ -82,9 +84,17 @@ abstract class Template
 
     protected function buildGenerators(array $generators): array
     {
-        return array_map(
-            fn (string|Generator $generator): Generator => $this->buildGenerator($generator),
-            $generators,
-        );
+        return collect($generators)
+            ->filter(function (string|Generator $generator): bool {
+                // If it's already an instance, we can't skip it by name
+                if ($generator instanceof Generator) {
+                    return true;
+                }
+
+                // Check if the generator key is in the skip list
+                return ! in_array($generator, $this->skip, true);
+            })
+            ->map(fn (string|Generator $generator): Generator => $this->buildGenerator($generator))
+            ->all();
     }
 }

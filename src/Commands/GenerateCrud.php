@@ -15,6 +15,7 @@ class GenerateCrud extends Command
                             {--fields= : The fields to generate. Format: field1:type1,field2?:type2}
                             {--table= : The database table to generate the fields from}
                             {--template=api : The CRUD template to generate}
+                            {--skip= : Comma-separated list of generators to skip}
                             {--options= : Other options to pass to the generator. Format: key1:value1,key2:value2}
                             {--force : Overwrite existing files}';
 
@@ -62,6 +63,7 @@ class GenerateCrud extends Command
             // Resolve template class from container
             $templateClass = app("laravel-crud-templates::template::{$template}");
             $options = $this->parseOptions($optionsString);
+            $skip = $this->parseSkip($this->option('skip'));
 
             $templateInstance = new $templateClass(
                 model: $model = new Model($modelPath),
@@ -70,6 +72,7 @@ class GenerateCrud extends Command
                 force: $this->option('force'),
                 table: $tableName,
                 options: $options,
+                skip: $skip,
             );
 
             // Generate files
@@ -105,5 +108,14 @@ class GenerateCrud extends Command
         }
 
         return $options;
+    }
+
+    protected function parseSkip(?string $skipString): array
+    {
+        if (empty($skipString)) {
+            return [];
+        }
+
+        return array_map('trim', explode(',', $skipString));
     }
 }
