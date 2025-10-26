@@ -33,11 +33,11 @@ export default defineConfig({
         text: 'Templates',
         items: [
           { text: 'API Template', link: '/templates/api' },
+          { text: 'Creating Your Own Template', link: '/templates/custom' },
+          { text: 'Customizing Generators', link: '/templates/customizing-generators' },
           { text: 'Customizing Stubs', link: '/templates/customizing-stubs' },
           { text: 'Customizing Field Types', link: '/templates/customizing-field-types' },
-          { text: 'Customizing Generators', link: '/templates/customizing-generators' },
-          { text: 'Customizing Printers', link: '/templates/customizing-printers' },
-          { text: 'Creating Your Own Template', link: '/templates/custom' }
+          { text: 'Customizing Printers', link: '/templates/customizing-printers' }
         ]
       },
       {

@@ -45,7 +45,7 @@ CREATE TABLE posts (
 );
 ```
 
-Running generate from table:
+Running generate from schema:
 
 ```bash
 php artisan crud:generate Post --table=posts
@@ -88,7 +88,7 @@ CREATE TABLE comments (
 );
 ```
 
-Running generate from table will automatically generate:
+Running generate from schema will automatically generate:
 ```bash
 php artisan crud:generate Comment --table=comments
 ```
@@ -136,7 +136,7 @@ This prevents creating duplicate migrations for existing tables. All other CRUD 
 
 ## Database Connection
 
-Generate from table uses your default database connection defined in `config/database.php`. Make sure:
+Generate from schema uses your default database connection defined in `config/database.php`. Make sure:
 
 1. Your database connection is properly configured
 2. The database is accessible

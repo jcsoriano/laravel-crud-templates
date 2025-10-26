@@ -1,6 +1,6 @@
 # Customizing Field Types
 
-Field types define how different data types are handled throughout the CRUD generation process. You can create custom field types to support new data types or override existing ones to change their behavior.
+CRUD Templates for Laravel already comes with many built-in [Field Types](/guide/field-types). However, sometimes you may need special field types specific to your project, or would like to customize the behavior of existing field types. This section will guide you through creating and customizing field types.
 
 ## Understanding Field Types
 
@@ -32,7 +32,7 @@ use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\HasSimpleRule;
 use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsFillable;
 use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
 
-class UuidType extends FieldType
+class PhoneType extends FieldType
 {
     use HasSimpleMigration;
     use HasSimpleRule;
@@ -41,17 +41,17 @@ class UuidType extends FieldType
 
     public function migration(): Output
     {
-        return $this->buildSimpleMigration('uuid');
+        return $this->buildSimpleMigration('string');
     }
 
     public function rule(): Output
     {
-        return $this->buildSimpleRule('uuid');
+        return $this->buildSimpleRule(['string', 'regex:/^[+]?[0-9]{10,15}$/']);
     }
 
     public function factory(): Output
     {
-        return new Output('fake()->uuid()');
+        return new Output("fake()->regexify('[+][0-9]{11}')");
     }
 }
 ```
@@ -61,11 +61,11 @@ class UuidType extends FieldType
 Register your field type in a service provider's `register()` method (e.g., `AppServiceProvider`):
 
 ```php
-use App\FieldTypes\UuidType;
+use App\FieldTypes\PhoneType;
 
 public function register()
 {
-    $this->app->bind('laravel-crud-templates::field-type::uuid', UuidType::class);
+    $this->app->bind('laravel-crud-templates::field-type::phone', PhoneType::class);
 }
 ```
 
@@ -76,7 +76,7 @@ public function register()
 Now you can use it in CRUD generation:
 
 ```bash
-php artisan crud:generate Post --fields="identifier:uuid,title:string"
+php artisan crud:generate Contact --fields="name:string,phone:phone,mobile?:phone"
 ```
 
 ## Field Type Methods
@@ -106,12 +106,10 @@ Defines validation rules for the field.
 ```php
 public function rule(): Output
 {
+    $fieldName = $this->field->name->snakeCase();
     $required = $this->field->required ? 'required' : 'nullable';
     
-    return new Output(
-        key: $this->field->name->snakeCase(),
-        value: "{$required}|uuid"
-    );
+    return new Output("'{$fieldName}' => ['{$required}', 'uuid']");
 }
 ```
 
@@ -127,14 +125,18 @@ public function factory(): Output
 ```
 
 **With Namespaces (for relationships or enums):**
+
+The second parameter to `Output` is a collection of namespaces to import. This is useful when your factory needs to reference other models or classes.
+
 ```php
 public function factory(): Output
 {
     $modelName = $this->field->name->studlyCase();
+    $modelClass = "App\\Models\\{$modelName}";
     
     return new Output(
         "{$modelName}::factory()",
-        collect(["App\\Models\\{$modelName}"])
+        collect([$modelClass])
     );
 }
 ```
@@ -148,35 +150,71 @@ Defines model casting (returns `Output` or `null`).
 ```php
 public function cast(): ?Output
 {
-    return new Output(
-        key: $this->field->name->snakeCase(),
-        value: "'string'"
-    );
+    $fieldName = $this->field->name->snakeCase();
+
+    return new Output("'{$fieldName}' => 'string'");
 }
 ```
 
 #### fillable()
 
-Whether the field is mass-assignable (returns `Output` or `null`).
+Whether the field is mass-assignable (returns `string`).
 
 ```php
-public function fillable(): ?Output
+public function fillable(): string
 {
-    return new Output($this->field->name->snakeCase());
+    return $this->field->name->snakeCase();
 }
 ```
 
-#### resourceField()
+#### resourceOnly()
 
-How the field appears in API resources (returns `Output` or `null`).
+Specifies which fields to include in the resource's `only()` array (returns `array`).
 
 ```php
-public function resourceField(): ?Output
+public function resourceOnly(): array
 {
-    return new Output(
-        key: $this->field->name->snakeCase(),
-        value: "\$this->{$this->field->name->snakeCase()}"
-    );
+    return [$this->field->name->snakeCase()];
+}
+```
+
+#### resourceRelations()
+
+For relationship fields, defines how to include related resources (returns `array`).
+
+```php
+public function resourceRelations(): array
+{
+    $fieldName = $this->field->name->snakeCase();
+    $relationName = $this->field->name->camelCase();
+    $modelName = $this->getModelName();
+    
+    return [
+        $fieldName => "{$modelName}Resource::make(\$this->whenLoaded('{$relationName}'))",
+    ];
+}
+```
+
+#### dbAssertion()
+
+Defines how to assert this field in database tests (returns `Output`).
+
+```php
+public function dbAssertion(): Output
+{
+    $column = $this->field->name->snakeCase();
+    return new Output("'{$column}' => \$payload['{$column}']");
+}
+```
+
+#### column()
+
+For relationship fields, returns the database column name (usually `field_name_id`):
+
+```php
+public function column(): string
+{
+    return $this->field->name->snakeCase() . '_id';
 }
 ```
 
@@ -187,12 +225,23 @@ Defines relationship methods (returns `Output` or `null`).
 ```php
 public function relation(): ?Output
 {
-    return new Output(
-        "public function {$this->field->name->camelCase()}()
-        {
-            return \$this->belongsTo(Category::class);
-        }"
-    );
+    $relationName = $this->field->name->camelCase();
+    $modelName = $this->getModelName();
+    $modelClass = $this->getModelClass();
+    
+    $output = <<<OUTPUT
+    public function {$relationName}(): BelongsTo
+    {
+        return \$this->belongsTo({$modelName}::class);
+    }
+OUTPUT;
+
+    $namespaces = collect([
+        $modelClass,
+        'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+    ]);
+    
+    return new Output($output, $namespaces);
 }
 ```
 
@@ -216,26 +265,33 @@ public function migration(): Output
 
 ### HasSimpleRule
 
-Creates basic validation rules:
+Creates basic validation rules. Accepts either a string or an array of rules:
 
 ```php
 use HasSimpleRule;
 
 public function rule(): Output
 {
-    return $this->buildSimpleRule('string|max:255');
+    // With array
+    return $this->buildSimpleRule(['string', 'max:255']);
     // Produces: 'field_name' => ['required', 'string', 'max:255']
+    
+    // With string
+    return $this->buildSimpleRule('uuid');
+    // Produces: 'field_name' => ['required', 'uuid']
 }
 ```
 
 ### IsFillable
 
-Makes the field mass-assignable:
+Makes the field mass-assignable and provides database assertion support:
 
 ```php
 use IsFillable;
 
-// Automatically implements fillable() to return the field name
+// Automatically implements:
+// - fillable(): Returns the field name for mass assignment
+// - dbAssertion(): Returns Output for database testing assertions
 ```
 
 ### IsSimpleResourceField
@@ -245,7 +301,31 @@ Adds field to API resources:
 ```php
 use IsSimpleResourceField;
 
-// Automatically implements resourceField() to return the field
+// Automatically implements:
+// - resourceOnly(): Returns array with the field name for the only() method
+```
+
+### ParsesRelatedModel
+
+Helper trait for relationship field types to parse related model information:
+
+```php
+use ParsesRelatedModel;
+
+// Provides methods:
+// - getModelClass(): Returns the fully qualified model class name
+// - getModelName(): Returns the model name in StudlyCase
+
+public function factory(): Output
+{
+    $modelName = $this->getModelName();
+    $modelClass = $this->getModelClass();
+    
+    return new Output(
+        "{$modelName}::factory()",
+        collect([$modelClass])
+    );
+}
 ```
 
 ### HasCast
@@ -260,64 +340,6 @@ public function cast(): ?Output
     return $this->buildCast('array');
     // Produces: 'field_name' => 'array'
 }
-```
-
-## Advanced Example: Phone Number Type
-
-Here's a complete example of a custom phone number field type:
-
-```php
-<?php
-
-namespace App\FieldTypes;
-
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\FieldType;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsFillable;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
-
-class PhoneType extends FieldType
-{
-    use IsFillable;
-    use IsSimpleResourceField;
-
-    public function migration(): Output
-    {
-        $field = $this->field;
-        $nullable = $field->required ? '' : '->nullable()';
-        
-        return new Output(
-            "\$table->string('{$field->name->snakeCase()}', 20){$nullable};"
-        );
-    }
-
-    public function rule(): Output
-    {
-        $required = $this->field->required ? 'required' : 'nullable';
-        
-        return new Output(
-            key: $this->field->name->snakeCase(),
-            value: "{$required}|string|regex:/^[+]?[0-9]{10,15}\$/"
-        );
-    }
-
-    public function factory(): Output
-    {
-        return new Output("fake()->regexify('[+][0-9]{11}')");
-    }
-}
-```
-
-Register it in your service provider's `register()` method:
-
-```php
-$this->app->bind('laravel-crud-templates::field-type::phone', PhoneType::class);
-```
-
-Use it:
-
-```bash
-php artisan crud:generate Contact --fields="name:string,phone:phone,mobile?:phone"
 ```
 
 ## Overriding Existing Field Types
@@ -341,23 +363,28 @@ Inside your field type, you have access to `$this->field`, which contains:
 
 ```php
 $this->field->name;       // Name object with various case formats
-$this->field->required;   // Boolean: is field required?
-$this->field->type;       // String: the field type name
-$this->field->options;    // Array: additional options (e.g., enum class)
+$this->field->required;   // bool: is field required?
+$this->field->typeClass;  // string: the field type class name
+$this->field->options;    // array: additional options (e.g., enum class)
+$this->field->model;      // ?Model: related model (for relationship fields)
 ```
 
 ### Name Object Methods
 
+The `Name` object provides various case conversion methods:
+
 ```php
-$this->field->name->name;         // Original name
-$this->field->name->snakeCase();  // snake_case
-$this->field->name->camelCase();  // camelCase
-$this->field->name->studlyCase(); // StudlyCase
-$this->field->name->plural();     // pluralized form
+$this->field->name->snakeCase();        // snake_case
+$this->field->name->camelCase();        // camelCase
+$this->field->name->studlyCase();       // StudlyCase
+$this->field->name->kebabCase();        // kebab-case
+$this->field->name->pluralSnakeCase();  // plural_snake_case
+$this->field->name->pluralCamelCase();  // pluralCamelCase
+$this->field->name->pluralStudlyCase(); // PluralStudlyCase
+$this->field->name->pluralKebabCase();  // plural-kebab-case
 ```
 
 ## Next Steps
 
-- Learn about [Customizing Generators](/templates/customizing-generators) to modify generation logic
-- Explore [Creating Your Own Template](/templates/custom) for different CRUD patterns
+- Learn about [Customizing Printers](/templates/customizing-printers) to modify code snippets
 - Check the package source code for more field type examples

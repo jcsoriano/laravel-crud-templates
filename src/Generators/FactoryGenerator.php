@@ -3,7 +3,6 @@
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 class FactoryGenerator extends Generator
 {
@@ -19,7 +18,7 @@ class FactoryGenerator extends Generator
         $fileName = $modelName.'Factory';
 
         // Check if file exists and return early if not forcing
-        if ($this->logIfFileExists('Factory', $directory, $fileName, $payload)) {
+        if ($this->checkIfFileExists('Factory', $directory, $fileName, $payload)) {
             return $payload;
         }
 
@@ -34,17 +33,17 @@ class FactoryGenerator extends Generator
             'Illuminate\Database\Eloquent\Factories\Factory',
         ])->merge($output->namespaces);
 
-        LaravelStub::from($this->getStubPath('api.factory.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces([
+        $this->generateFile(
+            stubPath: 'api.factory.stub',
+            directory: $directory,
+            fileName: $fileName,
+            variables: [
                 ...$payload->variables(),
                 'FACTORY_FIELDS' => $output->output,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ])
-            ->conditions($payload->conditions())
-            ->generate();
+            ],
+            conditions: $payload->conditions(),
+        );
 
         $this->logGeneratedFile('Factory', $directory, $fileName, $payload);
 

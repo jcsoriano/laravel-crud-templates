@@ -3,7 +3,6 @@
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 class ResourceGenerator extends Generator
 {
@@ -19,7 +18,7 @@ class ResourceGenerator extends Generator
         $fileName = $modelName.'Resource';
 
         // Check if file exists and return early if not forcing
-        if ($this->logIfFileExists('Resource', $directory, $fileName, $payload)) {
+        if ($this->checkIfFileExists('Resource', $directory, $fileName, $payload)) {
             return $payload;
         }
 
@@ -32,18 +31,18 @@ class ResourceGenerator extends Generator
             'Illuminate\Http\Resources\Json\JsonResource',
         ])->merge($resourceRelationsOutput->namespaces);
 
-        LaravelStub::from($this->getStubPath('api.resource.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces([
+        $this->generateFile(
+            stubPath: 'api.resource.stub',
+            directory: $directory,
+            fileName: $fileName,
+            variables: [
                 ...$payload->variables(),
                 'RESOURCE_ONLY' => $resourceOnlyOutput->output,
                 'RESOURCE_RELATIONS' => $resourceRelationsOutput->output,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ])
-            ->conditions($payload->conditions())
-            ->generate();
+            ],
+            conditions: $payload->conditions(),
+        );
 
         $this->logGeneratedFile('Resource', $directory, $fileName, $payload);
 

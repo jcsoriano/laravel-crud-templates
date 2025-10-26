@@ -193,6 +193,7 @@ $this->app->bind('laravel-crud-templates::printer::searchable', SearchablePrinte
 
 Use in a custom model stub:
 
+::: v-pre
 ```php
 public function toSearchableArray(): array
 {
@@ -201,6 +202,7 @@ public function toSearchableArray(): array
     ]);
 }
 ```
+:::
 
 ## Using Printers in Custom Generators
 
@@ -223,65 +225,6 @@ public function generate(Payload $payload): Payload
 }
 ```
 
-## Best Practices
-
-1. **Keep It Focused**: Each printer should handle one specific aspect of code generation
-2. **Reuse Logic**: Leverage field type methods (like `fillable()`, `cast()`, etc.)
-3. **Handle Edge Cases**: Check if methods exist before calling them
-4. **Return Clean Code**: Ensure proper formatting and indentation
-5. **Document Purpose**: Add comments explaining what the printer generates
-
-## Common Use Cases
-
-### Custom Attributes
-
-Create a printer for model attributes:
-
-```php
-class AttributesPrinter implements Printer
-{
-    public function print(Payload $payload): Output
-    {
-        $attributes = collect([
-            "protected function fullName(): Attribute",
-            "{",
-            "    return Attribute::make(",
-            "        get: fn () => \$this->first_name . ' ' . \$this->last_name,",
-            "    );",
-            "}",
-        ]);
-        
-        return new Output($attributes->join("\n    "));
-    }
-}
-```
-
-### API Filter Fields
-
-Create a printer for filterable fields:
-
-```php
-class FilterablePrinter implements Printer
-{
-    public function print(Payload $payload): Output
-    {
-        $fields = $payload->fields;
-        $filterableFields = collect();
-        
-        foreach ($fields as $field) {
-            if (!in_array($field->type->name, ['belongsTo', 'hasMany', 'belongsToMany'])) {
-                $filterableFields->push("'{$field->name->snakeCase()}'");
-            }
-        }
-        
-        return new Output($filterableFields->join(",\n        "));
-    }
-}
-```
-
 ## Next Steps
 
-- Learn about [Customizing Generators](/templates/customizing-generators) to use printers
-- Explore [Customizing Field Types](/templates/customizing-field-types) to control what printers output
-- Review [Creating Your Own Template](/templates/custom) to orchestrate printers and generators
-
+- Check the package source code for more printer examples

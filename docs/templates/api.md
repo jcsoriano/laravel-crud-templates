@@ -363,9 +363,9 @@ All generators listed in the [Generated Files](#generated-files) section can be 
 
 ## Next Steps
 
-Now that you've learned about the API template, read about how you can customize it (or any template) to fit your project's conventions.
+If the API template doesn't fit your needs, worry not! You can create your own template, read further below:
 
-- Learn about [Customizing Stubs](/templates/customizing-stubs) to modify generated code
-- Explore [Customizing Field Types](/templates/customizing-field-types) for custom fields
-- Understand [Customizing Generators](/templates/customizing-generators) to change generation logic
-- Create [Your Own Template](/templates/custom) for different patterns
+- [Create Your Own Template](/templates/custom) to generate different types of CRUDs beyond the default API pattern
+- Learn about [Customizing Generators](/templates/customizing-generators) to customize or create new generators
+- Explore [Customizing Stubs](/templates/customizing-stubs) to modify generated code
+- Check [Customizing Field Types](/templates/customizing-field-types) to add or customize existing field types

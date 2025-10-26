@@ -1,22 +1,229 @@
 # Customizing Generators
 
-Generators are responsible for creating individual files during CRUD generation. Each generator handles one type of file (controller, model, migration, etc.). You can override existing generators or create new ones to customize the generation process.
+Generators are responsible for creating individual files during CRUD generation. 
 
-## Understanding Generators
+It takes a stub file and generates a new file based on it, replacing placeholders with the actual content. 
 
-CRUD Templates for Laravel includes these built-in generators:
+## Available Generators
 
-- `controller` - API controllers
-- `model` - Eloquent models
-- `policy` - Authorization policies
-- `store-request` - Store validation requests
-- `update-request` - Update validation requests
-- `resource` - API resources
-- `migration` - Database migrations
-- `factory` - Model factories
-- `test` - Feature tests
-- `api-route` - API route registration
-- `pint` - Code formatting
+Below is a list of available generators, the stub they are based on, and the file they generate:
+
+- [controller](#controller)
+- [model](#model)
+- [policy](#policy)
+- [store-request](#store-request)
+- [update-request](#update-request)
+- [resource](#resource)
+- [migration](#migration)
+- [factory](#factory)
+- [test](#test)
+- [api-route](#api-route)
+- [pint](#pint)
+
+### controller
+
+- **Stub File**: `api.controller.stub`
+- **Generates file**: `app/Http/Controllers/Api/Content/PostController.php`
+
+### model
+
+- **Stub File**: `api.model.stub`
+- **Generates file**: `app/Models/Content/Post.php`
+
+### policy
+
+- **Stub File**: `api.policy.stub`
+- **Generates file**: `app/Policies/PostPolicy.php`
+
+### store-request
+
+- **Stub File**: `api.request.store.stub`
+- **Generates file**: `app/Http/Requests/Content/StorePostRequest.php`
+
+### update-request
+
+- **Stub File**: `api.request.update.stub`
+- **Generates file**: `app/Http/Requests/Content/UpdatePostRequest.php`
+
+### resource
+
+- **Stub File**: `api.resource.stub`
+- **Generates file**: `app/Http/Resources/Content/PostResource.php`
+
+### migration
+
+- **Stub File**: `api.migration.stub`
+- **Generates file**: `database/migrations/2024_01_01_000000_create_posts_table.php`
+
+### factory
+
+- **Stub File**: `api.factory.stub`
+- **Generates file**: `database/factories/Content/PostFactory.php`
+
+### test
+
+- **Stub File**: `api.test.stub`
+- **Generates file**: `tests/Feature/Api/Content/PostControllerTest.php`
+
+### api-route
+
+- **Stub File**: N/A
+- **Generates file**: Appends routes to `routes/api.php`
+
+### pint
+
+- **Stub File**: N/A
+- **Generates file**: Runs Laravel Pint on generated files
+
+## Customizing Stubs
+
+All stubs are completely customizable. You can publish the stubs for modification by running:
+
+```bash
+php artisan vendor:publish --tag="laravel-crud-templates-stubs"
+```
+
+See [Customizing Stubs](/templates/customizing-stubs) for more details.
+
+## Creating a Custom Generator
+
+Aside from the built-in generators, you can create your own custom generators. In the example below, we'll create a custom generator for the repository pattern.
+
+### Step 1: Create the Stub File
+
+First, create the stub file that defines what you want to generate. Create the stub file at `stubs/crud.repository.stub`:
+
+::: v-pre
+```php
+<?php
+
+namespace App\Repositories{{ NAMESPACE_PATH }};
+
+{{ NAMESPACES }}
+
+class {{ MODEL }}Repository
+{
+    public function all(): Collection
+    {
+        return {{ MODEL }}::all();
+    }
+    
+    public function find(int $id): ?{{ MODEL }}
+    {
+        return {{ MODEL }}::find($id);
+    }
+    
+    public function create(array $data): {{ MODEL }}
+    {
+        return {{ MODEL }}::create($data);
+    }
+    
+    public function update({{ MODEL }} ${{ MODEL_CAMEL }}, array $data): {{ MODEL }}
+    {
+        ${{ MODEL_CAMEL }}->update($data);
+        
+        return ${{ MODEL_CAMEL }};
+    }
+    
+    public function delete({{ MODEL }} ${{ MODEL_CAMEL }}): bool
+    {
+        return ${{ MODEL_CAMEL }}->delete();
+    }
+}
+```
+:::
+
+### Step 2: Create the Generator Class
+
+Create a class that extends `Generator`:
+
+```php
+<?php
+
+namespace App\Generators;
+
+use JCSoriano\LaravelCrudTemplates\Generators\Generator;
+use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+
+class RepositoryGenerator extends Generator
+{
+    public function generate(Payload $payload): Payload
+    {
+        $model = $payload->model;
+        $namespace = $model->namespace();
+        $modelName = $model->model()->studlyCase();
+        
+        // Create repositories directory
+        $directory = app_path('Repositories/'.str_replace('\\', '/', $namespace));
+        $this->createDirectoryIfNotExists($directory);
+        
+        $fileName = $modelName.'Repository';
+        
+        // Check if file exists and return early if not forcing
+        if ($this->checkIfFileExists('Repository', $directory, $fileName, $payload)) {
+            return $payload;
+        }
+        
+        // Build namespace paths
+        $modelNamespace = $this->buildNamespace('App\\Models', $payload);
+        
+        $namespaces = collect([
+            "{$modelNamespace}\\{$modelName}",
+            'Illuminate\Support\Collection',
+        ]);
+        
+        // Generate from custom stub
+        $this->generateFile(
+            stubPath: 'crud.repository.stub',
+            directory: $directory,
+            fileName: $fileName,
+            variables: [
+                ...$payload->variables(),
+                'NAMESPACES' => $this->buildNamespaces($namespaces),
+            ],
+            conditions: $payload->conditions(),
+        );
+        
+        $this->logGeneratedFile('Repository', $directory, $fileName, $payload);
+        
+        return $payload;
+    }
+}
+```
+
+### Step 3: Register the Generator
+
+Register your generator in a service provider's `register()` method:
+
+```php
+use App\Generators\RepositoryGenerator;
+
+public function register()
+{
+    $this->app->bind('laravel-crud-templates::generator::repository', RepositoryGenerator::class);
+}
+```
+
+**Note:** To override an existing generator, bind to the same key (e.g., `laravel-crud-templates::generator::controller`). To create a new generator, choose a unique key or use the class directly in your template without binding (see Step 4).
+
+### Step 4: Use the Generator in a Template
+
+Add your generator to your template. You can use either the registered key or the class name directly:
+
+```php
+use App\Generators\RepositoryGenerator;
+
+protected function template(): array
+{
+    return $this->buildGenerators([
+        'controller',
+        'model',
+        'repository', // Your registered generator
+        'migration',
+        // ... other generators
+    ]);
+}
+```
 
 ## Generator Lifecycle
 
@@ -28,108 +235,36 @@ Generators are executed as a pipeline:
 4. Generator returns the modified payload
 5. Next generator in the pipeline receives the payload
 
-## Creating a Custom Generator
-
-### Step 1: Create the Generator Class
-
-Create a class that extends `Generator`:
-
-```php
-<?php
-
-namespace App\Generators;
-
-use JCSoriano\LaravelCrudTemplates\Generators\Generator;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-
-class CustomControllerGenerator extends Generator
-{
-    public function generate(Payload $payload): Payload
-    {
-        $model = $payload->model;
-        $modelName = $model->model()->studlyCase();
-        
-        // Define output directory
-        $directory = app_path('Http/Controllers/Api');
-        $this->createDirectoryIfNotExists($directory);
-        
-        $fileName = $modelName.'Controller';
-        
-        // Generate from stub
-        LaravelStub::from($this->getStubPath('crud.controller.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces([
-                ...$payload->variables(),
-                'CUSTOM_VAR' => 'custom value',
-            ])
-            ->conditions($payload->conditions())
-            ->generate();
-        
-        // Log the generated file
-        $this->logGeneratedFile('Controller', $directory, $fileName, $payload);
-        
-        return $payload;
-    }
-}
-```
-
-### Step 2: Register the Generator
-
-Register your generator in a service provider's `register()` method:
-
-```php
-use App\Generators\CustomControllerGenerator;
-
-public function register()
-{
-    // Override existing controller generator
-    $this->app->bind('laravel-crud-templates::generator::controller', CustomControllerGenerator::class);
-    
-    // Or register a new generator
-    $this->app->bind('laravel-crud-templates::generator::custom-type', CustomControllerGenerator::class);
-}
-```
-
-**Note:** To override an existing generator, bind to the same key. To create a new generator that doesn't override a package default, you can either register it with a binding or use it directly in your template without binding (see Step 3).
-
-### Step 3: Use the Generator in a Template
-
-If you created a new generator, add it to your template. You can use either the registered key or the class name directly:
-
-```php
-use App\Generators\CustomControllerGenerator;
-
-protected function template(): array
-{
-    return $this->buildGenerators([
-        'controller',
-        'model',
-        'custom-type', // Your registered generator (if you bound it)
-        CustomControllerGenerator::class, // Or use directly without binding
-        'migration',
-        // ... other generators
-    ]);
-}
-```
-
-**Tip:** If you're not overriding an existing generator, you can use the class name directly without registering a binding.
-
 ## The Payload Object
 
 The `Payload` object contains all data needed for generation:
 
+### Properties
+
 ```php
-$payload->model;        // Model data (name, namespace, etc.)
-$payload->fields;       // Collection of field definitions
-$payload->components;   // Laravel console components for output
-$payload->options;      // Additional options passed to the command
-$payload->variables();  // Array of variables for stub replacement
-$payload->conditions(); // Array of conditions for stub logic
-$payload->data;         // Additional data array
+// Core properties
+$payload->model;        // Model: Model data (name, namespace, etc.)
+$payload->fields;       // Collection: Field definitions
+$payload->components;   // Factory: Laravel console components for output (read-only)
+$payload->force;        // bool: Force overwrite existing files (read-only)
+$payload->table;        // ?string: Database table name (read-only)
+
+// Configuration arrays
+$payload->options;      // array: Additional options passed to the command
+$payload->variables;    // array: Custom variables for stub replacement
+$payload->conditions;   // array: Custom conditions for stub logic
+$payload->data;         // array: Additional data for generators
+$payload->skip;         // array: Generators to skip
 ```
+
+### Methods
+
+```php
+$payload->variables();  // Returns array: All variables for stub replacement (includes MODEL, MODEL_CAMEL, NAMESPACE_PATH, etc.)
+$payload->conditions(); // Returns array: All conditions for stub logic (includes scopeUser, scopeTeam, scopeNone)
+```
+
+**Note:** Properties marked as "read-only" can be accessed but not modified directly. The `variables` and `conditions` properties are arrays you can modify to add custom values, while the `variables()` and `conditions()` methods return the complete merged arrays including defaults.
 
 ## Helper Methods
 
@@ -182,167 +317,6 @@ $useStatements = $this->buildNamespaces($namespaces);
 // Returns: "use App\Models\Post;\nuse Illuminate\Http\Request;"
 ```
 
-## Advanced Example: Service Generator
-
-Create a generator that creates service classes:
-
-```php
-<?php
-
-namespace App\Generators;
-
-use JCSoriano\LaravelCrudTemplates\Generators\Generator;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
-
-class ServiceGenerator extends Generator
-{
-    public function generate(Payload $payload): Payload
-    {
-        $model = $payload->model;
-        $namespace = $model->namespace();
-        $modelName = $model->model()->studlyCase();
-        
-        // Create services directory
-        $directory = app_path('Services/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
-        
-        $fileName = $modelName.'Service';
-        
-        // Build namespace paths
-        $modelNamespace = $this->buildNamespace('App\\Models', $payload);
-        
-        $namespaces = collect([
-            "{$modelNamespace}\\{$modelName}",
-            'Illuminate\Support\Collection',
-        ]);
-        
-        // Custom variables for the stub
-        $variables = [
-            ...$payload->variables(),
-            'NAMESPACES' => $this->buildNamespaces($namespaces),
-        ];
-        
-        // Generate from custom stub
-        LaravelStub::from($this->getStubPath('crud.service.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces($variables)
-            ->conditions($payload->conditions())
-            ->generate();
-        
-        $this->logGeneratedFile('Service', $directory, $fileName, $payload);
-        
-        return $payload;
-    }
-}
-```
-
-Create the stub file at `stubs/crud.service.stub`:
-
-```php
-<?php
-
-namespace App\Services{{ NAMESPACE_PATH }};
-
-{{ NAMESPACES }}
-
-class {{ MODEL }}Service
-{
-    public function getAll(): Collection
-    {
-        return {{ MODEL }}::all();
-    }
-    
-    public function create(array $data): {{ MODEL }}
-    {
-        return {{ MODEL }}::create($data);
-    }
-    
-    public function update({{ MODEL }} ${{ MODEL_CAMEL }}, array $data): {{ MODEL }}
-    {
-        ${{ MODEL_CAMEL }}->update($data);
-        
-        return ${{ MODEL_CAMEL }};
-    }
-    
-    public function delete({{ MODEL }} ${{ MODEL_CAMEL }}): bool
-    {
-        return ${{ MODEL_CAMEL }}->delete();
-    }
-}
-```
-
-Register and use it:
-
-```php
-// In your AppServiceProvider's register() method
-$this->app->bind('laravel-crud-templates::generator::service', ServiceGenerator::class);
-
-// Create custom template that uses it
-use App\Generators\ServiceGenerator;
-
-class CustomApiTemplate extends Template
-{
-    public function template(): array
-    {
-        return $this->buildGenerators([
-            'controller',
-            'service',  // Your registered generator
-            // Or use directly: ServiceGenerator::class
-            'model',
-            'migration',
-            // ...
-        ]);
-    }
-}
-```
-
-## Overriding Existing Generators
-
-### Example: Add Logging to Controller Generator
-
-```php
-<?php
-
-namespace App\Generators;
-
-use JCSoriano\LaravelCrudTemplates\Generators\ControllerGenerator as BaseControllerGenerator;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-
-class CustomControllerGenerator extends BaseControllerGenerator
-{
-    public function generate(Payload $payload): Payload
-    {
-        // Add custom logic before generation
-        $payload->data['add_logging'] = true;
-        
-        // Set custom condition
-        $payload->conditions['useLogging'] = true;
-        
-        // Call parent generation
-        $result = parent::generate($payload);
-        
-        // Add custom logic after generation
-        $this->addLoggingTrait($payload);
-        
-        return $result;
-    }
-    
-    protected function addLoggingTrait(Payload $payload): void
-    {
-        // Additional custom logic
-    }
-}
-```
-
-Register it in your service provider's `register()` method:
-
-```php
-$this->app->bind('laravel-crud-templates::generator::controller', CustomControllerGenerator::class);
-```
-
 ## Working with Printers
 
 Printers generate specific parts of files (like fillable arrays, casts, etc.). You can use printers in your generators:
@@ -375,29 +349,6 @@ Available printers (used via the `print()` method):
 - `rules` - Validation rules
 - `dbAssertions` - Database assertion columns
 
-## Conditional Generation
-
-You can conditionally generate files based on options:
-
-```php
-public function generate(Payload $payload): Payload
-{
-    // Only generate if option is set
-    if ($payload->options['with-service'] ?? false) {
-        // Generate service file
-        $this->generateService($payload);
-    }
-    
-    return $payload;
-}
-```
-
-Use it:
-
-```bash
-php artisan crud:generate Post --fields="title:string" --options="with-service:true"
-```
-
 ## Accessing Field Data
 
 Process fields in your generator:
@@ -426,7 +377,7 @@ public function generate(Payload $payload): Payload
 
 ## Next Steps
 
-- Learn about [Creating Your Own Template](/templates/custom) to combine generators
 - Explore [Customizing Stubs](/templates/customizing-stubs) to change generated code
 - Check [Customizing Field Types](/templates/customizing-field-types) for custom field logic
+- Learn about [Customizing Printers](/templates/customizing-printers) to modify code snippets
 

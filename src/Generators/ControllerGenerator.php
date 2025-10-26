@@ -20,7 +20,7 @@ class ControllerGenerator extends Generator
         $fileName = $modelName.'Controller';
 
         // Check if file exists and return early if not forcing
-        if ($this->logIfFileExists('Controller', $directory, $fileName, $payload)) {
+        if ($this->checkIfFileExists('Controller', $directory, $fileName, $payload)) {
             return $payload;
         }
 
@@ -50,17 +50,17 @@ class ControllerGenerator extends Generator
             $namespaces->push('Illuminate\Support\Facades\Auth');
         }
 
-        LaravelStub::from($this->getStubPath('api.controller.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces([
+        $this->generateFile(
+            stubPath: 'api.controller.stub',
+            directory: $directory,
+            fileName: $fileName,
+            variables: [
                 ...$payload->variables(),
                 'RELATIONS_LIST' => $relationsList,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ])
-            ->conditions($payload->conditions())
-            ->generate();
+            ],
+            conditions: $payload->conditions(),
+        );
 
         $this->logGeneratedFile('Controller', $directory, $fileName, $payload);
 

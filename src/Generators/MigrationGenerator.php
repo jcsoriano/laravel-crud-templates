@@ -3,7 +3,6 @@
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 class MigrationGenerator extends Generator
 {
@@ -26,22 +25,22 @@ class MigrationGenerator extends Generator
         $fileName = $timestamp.'_create_'.$tableName.'_table';
 
         // Check if file exists and return early if not forcing
-        if ($this->logIfFileExists('Migration', $directory, $fileName, $payload)) {
+        if ($this->checkIfFileExists('Migration', $directory, $fileName, $payload)) {
             return $payload;
         }
 
         $output = $this->print('migrations', $payload);
 
-        LaravelStub::from($this->getStubPath('api.migration.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces([
+        $this->generateFile(
+            stubPath: 'api.migration.stub',
+            directory: $directory,
+            fileName: $fileName,
+            variables: [
                 ...$payload->variables(),
                 'MIGRATION_FIELDS' => $output->output,
-            ])
-            ->conditions($payload->conditions())
-            ->generate();
+            ],
+            conditions: $payload->conditions(),
+        );
 
         $this->logGeneratedFile('Migration', $directory, $fileName, $payload);
 

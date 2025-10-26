@@ -8,10 +8,27 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 abstract class Generator
 {
     abstract public function generate(Payload $payload): Payload;
+
+    protected function generateFile(
+        string $stubPath,
+        string $directory,
+        string $fileName,
+        array $variables,
+        array $conditions,
+    ): void {
+        LaravelStub::from($this->getStubPath($stubPath))
+            ->to($directory)
+            ->name($fileName)
+            ->ext('php')
+            ->replaces($variables)
+            ->conditions($conditions)
+            ->generate();
+    }
 
     protected function createDirectoryIfNotExists(string $path): void
     {
@@ -43,7 +60,7 @@ abstract class Generator
         $payload->data['files'][] = $path;
     }
 
-    protected function logIfFileExists(string $type, string $directory, string $fileName, Payload $payload): bool
+    protected function checkIfFileExists(string $type, string $directory, string $fileName, Payload $payload): bool
     {
         $path = $directory.'/'.$fileName.'.php';
 

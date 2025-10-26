@@ -4,7 +4,6 @@ namespace JCSoriano\LaravelCrudTemplates\Generators;
 
 use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
 
 class TestGenerator extends Generator
 {
@@ -20,7 +19,7 @@ class TestGenerator extends Generator
         $fileName = $modelName.'ControllerTest';
 
         // Check if file exists and return early if not forcing
-        if ($this->logIfFileExists('Test', $directory, $fileName, $payload)) {
+        if ($this->checkIfFileExists('Test', $directory, $fileName, $payload)) {
             return $payload;
         }
 
@@ -52,18 +51,18 @@ class TestGenerator extends Generator
             'Tests\TestCase',
         ])->merge($dbAssertionsOutput->namespaces);
 
-        LaravelStub::from($this->getStubPath('api.test.stub'))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces([
+        $this->generateFile(
+            stubPath: 'api.test.stub',
+            directory: $directory,
+            fileName: $fileName,
+            variables: [
                 ...$payload->variables(),
                 'TEST_STRUCTURE' => $testStructureString,
                 'NAMESPACES' => $this->buildNamespaces($namespaces),
                 'DB_ASSERTION_COLUMNS' => $dbAssertionsOutput->output,
-            ])
-            ->conditions($payload->conditions())
-            ->generate();
+            ],
+            conditions: $payload->conditions(),
+        );
 
         $this->logGeneratedFile('Test', $directory, $fileName, $payload);
 
