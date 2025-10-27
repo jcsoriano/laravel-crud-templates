@@ -41,7 +41,7 @@ class {{ MODEL }}Policy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
+    public function update(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): bool|Response
     {
         {{ if scopeUser }}
         return ${{ MODEL_CAMEL }}->user_id == $user->id;
@@ -57,7 +57,7 @@ class {{ MODEL }}Policy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
+    public function delete(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): bool|Response
     {
         {{ if scopeUser }}
         return ${{ MODEL_CAMEL }}->user_id == $user->id;
@@ -73,7 +73,7 @@ class {{ MODEL }}Policy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
+    public function restore(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): bool|Response
     {
         {{ if scopeUser }}
         return ${{ MODEL_CAMEL }}->user_id == $user->id;
@@ -89,7 +89,7 @@ class {{ MODEL }}Policy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): Response
+    public function forceDelete(User $user, {{ MODEL }} ${{ MODEL_CAMEL }}): bool|Response
     {
         {{ if scopeUser }}
         return ${{ MODEL_CAMEL }}->user_id == $user->id;
