@@ -7,7 +7,7 @@
 
 CRUD Templates for Laravel allows you to generate controllers, models, policies, requests, resources, migrations, factories, and even tests - all the files you need to complete CRUD features with a single command. You can completely modify the template or create your own templates to fit your project's conventions perfectly.
 
-![Demo](docs/demo.gif)
+![Demo](docs/public/demo.gif)
 
 ## FAQs
 
@@ -212,16 +212,16 @@ public function toArray($request): array
 - [Installation](https://laravelcrudtemplates.com/guide/installation) - Requirements and installation guide
 - [Quick Start](https://laravelcrudtemplates.com/guide/quick-start) - Generate your first CRUD in minutes
 
-### Core Concepts
+### Using Templates
 - [Field Types](https://laravelcrudtemplates.com/guide/field-types) - Complete list of supported field types
 - [Relationships](https://laravelcrudtemplates.com/guide/relationships) - Working with model relationships
 - [Generate from Schema](https://laravelcrudtemplates.com/guide/generate-from-schema) - Generate from existing database tables
 
-### Templates
+### Available Templates
 - [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
-- [Custom Templates](https://laravelcrudtemplates.com/templates/custom) - Create your own templates
+- [Creating Your Own Template](https://laravelcrudtemplates.com/templates/custom) - Create templates for your own use cases
 
-### Customization
+### Customizing Templates
 - [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
 - [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
 - [Customizing Generators](https://laravelcrudtemplates.com/templates/customizing-generators) - Override file generators
