@@ -2,8 +2,10 @@
 
 namespace JCSoriano\LaravelCrudTemplates\Generators;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use RuntimeException;
 
 class ApiRouteGenerator extends Generator
 {
@@ -16,8 +18,12 @@ class ApiRouteGenerator extends Generator
         $apiRoutesPath = base_path('routes/api.php');
 
         if (! File::exists($apiRoutesPath)) {
-            // Create basic api.php file if it doesn't exist
-            File::put($apiRoutesPath, "<?php\n\nuse Illuminate\Http\Request;\nuse Illuminate\Support\Facades\Route;\n\n");
+            $payload->components->info('Running `php artisan install:api` to create the API routes file. This may take a few seconds...');
+            $exitCode = Artisan::call('install:api --without-migration-prompt --no-interaction');
+            
+            if ($exitCode !== 0) {
+                throw new RuntimeException("Failed to install API routes. Please run 'php artisan api:install' manually.");
+            }
         }
 
         $content = File::get($apiRoutesPath);
