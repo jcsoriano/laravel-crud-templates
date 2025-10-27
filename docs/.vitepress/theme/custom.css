@@ -1,0 +1,10 @@
+.VPImage.image-src {
+  max-width: 500px !important;
+  max-height: 500px !important;
+}
+
+.VPHero .image-container .image {
+  max-width: 560px !important;
+  max-height: 500px !important;
+}
+

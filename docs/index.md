@@ -6,6 +6,9 @@ hero:
   name: CRUD Templates for Laravel
   text: 0 to 90% done in seconds.
   tagline: Generate routes, controllers, models, policies, requests, resources, migrations, factories, and tests with a single command.
+  image:
+    src: /demo.gif
+    alt: CRUD Templates for Laravel
   actions:
     - theme: brand
       text: Get Started
