@@ -1,10 +1,24 @@
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
 .VPImage.image-src {
   max-width: 500px !important;
   max-height: 500px !important;
 }
 
+.VPHero .image-container {
+  animation: float 4s ease-in-out infinite;
+  will-change: transform;
+}
+
 .VPHero .image-container .image {
-  max-width: 560px !important;
+  max-width: 500px !important;
   max-height: 500px !important;
 }
 
