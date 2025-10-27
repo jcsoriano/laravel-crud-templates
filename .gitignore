@@ -36,3 +36,5 @@ docs/.vitepress/temp/
 
 # Task files
 task.md
+
+.DS_Store

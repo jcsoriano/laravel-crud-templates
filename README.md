@@ -7,7 +7,7 @@
 
 CRUD Templates for Laravel allows you to generate controllers, models, policies, requests, resources, migrations, factories, and even tests - all the files you need to complete CRUD features with a single command. You can completely modify the template or create your own templates to fit your project's conventions perfectly.
 
-![Demo](docs/public/demo.gif)
+![Demo](docs/demo.gif)
 
 ## FAQs
 
