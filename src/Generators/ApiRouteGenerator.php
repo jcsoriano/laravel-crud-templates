@@ -20,7 +20,7 @@ class ApiRouteGenerator extends Generator
         if (! File::exists($apiRoutesPath)) {
             $payload->components->info('Running `php artisan install:api` to create the API routes file. This may take a few seconds...');
             $exitCode = Artisan::call('install:api --without-migration-prompt --no-interaction');
-            
+
             if ($exitCode !== 0) {
                 throw new RuntimeException("Failed to install API routes. Please run 'php artisan api:install' manually.");
             }
