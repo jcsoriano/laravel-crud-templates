@@ -42,7 +42,10 @@ class ApiRouteGenerator extends Generator
         }
 
         // Add route at the end
-        $route = "\nRoute::apiResource('{$modelKebabPlural}', {$modelName}Controller::class);";
+        $route = "\n".$this->getStubContent('api.route.stub', [
+            'MODEL_KEBAB_PLURAL' => $modelKebabPlural,
+            'MODEL' => $modelName,
+        ]);
 
         if (! str_contains($content, $route)) {
             $content = rtrim($content)."\n{$route}\n";

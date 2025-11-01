@@ -46,6 +46,18 @@ abstract class Generator
             : __DIR__.'/../stubs/api/'.$file;
     }
 
+    protected function getStubContent(string $stubPath, array $variables): string
+    {
+        $path = $this->getStubPath($stubPath);
+        $content = File::get($path);
+
+        foreach ($variables as $search => $value) {
+            $content = str_replace("{{ $search }}", $value, $content);
+        }
+
+        return $content;
+    }
+
     public function handle(Payload $payload, Closure $next)
     {
         return $next($this->generate($payload));

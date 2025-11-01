@@ -22,6 +22,7 @@ stubs/api/
 ├── api.request.store.stub
 ├── api.request.update.stub
 ├── api.resource.stub
+├── api.route.stub
 └── api.test.stub
 ```
 
@@ -103,6 +104,18 @@ Generates the model factory for testing and seeding.
 
 ::: v-pre
 - `{{ FACTORY_FIELDS }}` - Factory field definitions
+:::
+
+### Route Stub
+**File:** `api.route.stub`
+
+Generates the API route registration line in `routes/api.php`.
+
+**Available Placeholders:**
+
+::: v-pre
+- `{{ MODEL }}` - Model name in StudlyCase (e.g., `Post`)
+- `{{ MODEL_KEBAB_PLURAL }}` - Model name in kebab-case plural (e.g., `posts`)
 :::
 
 ### Test Stub

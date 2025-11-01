@@ -67,7 +67,7 @@ Below is a list of available generators, the stub they are based on, and the fil
 
 ### api-route
 
-- **Stub File**: N/A
+- **Stub File**: `api.route.stub`
 - **Generates file**: Appends routes to `routes/api.php`
 
 ### pint
