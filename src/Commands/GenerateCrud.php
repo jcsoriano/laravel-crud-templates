@@ -61,7 +61,7 @@ class GenerateCrud extends Command
             }
 
             // Resolve template class from container
-            $templateClass = app("laravel-crud-templates::template::{$template}");
+            $templateClass = app("crud-templates::template::{$template}");
             $options = $this->parseOptions($optionsString);
             $skip = $this->parseSkip($this->option('skip'));
 

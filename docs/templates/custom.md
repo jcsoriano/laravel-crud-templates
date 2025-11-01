@@ -35,12 +35,12 @@ use App\Templates\MyCustomTemplate;
 
 public function register()
 {
-    $this->app->bind('laravel-crud-templates::template::my-custom', MyCustomTemplate::class);
+    $this->app->bind('crud-templates::template::my-custom', MyCustomTemplate::class);
 }
 ```
 
 ::: tip
-To override an existing template (like 'api'), bind to the same key: `laravel-crud-templates::template::api`.
+To override an existing template (like 'api'), bind to the same key: `crud-templates::template::api`.
 :::
 
 ### Use the Template

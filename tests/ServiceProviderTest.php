@@ -3,7 +3,7 @@
 use JCSoriano\CrudTemplates\FieldTypes\StringType;
 
 it('can resolve field type bindings without dependency errors', function () {
-    $stringTypeClass = app('laravel-crud-templates::field-type::string');
+    $stringTypeClass = app('crud-templates::field-type::string');
 
     expect($stringTypeClass)->toBe(StringType::class);
 });
@@ -28,7 +28,7 @@ it('can resolve all field type bindings', function () {
     ];
 
     foreach ($types as $type) {
-        $class = app("laravel-crud-templates::field-type::{$type}");
+        $class = app("crud-templates::field-type::{$type}");
         expect($class)->toBeString();
         expect(class_exists($class))->toBeTrue();
     }
@@ -50,13 +50,13 @@ it('can resolve generator bindings', function () {
     ];
 
     foreach ($generators as $generator) {
-        $instance = app("laravel-crud-templates::generator::{$generator}");
+        $instance = app("crud-templates::generator::{$generator}");
         expect($instance)->toBeInstanceOf(\JCSoriano\CrudTemplates\Generators\Generator::class);
     }
 });
 
 it('can resolve template bindings', function () {
-    $templateClass = app('laravel-crud-templates::template::api');
+    $templateClass = app('crud-templates::template::api');
     expect($templateClass)->toBeString();
     expect(class_exists($templateClass))->toBeTrue();
     expect(is_subclass_of($templateClass, \JCSoriano\CrudTemplates\Templates\Template::class))->toBeTrue();
@@ -75,7 +75,7 @@ it('can resolve printer bindings', function () {
     ];
 
     foreach ($printers as $printer) {
-        $instance = app("laravel-crud-templates::printer::{$printer}");
+        $instance = app("crud-templates::printer::{$printer}");
         expect($instance)->toBeInstanceOf(\JCSoriano\CrudTemplates\Printers\Printer::class);
     }
 });

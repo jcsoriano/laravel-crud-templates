@@ -3,7 +3,7 @@
 namespace JCSoriano\CrudTemplates\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use JCSoriano\CrudTemplates\LaravelCrudTemplatesServiceProvider;
+use JCSoriano\CrudTemplates\CrudTemplatesServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -20,7 +20,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            LaravelCrudTemplatesServiceProvider::class,
+            CrudTemplatesServiceProvider::class,
         ];
     }
 

@@ -78,10 +78,10 @@ Ensure you're binding field types and templates correctly. The package expects c
 public function register()
 {
     // Field types - bind to class name
-    $this->app->bind('laravel-crud-templates::field-type::custom', CustomFieldType::class);
+    $this->app->bind('crud-templates::field-type::custom', CustomFieldType::class);
     
     // Templates - bind to class name
-    $this->app->bind('laravel-crud-templates::template::custom', CustomTemplate::class);
+    $this->app->bind('crud-templates::template::custom', CustomTemplate::class);
 }
 ```
 
@@ -90,7 +90,7 @@ public function register()
 public function register()
 {
     // ❌ Don't try to instantiate with dependencies
-    $this->app->bind('laravel-crud-templates::field-type::custom', function () {
+    $this->app->bind('crud-templates::field-type::custom', function () {
         return new CustomFieldType(new Field(...)); // Wrong!
     });
 }

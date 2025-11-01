@@ -65,11 +65,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "JCSoriano\\CrudTemplates\\LaravelCrudTemplatesServiceProvider"
-            ],
-            "aliases": {
-                "LaravelCrudTemplates": "JCSoriano\\CrudTemplates\\Facades\\LaravelCrudTemplates"
-            }
+                "JCSoriano\\CrudTemplates\\CrudTemplatesServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",

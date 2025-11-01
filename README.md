@@ -35,7 +35,7 @@ The package will automatically register itself via Laravel's package discovery.
 You can publish the stubs to customize them:
 
 ```bash
-php artisan vendor:publish --tag="laravel-crud-templates-stubs"
+php artisan vendor:publish --tag="crud-templates-stubs"
 ```
 
 ## The Command

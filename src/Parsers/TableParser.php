@@ -43,7 +43,7 @@ class TableParser
                 name: new Name($column),
                 required: ! $nullable,
                 // Resolve the field type class from the container binding
-                typeClass: app("laravel-crud-templates::field-type::{$fieldType}"),
+                typeClass: app("crud-templates::field-type::{$fieldType}"),
                 options: [],
             ));
         }
@@ -54,7 +54,7 @@ class TableParser
                 name: new Name($baseName),
                 required: ! $nullable,
                 // Resolve the field type class from the container binding
-                typeClass: app('laravel-crud-templates::field-type::morphTo'),
+                typeClass: app('crud-templates::field-type::morphTo'),
                 options: [],
             ));
         }

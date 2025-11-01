@@ -67,11 +67,11 @@ use App\Printers\CustomFillablePrinter;
 
 public function register()
 {
-    $this->app->bind('laravel-crud-templates::printer::fillable', CustomFillablePrinter::class);
+    $this->app->bind('crud-templates::printer::fillable', CustomFillablePrinter::class);
 }
 ```
 
-**Note:** To override an existing printer, bind to the same key as the package default (e.g., `laravel-crud-templates::printer::fillable`).
+**Note:** To override an existing printer, bind to the same key as the package default (e.g., `crud-templates::printer::fillable`).
 
 ### Step 3: The Printer is Used Automatically
 
@@ -188,7 +188,7 @@ class SearchablePrinter implements Printer
 Register it in your service provider's `register()` method:
 
 ```php
-$this->app->bind('laravel-crud-templates::printer::searchable', SearchablePrinter::class);
+$this->app->bind('crud-templates::printer::searchable', SearchablePrinter::class);
 ```
 
 Use in a custom model stub:

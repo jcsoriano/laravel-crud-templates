@@ -79,7 +79,7 @@ abstract class Template
         }
 
         // Otherwise, treat as a registered key and resolve from container binding
-        return app("laravel-crud-templates::generator::{$generator}");
+        return app("crud-templates::generator::{$generator}");
     }
 
     protected function buildGenerators(array $generators): array

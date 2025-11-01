@@ -65,11 +65,11 @@ use App\FieldTypes\PhoneType;
 
 public function register()
 {
-    $this->app->bind('laravel-crud-templates::field-type::phone', PhoneType::class);
+    $this->app->bind('crud-templates::field-type::phone', PhoneType::class);
 }
 ```
 
-**Note:** To override an existing field type, bind to the same key as the package default (e.g., `laravel-crud-templates::field-type::string`).
+**Note:** To override an existing field type, bind to the same key as the package default (e.g., `crud-templates::field-type::string`).
 
 ### Step 3: Use Your Custom Field Type
 
@@ -351,7 +351,7 @@ use App\FieldTypes\CustomStringType;
 
 public function register()
 {
-    $this->app->bind('laravel-crud-templates::field-type::string', CustomStringType::class);
+    $this->app->bind('crud-templates::field-type::string', CustomStringType::class);
 }
 ```
 

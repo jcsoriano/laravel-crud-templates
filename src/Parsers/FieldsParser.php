@@ -75,7 +75,7 @@ class FieldsParser
             name: new Name($fieldName),
             required: $required,
             // Resolve the field type class from the container binding
-            typeClass: app("laravel-crud-templates::field-type::{$fieldType}"),
+            typeClass: app("crud-templates::field-type::{$fieldType}"),
             options: $options,
             model: $modelClass ? new Model($modelClass) : null,
         );

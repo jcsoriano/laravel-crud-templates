@@ -42,7 +42,7 @@ use JCSoriano\CrudTemplates\Templates\ApiTemplate;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
+class CrudTemplatesServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -52,7 +52,7 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-crud-templates')
+            ->name('crud-templates')
             ->hasCommand(GenerateCrud::class);
     }
 
@@ -62,7 +62,27 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/stubs/api' => base_path('stubs'),
-            ], 'laravel-crud-templates-stubs');
+            ], 'crud-templates-stubs');
+
+            // Publish service provider
+            $this->publishes([
+                __DIR__.'/stubs/CrudTemplatesServiceProvider.stub' => app_path('Providers/CrudTemplatesServiceProvider.php'),
+            ], 'crud-templates-provider');
+        }
+
+        // Auto-register the published service provider
+        $this->registerPublishedServiceProvider();
+    }
+
+    /**
+     * Register the published service provider if it exists.
+     */
+    protected function registerPublishedServiceProvider(): void
+    {
+        $providerPath = app_path('Providers/CrudTemplatesServiceProvider.php');
+
+        if (file_exists($providerPath)) {
+            $this->addProviderToBootstrapFile(\App\Providers\CrudTemplatesServiceProvider::class);
         }
     }
 
@@ -104,7 +124,7 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
             // Bind as class name string. Field types are instantiated later by parsers
             // when they have the required Field data. This prevents unresolvable
             // dependency errors when resolving from the container.
-            $this->app->bind("laravel-crud-templates::field-type::{$key}", fn () => $class);
+            $this->app->bind("crud-templates::field-type::{$key}", fn () => $class);
         }
     }
 
@@ -125,7 +145,7 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
         ];
 
         foreach ($generators as $key => $class) {
-            $this->app->bind("laravel-crud-templates::generator::{$key}", $class);
+            $this->app->bind("crud-templates::generator::{$key}", $class);
         }
     }
 
@@ -139,7 +159,7 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
             // Bind as class name string. Templates are instantiated by the command
             // with the required parameters (model, fields, etc.). This prevents
             // unresolvable dependency errors when resolving from the container.
-            $this->app->bind("laravel-crud-templates::template::{$key}", fn () => $class);
+            $this->app->bind("crud-templates::template::{$key}", fn () => $class);
         }
     }
 
@@ -158,7 +178,7 @@ class LaravelCrudTemplatesServiceProvider extends PackageServiceProvider
         ];
 
         foreach ($printers as $key => $class) {
-            $this->app->bind("laravel-crud-templates::printer::{$key}", $class);
+            $this->app->bind("crud-templates::printer::{$key}", $class);
         }
     }
 }

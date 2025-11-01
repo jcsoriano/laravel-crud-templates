@@ -7,7 +7,7 @@ Stubs are template files that define the structure of generated code. By customi
 To customize stubs, first publish them to your project:
 
 ```bash
-php artisan vendor:publish --tag="laravel-crud-templates-stubs"
+php artisan vendor:publish --tag="crud-templates-stubs"
 ```
 
 This will copy all stub files to `stubs/` in your project root. Currently, stubs for the `api` template are available:

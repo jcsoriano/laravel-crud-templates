@@ -85,7 +85,7 @@ abstract class Generator
 
     protected function print(string $printer, Payload $payload): Output
     {
-        return app("laravel-crud-templates::printer::{$printer}")
+        return app("crud-templates::printer::{$printer}")
             ->print($payload);
     }
 }
