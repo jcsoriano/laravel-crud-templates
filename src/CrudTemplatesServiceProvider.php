@@ -3,6 +3,10 @@
 namespace JCSoriano\CrudTemplates;
 
 use JCSoriano\CrudTemplates\Commands\GenerateCrud;
+use JCSoriano\CrudTemplates\Commands\MakeFieldTypeCommand;
+use JCSoriano\CrudTemplates\Commands\MakeGeneratorCommand;
+use JCSoriano\CrudTemplates\Commands\MakePrinterCommand;
+use JCSoriano\CrudTemplates\Commands\MakeTemplateCommand;
 use JCSoriano\CrudTemplates\FieldTypes\BelongsToManyType;
 use JCSoriano\CrudTemplates\FieldTypes\BelongsToType;
 use JCSoriano\CrudTemplates\FieldTypes\BooleanType;
@@ -53,7 +57,13 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('crud-templates')
-            ->hasCommand(GenerateCrud::class);
+            ->hasCommands([
+                GenerateCrud::class,
+                MakeGeneratorCommand::class,
+                MakePrinterCommand::class,
+                MakeFieldTypeCommand::class,
+                MakeTemplateCommand::class,
+            ]);
     }
 
     public function packageBooted(): void
@@ -63,6 +73,11 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
             $this->publishes([
                 __DIR__.'/stubs/api' => base_path('stubs'),
             ], 'crud-templates-stubs');
+
+            // Publish make command stubs
+            $this->publishes([
+                __DIR__.'/stubs/crud-templates' => base_path('stubs/crud-templates'),
+            ], 'crud-templates-make-stubs');
 
             // Publish service provider
             $this->publishes([
@@ -82,7 +97,7 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
         $providerPath = app_path('Providers/CrudTemplatesServiceProvider.php');
 
         if (file_exists($providerPath)) {
-            $this->addProviderToBootstrapFile(\App\Providers\CrudTemplatesServiceProvider::class);
+            static::addProviderToBootstrapFile(\App\Providers\CrudTemplatesServiceProvider::class);
         }
     }
 

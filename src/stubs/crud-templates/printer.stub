@@ -1,0 +1,24 @@
+<?php
+
+namespace {{ namespace }};
+
+use JCSoriano\CrudTemplates\Printers\Printer;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
+
+class {{ class }} implements Printer
+{
+    /**
+     * Print the output for the given payload.
+     */
+    public function print(Payload $payload): Output
+    {
+        $output = '';
+        $namespaces = collect();
+
+        // Implement your custom printing logic here
+
+        return new Output($output, $namespaces);
+    }
+}
+

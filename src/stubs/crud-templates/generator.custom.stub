@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ namespace }};
+
+use JCSoriano\CrudTemplates\Generators\Generator;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
+
+class {{ class }} extends Generator
+{
+    /**
+     * Generate the file.
+     */
+    public function generate(Payload $payload): Payload
+    {
+        // Implement your custom generation logic here
+
+        return $payload;
+    }
+}
+

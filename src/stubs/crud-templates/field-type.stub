@@ -1,0 +1,15 @@
+<?php
+
+namespace {{ namespace }};
+
+use JCSoriano\CrudTemplates\FieldTypes\FieldType;
+use JCSoriano\CrudTemplates\DataObjects\Field;
+
+class {{ class }} extends FieldType
+{
+    public function __construct(
+        protected Field $field,
+    ) {}
+
+    // Implement custom field type methods here
+}

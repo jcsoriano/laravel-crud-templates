@@ -1,0 +1,44 @@
+<?php
+
+namespace {{ namespace }};
+
+use JCSoriano\CrudTemplates\Generators\Generator;
+use JCSoriano\CrudTemplates\Generators\StandardGenerator;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
+
+class {{ class }} extends Generator
+{
+    use StandardGenerator;
+
+    /**
+     * Returns the directory path where the file will be created.
+     */
+    protected function directory(Payload $payload): string
+    {
+        return app_path('path/to/directory');
+    }
+
+    /**
+     * Returns the file name without the `.php` extension.
+     */
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase();
+    }
+
+    /**
+     * Returns the file type used in console logging (e.g., "Controller", "Model", "Policy").
+     */
+    protected function fileType(Payload $payload): string
+    {
+        return 'File';
+    }
+
+    /**
+     * Returns the path to the stub file (checks custom stubs directory first).
+     */
+    protected function stubPath(Payload $payload): string
+    {
+        return 'your-stub-file.stub';
+    }
+}

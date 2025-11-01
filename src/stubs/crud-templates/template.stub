@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use JCSoriano\CrudTemplates\Templates\Template;
+
+class {{ class }} extends Template
+{
+    /**
+     * Define the generators to be executed in this template.
+     */
+    public function template(): array
+    {
+        return $this->buildGenerators([
+            // Add your generators here
+            // Example: 'controller', 'model', 'migration'
+        ]);
+    }
+}

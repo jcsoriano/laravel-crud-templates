@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class CrudTemplatesServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->registerFieldTypes();
+        $this->registerGenerators();
+        $this->registerTemplates();
+        $this->registerPrinters();
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+
+    /**
+     * Register custom field types.
+     */
+    protected function registerFieldTypes(): void
+    {
+        // Custom field type bindings will be added here
+    }
+
+    /**
+     * Register custom generators.
+     */
+    protected function registerGenerators(): void
+    {
+        // Custom generator bindings will be added here
+    }
+
+    /**
+     * Register custom templates.
+     */
+    protected function registerTemplates(): void
+    {
+        // Custom template bindings will be added here
+    }
+
+    /**
+     * Register custom printers.
+     */
+    protected function registerPrinters(): void
+    {
+        // Custom printer bindings will be added here
+    }
+}
