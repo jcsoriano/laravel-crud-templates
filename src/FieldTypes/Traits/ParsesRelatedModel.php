@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes\Traits;
+namespace JCSoriano\CrudTemplates\FieldTypes\Traits;
 
 trait ParsesRelatedModel
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
+namespace JCSoriano\CrudTemplates\FieldTypes;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
+use JCSoriano\CrudTemplates\DataObjects\Field;
 
 abstract class FieldType
 {

@@ -38,12 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "JCSoriano\\LaravelCrudTemplates\\": "src/"
+            "JCSoriano\\CrudTemplates\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JCSoriano\\LaravelCrudTemplates\\Tests\\": "tests/",
+            "JCSoriano\\CrudTemplates\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -65,10 +65,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "JCSoriano\\LaravelCrudTemplates\\LaravelCrudTemplatesServiceProvider"
+                "JCSoriano\\CrudTemplates\\LaravelCrudTemplatesServiceProvider"
             ],
             "aliases": {
-                "LaravelCrudTemplates": "JCSoriano\\LaravelCrudTemplates\\Facades\\LaravelCrudTemplates"
+                "LaravelCrudTemplates": "JCSoriano\\CrudTemplates\\Facades\\LaravelCrudTemplates"
             }
         }
     },

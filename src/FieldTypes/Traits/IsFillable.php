@@ -1,8 +1,8 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes\Traits;
+namespace JCSoriano\CrudTemplates\FieldTypes\Traits;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\DataObjects\Output;
 
 trait IsFillable
 {

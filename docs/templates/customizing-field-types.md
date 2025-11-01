@@ -25,12 +25,12 @@ Create a new class that extends `FieldType`:
 
 namespace App\FieldTypes;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\FieldType;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\HasSimpleMigration;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\HasSimpleRule;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsFillable;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\FieldTypes\FieldType;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\HasSimpleMigration;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\HasSimpleRule;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\IsFillable;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
 
 class PhoneType extends FieldType
 {

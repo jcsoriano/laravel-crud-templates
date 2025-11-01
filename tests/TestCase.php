@@ -1,9 +1,9 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Tests;
+namespace JCSoriano\CrudTemplates\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use JCSoriano\LaravelCrudTemplates\LaravelCrudTemplatesServiceProvider;
+use JCSoriano\CrudTemplates\LaravelCrudTemplatesServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -13,7 +13,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'JCSoriano\\LaravelCrudTemplates\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'JCSoriano\\CrudTemplates\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 

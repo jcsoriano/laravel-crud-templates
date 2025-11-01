@@ -11,7 +11,7 @@ At its simplest, a template just defines which generators to use. See [Available
 
 namespace App\Templates;
 
-use JCSoriano\LaravelCrudTemplates\Templates\Template;
+use JCSoriano\CrudTemplates\Templates\Template;
 
 class MyCustomTemplate extends Template
 {

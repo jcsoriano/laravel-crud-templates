@@ -64,7 +64,7 @@ php artisan crud:generate Order --fields="status:enum:OrderStatus"
 **Error Message:**
 ```
 Unresolvable dependency resolving [Parameter #0 [ <required> string $name ]] 
-in class JCSoriano\LaravelCrudTemplates\DataObjects\Name
+in class JCSoriano\CrudTemplates\DataObjects\Name
 ```
 
 **Cause:**

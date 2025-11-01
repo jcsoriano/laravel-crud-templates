@@ -1,13 +1,13 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
+namespace JCSoriano\CrudTemplates\FieldTypes;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\HasCast;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\HasSimpleMigration;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\HasSimpleRule;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsFillable;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\HasCast;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\HasSimpleMigration;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\HasSimpleRule;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\IsFillable;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
 
 class DateTimeType extends FieldType
 {

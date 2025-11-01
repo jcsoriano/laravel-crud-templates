@@ -1,12 +1,12 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Parsers;
+namespace JCSoriano\CrudTemplates\Parsers;
 
 use Illuminate\Support\Collection;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
-use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
+use JCSoriano\CrudTemplates\DataObjects\Field;
+use JCSoriano\CrudTemplates\DataObjects\Model;
+use JCSoriano\CrudTemplates\DataObjects\Name;
+use JCSoriano\CrudTemplates\Exceptions\InvalidFieldsException;
 
 class FieldsParser
 {

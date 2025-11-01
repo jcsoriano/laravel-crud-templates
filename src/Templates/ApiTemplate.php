@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Templates;
+namespace JCSoriano\CrudTemplates\Templates;
 
 class ApiTemplate extends Template
 {

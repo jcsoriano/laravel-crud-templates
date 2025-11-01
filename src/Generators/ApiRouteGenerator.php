@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Generators;
+namespace JCSoriano\CrudTemplates\Generators;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
 use RuntimeException;
 
 class ApiRouteGenerator extends Generator

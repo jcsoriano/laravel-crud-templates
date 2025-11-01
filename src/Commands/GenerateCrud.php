@@ -1,12 +1,12 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Commands;
+namespace JCSoriano\CrudTemplates\Commands;
 
 use Illuminate\Console\Command;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
-use JCSoriano\LaravelCrudTemplates\Exceptions\InvalidFieldsException;
-use JCSoriano\LaravelCrudTemplates\Parsers\FieldsParser;
-use JCSoriano\LaravelCrudTemplates\Parsers\TableParser;
+use JCSoriano\CrudTemplates\DataObjects\Model;
+use JCSoriano\CrudTemplates\Exceptions\InvalidFieldsException;
+use JCSoriano\CrudTemplates\Parsers\FieldsParser;
+use JCSoriano\CrudTemplates\Parsers\TableParser;
 
 class GenerateCrud extends Command
 {

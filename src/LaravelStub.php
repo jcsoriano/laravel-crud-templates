@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates;
+namespace JCSoriano\CrudTemplates;
 
 use Binafy\LaravelStub\LaravelStub as BaseLaravelStub;
 use Closure;

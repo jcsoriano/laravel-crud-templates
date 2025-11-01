@@ -1,11 +1,11 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Parsers;
+namespace JCSoriano\CrudTemplates\Parsers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
+use JCSoriano\CrudTemplates\DataObjects\Field;
+use JCSoriano\CrudTemplates\DataObjects\Name;
 
 class TableParser
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Generators;
+namespace JCSoriano\CrudTemplates\Generators;
 
 use Closure;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Facades\LaravelStub;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\Facades\LaravelStub;
 
 abstract class Generator
 {

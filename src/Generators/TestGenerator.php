@@ -1,9 +1,9 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Generators;
+namespace JCSoriano\CrudTemplates\Generators;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Field;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\DataObjects\Field;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
 
 class TestGenerator extends Generator
 {

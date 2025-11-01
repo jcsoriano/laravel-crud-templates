@@ -1,8 +1,8 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
+namespace JCSoriano\CrudTemplates\FieldTypes;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\DataObjects\Output;
 
 class MorphToType extends FieldType
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
+namespace JCSoriano\CrudTemplates\FieldTypes;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Name;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\ParsesRelatedModel;
+use JCSoriano\CrudTemplates\DataObjects\Name;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\ParsesRelatedModel;
 
 class BelongsToType extends FieldType
 {

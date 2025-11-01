@@ -1,10 +1,10 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\FieldTypes;
+namespace JCSoriano\CrudTemplates\FieldTypes;
 
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsFillable;
-use JCSoriano\LaravelCrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\IsFillable;
+use JCSoriano\CrudTemplates\FieldTypes\Traits\IsSimpleResourceField;
 
 class EnumType extends FieldType
 {

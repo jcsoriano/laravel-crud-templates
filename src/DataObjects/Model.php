@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\DataObjects;
+namespace JCSoriano\CrudTemplates\DataObjects;
 
 class Model
 {

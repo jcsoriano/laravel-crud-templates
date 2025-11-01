@@ -1,13 +1,13 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Templates;
+namespace JCSoriano\CrudTemplates\Templates;
 
 use Illuminate\Console\View\Components\Factory;
 use Illuminate\Pipeline\Pipeline as LaravelPipeline;
 use Illuminate\Support\Collection;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Model;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
-use JCSoriano\LaravelCrudTemplates\Generators\Generator;
+use JCSoriano\CrudTemplates\DataObjects\Model;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\Generators\Generator;
 
 abstract class Template
 {

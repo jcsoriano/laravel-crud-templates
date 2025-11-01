@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\DataObjects;
+namespace JCSoriano\CrudTemplates\DataObjects;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;

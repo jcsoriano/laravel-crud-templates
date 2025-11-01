@@ -31,9 +31,9 @@ Create a class that implements the `Printer` interface:
 
 namespace App\Printers;
 
-use JCSoriano\LaravelCrudTemplates\Printers\Printer;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\Printers\Printer;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
 
 class CustomFillablePrinter implements Printer
 {
@@ -162,9 +162,9 @@ Create a printer for Laravel Scout searchable fields:
 
 namespace App\Printers;
 
-use JCSoriano\LaravelCrudTemplates\Printers\Printer;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Output;
-use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\Printers\Printer;
+use JCSoriano\CrudTemplates\DataObjects\Output;
+use JCSoriano\CrudTemplates\DataObjects\Payload;
 
 class SearchablePrinter implements Printer
 {

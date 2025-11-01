@@ -1,6 +1,6 @@
 <?php
 
-namespace JCSoriano\LaravelCrudTemplates\Exceptions;
+namespace JCSoriano\CrudTemplates\Exceptions;
 
 use Exception;
 
