@@ -6,22 +6,32 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class ModelGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
     {
-        $model = $payload->model;
-        $namespace = $model->namespace();
-        $modelName = $model->model()->studlyCase();
+        $namespace = $payload->model->namespace();
 
-        $directory = app_path('Models/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
+        return app_path('Models/'.str_replace('\\', '/', $namespace));
+    }
 
-        $fileName = $modelName;
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase();
+    }
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Model', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+    protected function fileType(Payload $payload): string
+    {
+        return 'Model';
+    }
 
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.model.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
         $fillableOutput = $this->print('fillable', $payload);
         $castsOutput = $this->print('casts', $payload);
         $relationsOutput = $this->print('relations', $payload);
@@ -35,22 +45,12 @@ class ModelGenerator extends Generator
             ->merge($castsOutput->namespaces)
             ->merge($relationsOutput->namespaces);
 
-        $this->generateFile(
-            stubPath: 'api.model.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'FILLABLE' => $fillableOutput->output,
-                'CASTS' => $castsOutput->output,
-                'RELATIONS' => $relationsOutput->output,
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Model', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'FILLABLE' => $fillableOutput->output,
+            'CASTS' => $castsOutput->output,
+            'RELATIONS' => $relationsOutput->output,
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+        ];
     }
 }

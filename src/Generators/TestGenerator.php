@@ -7,21 +7,33 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class TestGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
     {
-        $model = $payload->model;
-        $namespace = $model->namespace();
-        $modelName = $model->model()->studlyCase();
+        $namespace = $payload->model->namespace();
 
-        $directory = base_path('tests/Feature/Api/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
+        return base_path('tests/Feature/Api/'.str_replace('\\', '/', $namespace));
+    }
 
-        $fileName = $modelName.'ControllerTest';
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase().'ControllerTest';
+    }
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Test', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+    protected function fileType(Payload $payload): string
+    {
+        return 'Test';
+    }
+
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.test.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
+        $modelName = $payload->model->model()->studlyCase();
 
         // Build test structure from fillable fields
         $testStructure = collect(['id']);
@@ -51,21 +63,11 @@ class TestGenerator extends Generator
             'Tests\TestCase',
         ])->merge($dbAssertionsOutput->namespaces);
 
-        $this->generateFile(
-            stubPath: 'api.test.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'TEST_STRUCTURE' => $testStructureString,
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-                'DB_ASSERTION_COLUMNS' => $dbAssertionsOutput->output,
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Test', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'TEST_STRUCTURE' => $testStructureString,
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+            'DB_ASSERTION_COLUMNS' => $dbAssertionsOutput->output,
+        ];
     }
 }

@@ -6,20 +6,31 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class PolicyGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
     {
-        $model = $payload->model;
-        $modelName = $model->model()->studlyCase();
+        return app_path('Policies');
+    }
 
-        $directory = app_path('Policies');
-        $this->createDirectoryIfNotExists($directory);
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase().'Policy';
+    }
 
-        $fileName = $modelName.'Policy';
+    protected function fileType(Payload $payload): string
+    {
+        return 'Policy';
+    }
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Policy', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.policy.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
+        $modelName = $payload->model->model()->studlyCase();
 
         // Build proper namespace paths
         $modelNamespace = $this->buildNamespace('App\\Models', $payload);
@@ -30,19 +41,9 @@ class PolicyGenerator extends Generator
             'Illuminate\Auth\Access\Response',
         ]);
 
-        $this->generateFile(
-            stubPath: 'api.policy.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Policy', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+        ];
     }
 }

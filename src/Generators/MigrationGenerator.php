@@ -6,44 +6,49 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class MigrationGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function shouldSkipGeneration(Payload $payload): bool
     {
-        // Skip migration generation if --table is used
         if ($payload->table) {
             $payload->components->warn('--table used so the table already exists. Skipping migration generation');
 
-            return $payload;
+            return true;
         }
 
-        $model = $payload->model;
-        $tableName = $model->model()->pluralSnakeCase();
+        return false;
+    }
 
-        $directory = database_path('migrations');
-        $this->createDirectoryIfNotExists($directory);
+    protected function directory(Payload $payload): string
+    {
+        return database_path('migrations');
+    }
 
+    protected function fileName(Payload $payload): string
+    {
         $timestamp = now()->format('Y_m_d_His');
-        $fileName = $timestamp.'_create_'.$tableName.'_table';
+        $tableName = $payload->model->model()->pluralSnakeCase();
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Migration', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+        return $timestamp.'_create_'.$tableName.'_table';
+    }
 
+    protected function fileType(Payload $payload): string
+    {
+        return 'Migration';
+    }
+
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.migration.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
         $output = $this->print('migrations', $payload);
 
-        $this->generateFile(
-            stubPath: 'api.migration.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'MIGRATION_FIELDS' => $output->output,
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Migration', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'MIGRATION_FIELDS' => $output->output,
+        ];
     }
 }

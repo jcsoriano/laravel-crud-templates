@@ -6,22 +6,32 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class ResourceGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
     {
-        $model = $payload->model;
-        $namespace = $model->namespace();
-        $modelName = $model->model()->studlyCase();
+        $namespace = $payload->model->namespace();
 
-        $directory = app_path('Http/Resources/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
+        return app_path('Http/Resources/'.str_replace('\\', '/', $namespace));
+    }
 
-        $fileName = $modelName.'Resource';
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase().'Resource';
+    }
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Resource', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+    protected function fileType(Payload $payload): string
+    {
+        return 'Resource';
+    }
 
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.resource.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
         $resourceOnlyOutput = $this->print('resource-only', $payload);
         $resourceRelationsOutput = $this->print('resource-relation', $payload);
 
@@ -31,21 +41,11 @@ class ResourceGenerator extends Generator
             'Illuminate\Http\Resources\Json\JsonResource',
         ])->merge($resourceRelationsOutput->namespaces);
 
-        $this->generateFile(
-            stubPath: 'api.resource.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'RESOURCE_ONLY' => $resourceOnlyOutput->output,
-                'RESOURCE_RELATIONS' => $resourceRelationsOutput->output,
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Resource', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'RESOURCE_ONLY' => $resourceOnlyOutput->output,
+            'RESOURCE_RELATIONS' => $resourceRelationsOutput->output,
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+        ];
     }
 }

@@ -6,21 +6,33 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class FactoryGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
     {
-        $model = $payload->model;
-        $namespace = $model->namespace();
-        $modelName = $model->model()->studlyCase();
+        $namespace = $payload->model->namespace();
 
-        $directory = database_path('factories/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
+        return database_path('factories/'.str_replace('\\', '/', $namespace));
+    }
 
-        $fileName = $modelName.'Factory';
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase().'Factory';
+    }
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Factory', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+    protected function fileType(Payload $payload): string
+    {
+        return 'Factory';
+    }
+
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.factory.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
+        $modelName = $payload->model->model()->studlyCase();
 
         $output = $this->print('factory', $payload);
 
@@ -33,20 +45,10 @@ class FactoryGenerator extends Generator
             'Illuminate\Database\Eloquent\Factories\Factory',
         ])->merge($output->namespaces);
 
-        $this->generateFile(
-            stubPath: 'api.factory.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'FACTORY_FIELDS' => $output->output,
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Factory', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'FACTORY_FIELDS' => $output->output,
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+        ];
     }
 }

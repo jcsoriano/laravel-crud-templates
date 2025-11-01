@@ -6,22 +6,32 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class UpdateRequestGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
     {
-        $model = $payload->model;
-        $namespace = $model->namespace();
-        $modelName = $model->model()->studlyCase();
+        $namespace = $payload->model->namespace();
 
-        $directory = app_path('Http/Requests/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
+        return app_path('Http/Requests/'.str_replace('\\', '/', $namespace));
+    }
 
-        $fileName = 'Update'.$modelName.'Request';
+    protected function fileName(Payload $payload): string
+    {
+        return 'Update'.$payload->model->model()->studlyCase().'Request';
+    }
 
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Request', $directory, $fileName, $payload)) {
-            return $payload;
-        }
+    protected function fileType(Payload $payload): string
+    {
+        return 'Request';
+    }
 
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.request.update.stub';
+    }
+
+    protected function variables(Payload $payload): array
+    {
         $rulesOutput = $this->print('rules', $payload);
 
         // Collect namespaces from printer
@@ -29,20 +39,10 @@ class UpdateRequestGenerator extends Generator
             'Illuminate\Foundation\Http\FormRequest',
         ])->merge($rulesOutput->namespaces);
 
-        $this->generateFile(
-            stubPath: 'api.request.update.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'RULES' => $rulesOutput->output,
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Request', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'RULES' => $rulesOutput->output,
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+        ];
     }
 }

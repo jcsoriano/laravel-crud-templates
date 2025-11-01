@@ -7,21 +7,34 @@ use JCSoriano\LaravelCrudTemplates\DataObjects\Payload;
 
 class ControllerGenerator extends Generator
 {
-    public function generate(Payload $payload): Payload
+    use StandardGenerator;
+
+    protected function directory(Payload $payload): string
+    {
+        $namespace = $payload->model->namespace();
+
+        return app_path('Http/Controllers/Api/'.str_replace('\\', '/', $namespace));
+    }
+
+    protected function fileName(Payload $payload): string
+    {
+        return $payload->model->model()->studlyCase().'Controller';
+    }
+
+    protected function fileType(Payload $payload): string
+    {
+        return 'Controller';
+    }
+
+    protected function stubPath(Payload $payload): string
+    {
+        return 'api.controller.stub';
+    }
+
+    protected function variables(Payload $payload): array
     {
         $model = $payload->model;
-        $namespace = $model->namespace();
         $modelName = $model->model()->studlyCase();
-
-        $directory = app_path('Http/Controllers/Api/'.str_replace('\\', '/', $namespace));
-        $this->createDirectoryIfNotExists($directory);
-
-        $fileName = $modelName.'Controller';
-
-        // Check if file exists and return early if not forcing
-        if ($this->checkIfFileExists('Controller', $directory, $fileName, $payload)) {
-            return $payload;
-        }
 
         // Build proper namespace paths
         $requestNamespace = $this->buildNamespace('App\\Http\\Requests', $payload);
@@ -49,20 +62,10 @@ class ControllerGenerator extends Generator
             $namespaces->push('Illuminate\Support\Facades\Auth');
         }
 
-        $this->generateFile(
-            stubPath: 'api.controller.stub',
-            directory: $directory,
-            fileName: $fileName,
-            variables: [
-                ...$payload->variables(),
-                'RELATIONS_LIST' => $relationsList,
-                'NAMESPACES' => $this->buildNamespaces($namespaces),
-            ],
-            conditions: $payload->conditions(),
-        );
-
-        $this->logGeneratedFile('Controller', $directory, $fileName, $payload);
-
-        return $payload;
+        return [
+            ...$payload->variables(),
+            'RELATIONS_LIST' => $relationsList,
+            'NAMESPACES' => $this->buildNamespaces($namespaces),
+        ];
     }
 }
