@@ -27,7 +27,7 @@ class StoreRequestGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.request.store.stub';
+        return 'api/request.store.stub';
     }
 
     protected function variables(Payload $payload): array

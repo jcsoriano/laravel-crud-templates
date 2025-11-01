@@ -28,7 +28,7 @@ class ControllerGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.controller.stub';
+        return 'api/controller.stub';
     }
 
     protected function variables(Payload $payload): array

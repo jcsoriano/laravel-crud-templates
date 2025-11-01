@@ -28,7 +28,7 @@ class TestGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.test.stub';
+        return 'api/test.stub';
     }
 
     protected function variables(Payload $payload): array

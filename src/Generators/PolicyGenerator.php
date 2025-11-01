@@ -25,7 +25,7 @@ class PolicyGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.policy.stub';
+        return 'api/policy.stub';
     }
 
     protected function variables(Payload $payload): array

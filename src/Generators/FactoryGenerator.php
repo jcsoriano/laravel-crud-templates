@@ -27,7 +27,7 @@ class FactoryGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.factory.stub';
+        return 'api/factory.stub';
     }
 
     protected function variables(Payload $payload): array

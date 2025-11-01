@@ -27,7 +27,7 @@ class ModelGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.model.stub';
+        return 'api/model.stub';
     }
 
     protected function variables(Payload $payload): array

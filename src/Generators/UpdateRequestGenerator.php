@@ -27,7 +27,7 @@ class UpdateRequestGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.request.update.stub';
+        return 'api/request.update.stub';
     }
 
     protected function variables(Payload $payload): array

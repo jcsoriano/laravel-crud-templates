@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use JCSoriano\CrudTemplates\DataObjects\Output;
 use JCSoriano\CrudTemplates\DataObjects\Payload;
-use JCSoriano\CrudTemplates\Facades\LaravelStub;
 
 abstract class Generator
 {
@@ -27,7 +26,7 @@ abstract class Generator
 
         return file_exists($customPath)
             ? $customPath
-            : __DIR__.'/../stubs/api/'.$file;
+            : __DIR__.'/../stubs/'.$file;
     }
 
     protected function getStubContent(string $stubPath, array $variables): string

@@ -27,7 +27,7 @@ class ResourceGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.resource.stub';
+        return 'api/resource.stub';
     }
 
     protected function variables(Payload $payload): array

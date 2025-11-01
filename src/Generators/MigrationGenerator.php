@@ -39,7 +39,7 @@ class MigrationGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'api.migration.stub';
+        return 'api/migration.stub';
     }
 
     protected function variables(Payload $payload): array
