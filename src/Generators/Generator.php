@@ -14,22 +14,6 @@ abstract class Generator
 {
     abstract public function generate(Payload $payload): Payload;
 
-    protected function generateFile(
-        string $stubPath,
-        string $directory,
-        string $fileName,
-        array $variables,
-        array $conditions,
-    ): void {
-        LaravelStub::from($this->getStubPath($stubPath))
-            ->to($directory)
-            ->name($fileName)
-            ->ext('php')
-            ->replaces($variables)
-            ->conditions($conditions)
-            ->generate();
-    }
-
     protected function createDirectoryIfNotExists(string $path): void
     {
         if (! File::exists($path)) {
