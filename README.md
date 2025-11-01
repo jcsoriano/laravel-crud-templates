@@ -13,7 +13,7 @@ CRUD Templates for Laravel allows you to generate controllers, models, policies,
 
 1. **Why do I need this if AI can generate the files for me?** AI is nondeterministic. Sometimes, it won't follow your conventions perfectly, sometimes it may miss things. This generates all of the files for you programmatically - it will be complete and exact, and a great base for further work with your AI.
 2. **What if the generated files don't fit my project's conventions?** Everything is customizable. You can modify the stubs, add more file types to generate, or even create your own CRUD templates - create multiple for different scenarios!
-3. **Won't this take over my job?** This will take over the _grunt_ work of your job - generating the first 80% of the code that you probably don't like doing anyway, and leaving you to focus on the unique logic that makes your project special - the last 20%. 
+3. **Will this do everything for me?** The aim of this package is to generate _almost_ everything for you. For simple CRUD features you can already get away with what it generates without modification. For features requiring a little bit of custom logic, this package will generate the first 90% of the code, so you can focus on the last 10% that makes your project special.
 
 ## Requirements
 
@@ -212,19 +212,19 @@ public function toArray($request): array
 - [Installation](https://laravelcrudtemplates.com/guide/installation) - Requirements and installation guide
 - [Quick Start](https://laravelcrudtemplates.com/guide/quick-start) - Generate your first CRUD in minutes
 
+### Available Templates
+- [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
+- [Creating Your Own Template](https://laravelcrudtemplates.com/templates/custom) - Create templates for your own use cases
+
 ### Using Templates
 - [Field Types](https://laravelcrudtemplates.com/guide/field-types) - Complete list of supported field types
 - [Relationships](https://laravelcrudtemplates.com/guide/relationships) - Working with model relationships
 - [Generate from Schema](https://laravelcrudtemplates.com/guide/generate-from-schema) - Generate from existing database tables
 
-### Available Templates
-- [API Template](https://laravelcrudtemplates.com/templates/api) - RESTful API CRUD generation
-- [Creating Your Own Template](https://laravelcrudtemplates.com/templates/custom) - Create templates for your own use cases
-
 ### Customizing Templates
 - [Customizing Stubs](https://laravelcrudtemplates.com/templates/customizing-stubs) - Modify stub templates
-- [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
 - [Customizing Generators](https://laravelcrudtemplates.com/templates/customizing-generators) - Override file generators
+- [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
 - [Customizing Printers](https://laravelcrudtemplates.com/templates/customizing-printers) - Customize code output
 
 ## Coming Soon

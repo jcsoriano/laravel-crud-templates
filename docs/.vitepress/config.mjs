@@ -17,12 +17,20 @@ export default defineConfig({
       {
         text: 'Getting Started',
         items: [
+          { text: 'Overview', link: '/guide/overview' },
           { text: 'Installation', link: '/guide/installation' },
           { text: 'Quick Start', link: '/guide/quick-start' }
         ]
       },
       {
-        text: 'Fields',
+        text: 'Available Templates',
+        items: [
+          { text: 'API Template', link: '/templates/api' },
+          { text: 'Creating Your Own Template', link: '/templates/custom' }
+        ]
+      },
+      {
+        text: 'Using Templates',
         items: [
           { text: 'Field Types', link: '/guide/field-types' },
           { text: 'Relationships', link: '/guide/relationships' },
@@ -30,12 +38,10 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Templates',
+        text: 'Customizing Templates',
         items: [
-          { text: 'API Template', link: '/templates/api' },
-          { text: 'Creating Your Own Template', link: '/templates/custom' },
-          { text: 'Customizing Generators', link: '/templates/customizing-generators' },
           { text: 'Customizing Stubs', link: '/templates/customizing-stubs' },
+          { text: 'Customizing Generators', link: '/templates/customizing-generators' },
           { text: 'Customizing Field Types', link: '/templates/customizing-field-types' },
           { text: 'Customizing Printers', link: '/templates/customizing-printers' }
         ]

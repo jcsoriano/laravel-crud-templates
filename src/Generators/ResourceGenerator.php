@@ -32,19 +32,17 @@ class ResourceGenerator extends Generator
 
     protected function variables(Payload $payload): array
     {
-        $resourceOnlyOutput = $this->print('resource-only', $payload);
-        $resourceRelationsOutput = $this->print('resource-relation', $payload);
+        $resourceOutput = $this->print('resource', $payload);
 
         // Collect namespaces from printers
         $namespaces = collect([
             'Illuminate\Http\Request',
             'Illuminate\Http\Resources\Json\JsonResource',
-        ])->merge($resourceRelationsOutput->namespaces);
+        ])->merge($resourceOutput->namespaces);
 
         return [
             ...$payload->variables(),
-            'RESOURCE_ONLY' => $resourceOnlyOutput->output,
-            'RESOURCE_RELATIONS' => $resourceRelationsOutput->output,
+            'RESOURCE_FIELDS' => $resourceOutput->output,
             'NAMESPACES' => $this->buildNamespaces($namespaces),
         ];
     }

@@ -26,14 +26,46 @@ class MyCustomTemplate extends Template
 }
 ```
 
-### Register the Template
+## Creating a new template
 
-After creating your template, register it in a service provider's `register()` method:
+You can easily create a new template using the `make:template` command:
+
+```bash
+php artisan make:template MyCustom
+```
+
+This command will generate a template class at `app/Templates/{Name}Template.php` with the following content:
+
+```php
+<?php
+
+namespace App\Templates;
+
+use JCSoriano\CrudTemplates\Templates\Template;
+
+class MyCustomTemplate extends Template
+{
+    public function template(): array
+    {
+        return $this->buildGenerators([
+            // List your generators here
+        ]);
+    }
+}
+```
+
+::: tip
+Use `--force` to overwrite an existing template file.
+:::
+
+### Registering the Template
+
+The command also automatically registers the template in the `CrudTemplatesServiceProvider`:
 
 ```php
 use App\Templates\MyCustomTemplate;
 
-public function register()
+public function registerTemplates(): void
 {
     $this->app->bind('crud-templates::template::my-custom', MyCustomTemplate::class);
 }
@@ -45,7 +77,7 @@ To override an existing template (like 'api'), bind to the same key: `crud-templ
 
 ### Use the Template
 
-Voilà! You can now use your custom template:
+Voilà! After setting what generators to use, you can now use your custom template:
 
 ```bash
 php artisan crud:generate Post --template=my-custom --fields="title:string,content:text"
@@ -70,7 +102,7 @@ protected function variables(): array
 ```
 
 ::: v-pre
-These variables will be available in all stubs as `{{ CUSTOM_VAR }}`.
+These variables will replace placeholders in the stubs as `{{ CUSTOM_VAR }}`.
 :::
 
 ### conditions()
@@ -113,8 +145,8 @@ public function data(): array
 
 ## Next Steps
 
-- Learn about [Customizing Generators](/templates/customizing-generators) to create custom file generators
-- Explore [Customizing Stubs](/templates/customizing-stubs) to modify generated code
-- Check [Customizing Field Types](/templates/customizing-field-types) for custom field behavior
-- Review [Customizing Printers](/templates/customizing-printers) to modify code snippets
+Now that you've learned about the API template or created your own template, you can learn about how to use it by feeding fields into the templates:
+ - Explore the [Field Types](/guide/field-types) to learn about the available field types or create new ones
+ - Explore the [Relationships](/guide/relationships) to learn about how to define and generate model relationships
+ - Explore the [Generate from Schema](/guide/generate-from-schema) to learn how to generate CRUD from existing database tables
 

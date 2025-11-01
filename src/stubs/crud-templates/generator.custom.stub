@@ -17,4 +17,3 @@ class {{ class }} extends Generator
         return $payload;
     }
 }
-

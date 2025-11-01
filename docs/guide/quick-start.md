@@ -2,107 +2,47 @@
 
 ## Command Signature
 
-The main command for generating CRUD files is:
+You can generate entire CRUD features with a single command. Below is the command signature:
 
-```bash
-php artisan crud:generate {model} [options]
 ```
-
-### Arguments
-
-- `model` - The name of the model (e.g., `Post`, `Content/Post` for namespaced models)
-
-### Options
-
-- `--fields=` - The fields to generate (format: `field1:type1,field2?:type2`)
-- `--table=` - The database table to generate fields from
-- `--template=` - The CRUD template to use (default: `api`)
-- `--skip=` - Comma-separated list of generators to skip (e.g., `test,factory`)
-- `--options=` - Additional options (format: `key1:value1,key2:value2`)
-- `--force` - Overwrite existing files (default: false, will skip existing files)
-
-::: tip Namespaced Models
-You can organize models with namespaces by using a forward slash in the model name, e.g., `Content/Post` will create the model at `app/Models/Content/Post.php`
-:::
+php artisan crud:generate
+  {model : The name of the model}
+  {--fields= : The fields to generate. Format: field1:type1,field2?:type2}
+  {--table= : The database table to generate the fields from}
+  {--template=api : The CRUD template to generate}
+  {--skip= : List of files you want to skip}
+  {--options= : Other options to pass to the generator. Format: key1:value1,key2:value2}
+  {--force : Overwrite existing files}
+```
 
 ## Your First CRUD Generation
 
-Let's generate a simple blog post CRUD:
+Let's go straight ahead and generate a simple blog post CRUD:
 
 ```bash
-php artisan crud:generate Content/Post --template=api --fields="title:string,content:text,published_at:datetime,category:belongsTo,comments:hasMany,status:enum:PublishStatus"
+php artisan crud:generate Content/Post \
+--template=api \
+--fields="title:string,content:text,published_at:datetime,category:belongsTo,comments:hasMany,status:enum:PublishStatus" \
+--options="scope:user"
 ```
 
 This example demonstrates multiple field types including relationships, datetime, and enums.
 
-## Generated Routes
-
-This single command will generate the following fully functioning RESTful API:
-
-| HTTP Method | URI | Action | Description |
-|-------------|-----|--------|-------------|
-| GET | `/api/posts` | `index` | List all posts (paginated) |
-| POST | `/api/posts` | `store` | Create a new post |
-| GET | `/api/posts/{id}` | `show` | Show a specific post |
-| PUT/PATCH | `/api/posts/{id}` | `update` | Update a post |
-| DELETE | `/api/posts/{id}` | `destroy` | Delete a post |
-
-## Response Format
-
-All responses follow a consistent JSON format:
-
-### Single Resource:
-```json
-{
-  "data": {
-    "id": 1,
-    "title": "My Post",
-    "content": "...",
-    "category": { "...": "..." },
-    "comments": [ { "...": "..." } ],
-    "status": "published",
-    "published_at": "2024-01-01T00:00:00.000000Z",
-    "created_at": "2024-01-01T00:00:00.000000Z",
-    "updated_at": "2024-01-01T00:00:00.000000Z"
-  }
-}
-```
-
-### Collection (with pagination):
-```json
-{
-  "data": [
-    { "The Post object as above" },
-  ],
-  "links": { "first": "...", "last": "...", "prev": null, "next": "..." },
-  "meta": { "current_page": 1, "per_page": 15, "total": 50 }
-}
-```
-
-## Error Handling
-
-The generated routes will handle errors appropriately:
-
-- **404 Not Found**: When a resource doesn't exist
-- **403 Forbidden**: When authorization fails
-- **422 Unprocessable Entity**: When validation fails
-- **500 Internal Server Error**: For unexpected errors
-
 ## Generated Files
 
-To make those routes work, all appropriate files are generated: models, controllers, policies, requests, resources, migrations, factories, and even tests!
+The above command will generate the following files:
 
-- `app/Http/Controllers/Api/Content/PostController.php` - RESTful API controller
-- `app/Models/Content/Post.php` - Eloquent model with fillable fields and casts
-- `app/Policies/Content/PostPolicy.php` - Authorization policy
-- `app/Http/Requests/Content/StorePostRequest.php` - Validation for create operations
-- `app/Http/Requests/Content/UpdatePostRequest.php` - Validation for update operations
-- `app/Http/Resources/Content/PostResource.php` - API resource for transforming responses
-- `database/migrations/{timestamp}_create_posts_table.php` - Database migration
-- `database/factories/Content/PostFactory.php` - Model factory for testing
-- `tests/Feature/Api/Content/PostControllerTest.php` - Feature tests
-- API routes automatically added
-- All generated files formatted using Pint
+- `app/Http/Controllers/Api/Content/PostController.php`
+- `app/Models/Content/Post.php`
+- `app/Policies/Content/PostPolicy.php`
+- `app/Http/Requests/Content/StorePostRequest.php`
+- `app/Http/Requests/Content/UpdatePostRequest.php`
+- `app/Http/Resources/Content/PostResource.php`
+- `database/migrations/{timestamp}_create_posts_table.php`
+- `database/factories/Content/PostFactory.php`
+- `tests/Feature/Api/Content/PostControllerTest.php`
+- API routes automatically added to `routes/api.php` (will run `install:api` if the file doesn't exist yet)
+- Laravel Pint run on all generated files
 
 ::: tip File Protection
 By default, existing files will not be overwritten. Use the `--force` flag to overwrite existing files:
@@ -151,7 +91,13 @@ protected $fillable = [
 ];
 ```
 
-### Resource Transformation
+
+
+## Relationships
+
+Special handling for relationships is already applied to the Resource file, the migration, and the validation rules.
+
+### Resource File
 
 The generated `PostResource` automatically includes relationships:
 
@@ -159,16 +105,14 @@ The generated `PostResource` automatically includes relationships:
 public function toArray($request): array
 {
     return [
-        ...$this->only([
-            'id',
-            'title',
-            'content',
-            'published_at',
-            'status',
-            'created_at',
-            'updated_at',
-        ]),
-        'category' => new CategoryResource($this->whenLoaded('category')),
+        'id' => $this->id,
+        'title' => $this->title,
+        'content' => $this->content,
+        'published_at' => $this->published_at,
+        'status' => $this->status,
+        'created_at' => $this->created_at,
+        'updated_at' => $this->updated_at,
+        'category' => CategoryResource::make($this->whenLoaded('category')),
         'comments' => CommentResource::collection($this->whenLoaded('comments')),
     ];
 }
@@ -208,12 +152,62 @@ public function rules(): array
 }
 ```
 
+## Generated Routes
+
+The command will also automatically register the following routes in your `routes/api.php` file:
+
+| HTTP Method | URI | Action | Description |
+|-------------|-----|--------|-------------|
+| GET | `/api/posts` | `index` | List all posts (paginated) |
+| POST | `/api/posts` | `store` | Create a new post |
+| GET | `/api/posts/{id}` | `show` | Show a specific post |
+| PUT/PATCH | `/api/posts/{id}` | `update` | Update a post |
+| DELETE | `/api/posts/{id}` | `destroy` | Delete a post |
+
+### Response Format
+
+All responses follow a consistent JSON format:
+
+#### Single Resource:
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "My Post",
+    "content": "...",
+    "category": { "...": "..." },
+    "comments": [ { "...": "..." } ],
+    "status": "published",
+    "published_at": "2024-01-01T00:00:00.000000Z",
+    "created_at": "2024-01-01T00:00:00.000000Z",
+    "updated_at": "2024-01-01T00:00:00.000000Z"
+  }
+}
+```
+
+#### Collection (with pagination):
+```json
+{
+  "data": [
+    { "The Post object as above" },
+  ],
+  "links": { "first": "...", "last": "...", "prev": null, "next": "..." },
+  "meta": { "current_page": 1, "per_page": 15, "total": 50 }
+}
+```
+
+### Error Handling
+
+The generated routes will handle errors appropriately:
+
+- **404 Not Found**: When a resource doesn't exist
+- **403 Forbidden**: When authorization fails
+- **422 Unprocessable Entity**: When validation fails
+- **500 Internal Server Error**: For unexpected errors
+
 ## Next Steps
 
 Now that you've generated your first CRUD, explore more advanced features:
 
-- Learn about all available [Field Types](/guide/field-types)
-- Add [Relationships](/guide/relationships) between models
-- Use [Generate from Schema](/guide/generate-from-schema) to generate from existing tables
-- Explore [Templates](/templates/api) to understand the generated structure
-
+- Explore the [API Template](/templates/api) which is used by the above command
+- Learn about all available [Field Types](/guide/field-types) and how to use them

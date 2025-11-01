@@ -1,6 +1,6 @@
 # Relationships
 
-CRUD Templates for Laravel supports generating Eloquent relationships between models. When you define a relationship field, the package automatically creates the necessary migration columns, relationship methods, and validation rules.
+In addition to fields, CRUD Templates for Laravel also supports relationships. When you define a relationship field, the package automatically creates the necessary migration columns, relationship methods, and validation rules.
 
 Relationships are declared along with fields, like below:
 

@@ -69,8 +69,7 @@ it('can resolve printer bindings', function () {
         'fillable',
         'migrations',
         'relations',
-        'resource-only',
-        'resource-relation',
+        'resource',
         'rules',
     ];
 

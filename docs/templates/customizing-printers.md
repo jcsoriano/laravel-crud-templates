@@ -11,8 +11,7 @@ CRUD Templates for Laravel includes these built-in printers:
 - `fillable` - Fillable array for models
 - `migrations` - Migration column definitions
 - `relations` - Relationship methods for models
-- `resource-only` - Resource fields (non-relationships)
-- `resource-relation` - Resource relationship fields
+- `resource` - Resource fields and relationships
 - `rules` - Validation rules
 - `dbAssertions` - Database assertion columns for tests
 
@@ -21,6 +20,24 @@ CRUD Templates for Laravel includes these built-in printers:
 Printers are used by generators to produce specific code segments. They receive a `Payload` object containing model and field information, and return an `Output` object with the generated code.
 
 ## Creating a Custom Printer
+
+### Quick Start: Using the Make Command
+
+The fastest way to create a new printer is using the `make:printer` command:
+
+```bash
+php artisan make:printer CustomFillable
+```
+
+This command will:
+1. Create a printer class at `app/Printers/{Name}Printer.php`
+2. Automatically register it in `app/Providers/CrudTemplatesServiceProvider.php`
+
+::: tip
+Use `--force` to overwrite an existing printer file.
+:::
+
+If you want to understand what the command generated or customize it further, continue reading the manual creation steps below.
 
 ### Step 1: Create the Printer Class
 
@@ -95,64 +112,6 @@ Printers return an `Output` object that can contain:
 - **output**: The generated code string
 - **namespaces**: Optional namespace collection. Used by Generators to collect namespaces, deduplicate them, sort alphabetically, and place them at the top of the file.
 
-## Built-in Printer Examples
-
-### Casts Printer
-
-Generates model type casts:
-
-```php
-class CastsPrinter implements Printer
-{
-    public function print(Payload $payload): Output
-    {
-        $fields = $payload->fields;
-        $casts = collect();
-        
-        foreach ($fields as $field) {
-            $fieldType = new $field->typeClass($field);
-            
-            if (method_exists($fieldType, 'cast')) {
-                $result = $fieldType->cast();
-                if ($result) {
-                    $casts->push("'{$result->key}' => {$result->value},");
-                }
-            }
-        }
-        
-        return new Output($casts->join("\n        "));
-    }
-}
-```
-
-### Rules Printer
-
-Generates validation rules:
-
-```php
-class RulesPrinter implements Printer
-{
-    public function print(Payload $payload): Output
-    {
-        $fields = $payload->fields;
-        $rules = collect();
-        
-        foreach ($fields as $field) {
-            $fieldType = new $field->typeClass($field);
-            
-            if (method_exists($fieldType, 'rule')) {
-                $result = $fieldType->rule();
-                if ($result) {
-                    $rules->push("'{$result->key}' => '{$result->value}',");
-                }
-            }
-        }
-        
-        return new Output($rules->join("\n            "));
-    }
-}
-```
-
 ## Practical Example: Searchable Fields Printer
 
 Create a printer for Laravel Scout searchable fields:
@@ -209,22 +168,19 @@ public function toSearchableArray(): array
 You can use printers in your custom generators:
 
 ```php
-public function generate(Payload $payload): Payload
+public function variables(Payload $payload): array
 {
-    // Use a printer (inherited from Generator base class)
     $fillableOutput = $this->print('fillable', $payload);
     $fillableFields = $fillableOutput->output;
     
     // Add to stub variables
-    $variables = [
+    return [
         ...$payload->variables(),
         'FILLABLE' => $fillableFields,
     ];
-    
-    // ... continue with generation
 }
 ```
 
 ## Next Steps
 
-- Check the package source code for more printer examples
+- Check the package source code to dive deeper

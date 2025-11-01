@@ -4,8 +4,10 @@ namespace JCSoriano\CrudTemplates\FieldTypes\Traits;
 
 trait IsSimpleResourceField
 {
-    public function resourceOnly(): array
+    public function resource(): array
     {
-        return [$this->field->name->snakeCase()];
+        $fieldName = $this->field->name->snakeCase();
+
+        return [$fieldName => "\$this->{$fieldName}"];
     }
 }

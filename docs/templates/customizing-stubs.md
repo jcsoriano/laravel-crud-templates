@@ -14,16 +14,16 @@ This will copy all stub files to `stubs/` in your project root. Currently, stubs
 
 ```
 stubs/api/
-├── api.controller.stub
-├── api.factory.stub
-├── api.migration.stub
-├── api.model.stub
-├── api.policy.stub
-├── api.request.store.stub
-├── api.request.update.stub
-├── api.resource.stub
-├── api.route.stub
-└── api.test.stub
+├── controller.stub
+├── factory.stub
+├── migration.stub
+├── model.stub
+├── policy.stub
+├── request.store.stub
+├── request.update.stub
+├── resource.stub
+├── route.stub
+└── test.stub
 ```
 
 ::: tip Priority
@@ -33,7 +33,7 @@ When stubs exist in your `stubs/` directory, they take priority over the package
 ## Available Stubs
 
 ### Controller Stub
-**File:** `api.controller.stub`
+**File:** `api/controller.stub`
 
 Generates the API controller with RESTful methods.
 
@@ -44,7 +44,7 @@ Generates the API controller with RESTful methods.
 :::
 
 ### Model Stub
-**File:** `api.model.stub`
+**File:** `api/model.stub`
 
 Generates the Eloquent model with fillable fields, casts, and relationships.
 
@@ -57,12 +57,12 @@ Generates the Eloquent model with fillable fields, casts, and relationships.
 :::
 
 ### Policy Stub
-**File:** `api.policy.stub`
+**File:** `api/policy.stub`
 
 Generates the authorization policy with CRUD permissions.
 
 ### Request Stubs
-**Files:** `api.request.store.stub`, `api.request.update.stub`
+**Files:** `api/request.store.stub`, `api/request.update.stub`
 
 Generate validation request classes for store and update operations.
 
@@ -73,7 +73,7 @@ Generate validation request classes for store and update operations.
 :::
 
 ### Resource Stub
-**File:** `api.resource.stub`
+**File:** `api/resource.stub`
 
 Generates the API resource for transforming model data.
 
@@ -85,7 +85,7 @@ Generates the API resource for transforming model data.
 :::
 
 ### Migration Stub
-**File:** `api.migration.stub`
+**File:** `api/migration.stub`
 
 Generates the database migration.
 
@@ -96,7 +96,7 @@ Generates the database migration.
 :::
 
 ### Factory Stub
-**File:** `api.factory.stub`
+**File:** `api/factory.stub`
 
 Generates the model factory for testing and seeding.
 
@@ -107,7 +107,7 @@ Generates the model factory for testing and seeding.
 :::
 
 ### Route Stub
-**File:** `api.route.stub`
+**File:** `api/route.stub`
 
 Generates the API route registration line in `routes/api.php`.
 
@@ -119,7 +119,7 @@ Generates the API route registration line in `routes/api.php`.
 :::
 
 ### Test Stub
-**File:** `api.test.stub`
+**File:** `api/test.stub`
 
 Generates feature tests for the controller.
 
@@ -176,7 +176,7 @@ Stubs support conditional logic:
 To revert to the package's default stubs:
 
 1. Delete the stub files from your `stubs/` directory
-2. Or rename them (e.g., `api.controller.stub.backup`)
+2. Or rename them (e.g., `api/controller.stub.backup`)
 
 The package will automatically fall back to its default stubs.
 
@@ -193,5 +193,6 @@ For implementation details on how variables are populated, see:
 
 ## Next Steps
 
-- Learn about [Customizing Field Types](/templates/customizing-field-types) to add custom field logic
-- Explore [Customizing Printers](/templates/customizing-printers) to modify code snippets
+- Learn about [Customizing Generators](/templates/customizing-generators) to create or override file generators
+- Explore [Customizing Field Types](/templates/customizing-field-types) to add custom field logic
+- Check out [Customizing Printers](/templates/customizing-printers) to modify code snippets

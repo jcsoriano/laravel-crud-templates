@@ -125,15 +125,13 @@ class PostResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            ...$this->only([
-                'id',
-                'title',
-                'content',
-                'published',
-                'created_at',
-                'updated_at',
-            ]),
-            'category' => new CategoryResource($this->whenLoaded('category')),
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'published' => $this->published,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'category' => CategoryResource::make($this->whenLoaded('category')),
         ];
     }
 }
@@ -366,6 +364,6 @@ All generators listed in the [Generated Files](#generated-files) section can be 
 If the API template doesn't fit your needs, worry not! You can create your own template, read further below:
 
 - [Create Your Own Template](/templates/custom) to generate different types of CRUDs beyond the default API pattern
-- Learn about [Customizing Generators](/templates/customizing-generators) to customize or create new generators
 - Explore [Customizing Stubs](/templates/customizing-stubs) to modify generated code
+- Learn about [Customizing Generators](/templates/customizing-generators) to customize or create new generators
 - Check [Customizing Field Types](/templates/customizing-field-types) to add or customize existing field types

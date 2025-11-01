@@ -12,8 +12,7 @@ class {{ class }} extends Template
     public function template(): array
     {
         return $this->buildGenerators([
-            // Add your generators here
-            // Example: 'controller', 'model', 'migration'
+            // List your generators here
         ]);
     }
 }

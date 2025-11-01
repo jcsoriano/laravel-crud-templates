@@ -1,6 +1,6 @@
 # Customizing Field Types
 
-CRUD Templates for Laravel already comes with many built-in [Field Types](/guide/field-types). However, sometimes you may need special field types specific to your project, or would like to customize the behavior of existing field types. This section will guide you through creating and customizing field types.
+CRUD Templates for Laravel comes with many built-in [Field Types](/guide/field-types). However, sometimes you may need field types specific to your project, or would like to customize the behavior of existing field types. This section will guide you through creating and customizing field types.
 
 ## Understanding Field Types
 
@@ -15,6 +15,22 @@ A field type controls:
 - **Relations**: Whether the field creates a relationship method
 
 ## Creating a Custom Field Type
+
+### Quick Start: Using the Make Command
+
+The fastest way to create a new field type is using the `make:field-type` command:
+
+```bash
+php artisan make:field-type Phone
+```
+
+This command will:
+1. Create a field type class at `app/FieldTypes/{Name}Type.php`
+2. Automatically register it in `app/Providers/CrudTemplatesServiceProvider.php`
+
+::: tip
+Use `--force` to overwrite an existing field type file.
+:::
 
 ### Step 1: Create the Field Type Class
 
@@ -58,12 +74,12 @@ class PhoneType extends FieldType
 
 ### Step 2: Register the Field Type
 
-Register your field type in a service provider's `register()` method (e.g., `AppServiceProvider`):
+Your field type will automatically be registered in the `CrudTemplatesServiceProvider` when you run the `make` command. 
 
 ```php
 use App\FieldTypes\PhoneType;
 
-public function register()
+public function registerFieldTypes(): void
 {
     $this->app->bind('crud-templates::field-type::phone', PhoneType::class);
 }
@@ -167,23 +183,23 @@ public function fillable(): string
 }
 ```
 
-#### resourceOnly()
+#### resource()
 
-Specifies which fields to include in the resource's `only()` array (returns `array`).
+Defines how the field should be represented in API resources (returns `array`).
 
+For simple fields:
 ```php
-public function resourceOnly(): array
+public function resource(): array
 {
-    return [$this->field->name->snakeCase()];
+    $fieldName = $this->field->name->snakeCase();
+    
+    return [$fieldName => "\$this->{$fieldName}"];
 }
 ```
 
-#### resourceRelations()
-
-For relationship fields, defines how to include related resources (returns `array`).
-
+For relationship fields:
 ```php
-public function resourceRelations(): array
+public function resource(): array
 {
     $fieldName = $this->field->name->snakeCase();
     $relationName = $this->field->name->camelCase();
@@ -302,7 +318,7 @@ Adds field to API resources:
 use IsSimpleResourceField;
 
 // Automatically implements:
-// - resourceOnly(): Returns array with the field name for the only() method
+// - resource(): Returns array with the field name mapping to $this->field_name
 ```
 
 ### ParsesRelatedModel

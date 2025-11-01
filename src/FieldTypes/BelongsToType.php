@@ -61,7 +61,7 @@ OUTPUT;
         return new Output($output, $namespaces);
     }
 
-    public function resourceRelations(): array
+    public function resource(): array
     {
         $name = $this->field->name;
         $fieldName = $name->snakeCase();

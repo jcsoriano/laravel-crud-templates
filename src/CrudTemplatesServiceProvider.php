@@ -39,8 +39,7 @@ use JCSoriano\CrudTemplates\Printers\FactoryPrinter;
 use JCSoriano\CrudTemplates\Printers\FillablePrinter;
 use JCSoriano\CrudTemplates\Printers\MigrationsPrinter;
 use JCSoriano\CrudTemplates\Printers\RelationsPrinter;
-use JCSoriano\CrudTemplates\Printers\ResourceOnlyPrinter;
-use JCSoriano\CrudTemplates\Printers\ResourceRelationPrinter;
+use JCSoriano\CrudTemplates\Printers\ResourcePrinter;
 use JCSoriano\CrudTemplates\Printers\RulesPrinter;
 use JCSoriano\CrudTemplates\Templates\ApiTemplate;
 use Spatie\LaravelPackageTools\Package;
@@ -186,8 +185,7 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
             'fillable' => FillablePrinter::class,
             'migrations' => MigrationsPrinter::class,
             'relations' => RelationsPrinter::class,
-            'resource-only' => ResourceOnlyPrinter::class,
-            'resource-relation' => ResourceRelationPrinter::class,
+            'resource' => ResourcePrinter::class,
             'rules' => RulesPrinter::class,
             'dbAssertions' => DbAssertionPrinter::class,
         ];

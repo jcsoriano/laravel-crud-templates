@@ -145,7 +145,7 @@ Generate from schema uses your default database connection defined in `config/da
 ## Next Steps
 
 - Explore the [API Template](/templates/api) to understand generated structure
-- Learn about [Customizing Templates](/templates/customizing-stubs) to modify output
+- Learn about [Customizing Stubs](/templates/customizing-stubs) to modify generated code
 - Check [Troubleshooting](/troubleshooting) for common issues
 
 

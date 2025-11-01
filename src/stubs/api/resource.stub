@@ -14,10 +14,7 @@ class {{ MODEL }}Resource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            ...$this->only([
-                {{ RESOURCE_ONLY }}
-            ]),
-            {{ RESOURCE_RELATIONS }}
+            {{ RESOURCE_FIELDS }}
         ];
     }
 }

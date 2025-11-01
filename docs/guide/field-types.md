@@ -1,6 +1,10 @@
 # Field Types
 
-Field types determine how your model attributes are stored, validated, and cast. CRUD Templates for Laravel supports a wide range of field types for various use cases.
+Fields are an integral part of CRUD Templates. They are fed into a template in one of two ways:
+
+The `--fields` option where you can manually specify the fields and their types, or the `--table` option, which automatically generates fields from an existing database table.
+
+These fields are then used to intelligently populate the content of the generated files.
 
 ## Basic Syntax
 

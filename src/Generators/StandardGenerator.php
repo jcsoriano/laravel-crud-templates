@@ -3,6 +3,7 @@
 namespace JCSoriano\CrudTemplates\Generators;
 
 use JCSoriano\CrudTemplates\DataObjects\Payload;
+use JCSoriano\CrudTemplates\Facades\LaravelStub;
 
 trait StandardGenerator
 {
