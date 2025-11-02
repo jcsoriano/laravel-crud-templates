@@ -3,11 +3,11 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jcsoriano/laravel-crud-templates.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-templates)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-templates/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/jcsoriano/laravel-crud-templates/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jcsoriano/laravel-crud-templates/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/jcsoriano/laravel-crud-templates/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/jcsoriano/laravel-crud-templates.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-templates)
+<!-- [![Total Downloads](https://img.shields.io/packagist/dt/jcsoriano/laravel-crud-templates.svg?style=flat-square)](https://packagist.org/packages/jcsoriano/laravel-crud-templates) -->
 
 CRUD Templates for Laravel allows you to generate controllers, models, policies, requests, resources, migrations, factories, and even tests - all the files you need to complete CRUD features with a single command. You can completely modify the template or create your own templates to fit your project's conventions perfectly.
 
-![Demo](docs/demo.gif)
+![Demo](docs/public/demo.gif)
 
 ## FAQs
 
@@ -65,17 +65,17 @@ php artisan crud:generate Content/Post --template=api --fields="title:string,con
 
 This command generates all the files needed to complete the CRUD feature, from routes, to validation, to authorization, to API responses, to migrations, to factories, to tests, and more.
 
-- `app/Http/Controllers/Api/Content/PostController.php` - RESTful API controller
-- `app/Models/Content/Post.php` - Eloquent model with fillable fields and casts, a belongsTo relation with the Category model, and a hasMany relation with the Comment model.
-- `app/Policies/PostPolicy.php` - Authorization policy, scoped to the authenticated user.
-- `app/Http/Requests/Content/StorePostRequest.php` - Validation for create operations
-- `app/Http/Requests/Content/UpdatePostRequest.php` - Validation for update operations
-- `app/Http/Resources/Content/PostResource.php` - API resource for transforming responses
-- `database/migrations/{timestamp}_create_posts_table.php` - Database migration
-- `database/factories/Content/PostFactory.php` - Model factory for testing
-- `tests/Feature/Api/Content/PostControllerTest.php` - Feature tests
-- API routes automatically added
-- All generated files formatted using Pint
+app/Http/Controllers/Api/Content/PostController.php`
+- `app/Models/Content/Post.php`
+- `app/Policies/PostPolicy.php`
+- `app/Http/Requests/Content/StorePostRequest.php`
+- `app/Http/Requests/Content/UpdatePostRequest.php`
+- `app/Http/Resources/Content/PostResource.php`
+- `database/migrations/{timestamp}_create_posts_table.php`
+- `database/factories/Content/PostFactory.php`
+- `tests/Feature/Api/Content/PostControllerTest.php`
+- API routes automatically added to `routes/api.php` (will run `install:api` if the file doesn't exist yet)
+- Laravel Pint run on all generated files
 
 ### Generated Routes
 
@@ -141,7 +141,7 @@ public function rules(): array
 
 The generated `Post` model will include several automatic enhancements:
 
-#### Relationship Methods:
+**Relationship Methods:**
 ```php
 public function category(): BelongsTo
 {
@@ -154,7 +154,7 @@ public function comments(): HasMany
 }
 ```
 
-#### Type Casting:
+**Type Casting:**
 ```php
 protected $casts = [
     'published_at' => 'immutable_datetime',  // Automatic datetime casting
@@ -162,7 +162,7 @@ protected $casts = [
 ];
 ```
 
-#### Fillable Fields:
+**Fillable Fields:**
 ```php
 protected $fillable = [
     'title',
@@ -198,7 +198,7 @@ public function toArray($request): array
 {
     return [
         ...
-        'category' => new CategoryResource($this->whenLoaded('category')),
+        'category' => CategoryResource::make($this->whenLoaded('category')),
         'comments' => CommentResource::collection($this->whenLoaded('comments')),
     ];
 }

@@ -9,8 +9,8 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/installation' },
+      { text: 'Fields', link: '/guide/field-types' },
       { text: 'Templates', link: '/templates/api' },
-      { text: 'Troubleshooting', link: '/troubleshooting' }
     ],
 
     sidebar: [

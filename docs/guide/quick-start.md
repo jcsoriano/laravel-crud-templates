@@ -34,7 +34,7 @@ The above command will generate the following files:
 
 - `app/Http/Controllers/Api/Content/PostController.php`
 - `app/Models/Content/Post.php`
-- `app/Policies/Content/PostPolicy.php`
+- `app/Policies/PostPolicy.php`
 - `app/Http/Requests/Content/StorePostRequest.php`
 - `app/Http/Requests/Content/UpdatePostRequest.php`
 - `app/Http/Resources/Content/PostResource.php`
@@ -90,8 +90,6 @@ protected $fillable = [
     'status',
 ];
 ```
-
-
 
 ## Relationships
 
