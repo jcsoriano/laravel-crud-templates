@@ -25,6 +25,7 @@ class MakePrinterCommand extends Command
             type: 'printer',
             methodName: 'registerPrinters',
             namespace: 'App\\Printers',
+            suffix: 'Printer',
         );
 
         return self::SUCCESS;

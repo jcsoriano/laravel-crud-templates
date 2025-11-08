@@ -3,6 +3,7 @@
 namespace JCSoriano\CrudTemplates\Commands\Concerns;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\ServiceProvider;
 use JCSoriano\CrudTemplates\DataObjects\Model;
 use JCSoriano\CrudTemplates\DataObjects\Name;
 use JCSoriano\CrudTemplates\DataObjects\Payload;
@@ -25,17 +26,18 @@ trait GeneratesPackageFiles
         string $methodName,
         string $namespace,
         string $bindingKeyCase = 'kebabCase',
-        bool $useClosure = false
+        bool $useClosure = false,
+        string $suffix = ''
     ): void {
         $name = new Name($this->argument('name'));
-        $className = $name->studlyCase();
+        $className = $name->studlyCase().$suffix;
         $bindingKey = $name->$bindingKeyCase();
         $providerPath = app_path('Providers/CrudTemplatesServiceProvider.php');
 
         if (! File::exists($providerPath)) {
-            $this->components->warn('Published CrudTemplatesServiceProvider not found. Run: php artisan vendor:publish --tag=crud-templates-provider');
+            $this->call('vendor:publish', ['--tag' => 'crud-templates-provider']);
 
-            return;
+            ServiceProvider::addProviderToBootstrapFile(\App\Providers\CrudTemplatesServiceProvider::class);
         }
 
         $content = File::get($providerPath);
@@ -54,7 +56,7 @@ trait GeneratesPackageFiles
             ? "fn () => \\{$namespace}\\{$className}::class"
             : "\\{$namespace}\\{$className}::class";
 
-        $binding = "        \$this->app->bind(\"crud-templates::{$type}::{$bindingKey}\", {$bindingValue});\n";
+        $binding = "    \$this->app->bind(\"crud-templates::{$type}::{$bindingKey}\", {$bindingValue});\n";
 
         $replacement = "$1$2{$binding}    }";
 

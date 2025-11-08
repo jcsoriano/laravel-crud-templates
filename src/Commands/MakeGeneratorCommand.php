@@ -37,6 +37,7 @@ class MakeGeneratorCommand extends Command
             type: 'generator',
             methodName: 'registerGenerators',
             namespace: 'App\\Generators',
+            suffix: 'Generator',
         );
 
         return self::SUCCESS;

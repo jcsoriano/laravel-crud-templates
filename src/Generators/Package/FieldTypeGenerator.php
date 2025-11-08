@@ -17,7 +17,7 @@ class FieldTypeGenerator extends Generator
 
     protected function fileName(Payload $payload): string
     {
-        return $payload->model->model()->studlyCase();
+        return $payload->model->model()->studlyCase().'Type';
     }
 
     protected function fileType(Payload $payload): string
@@ -34,7 +34,7 @@ class FieldTypeGenerator extends Generator
     {
         return [
             'namespace' => 'App\\FieldTypes',
-            'class' => $payload->model->model()->studlyCase(),
+            'class' => $this->fileName($payload),
         ];
     }
 }

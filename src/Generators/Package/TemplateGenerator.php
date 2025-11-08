@@ -17,7 +17,7 @@ class TemplateGenerator extends Generator
 
     protected function fileName(Payload $payload): string
     {
-        return $payload->model->model()->studlyCase();
+        return $payload->model->model()->studlyCase().'Template';
     }
 
     protected function fileType(Payload $payload): string
@@ -34,7 +34,7 @@ class TemplateGenerator extends Generator
     {
         return [
             'namespace' => 'App\\Templates',
-            'class' => $payload->model->model()->studlyCase(),
+            'class' => $this->fileName($payload),
         ];
     }
 }

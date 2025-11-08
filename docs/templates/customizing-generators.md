@@ -169,7 +169,7 @@ class RepositoryGenerator extends Generator
 
     protected function stubPath(Payload $payload): string
     {
-        return 'crud.repository.stub';
+        return 'repository.stub';
     }
 
     protected function variables(Payload $payload): array

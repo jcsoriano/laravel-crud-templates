@@ -17,7 +17,7 @@ class PrinterGenerator extends Generator
 
     protected function fileName(Payload $payload): string
     {
-        return $payload->model->model()->studlyCase();
+        return $payload->model->model()->studlyCase().'Printer';
     }
 
     protected function fileType(Payload $payload): string
@@ -34,7 +34,7 @@ class PrinterGenerator extends Generator
     {
         return [
             'namespace' => 'App\\Printers',
-            'class' => $payload->model->model()->studlyCase(),
+            'class' => $this->fileName($payload),
         ];
     }
 }

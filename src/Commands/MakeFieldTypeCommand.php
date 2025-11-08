@@ -27,6 +27,7 @@ class MakeFieldTypeCommand extends Command
             namespace: 'App\\FieldTypes',
             bindingKeyCase: 'camelCase',
             useClosure: true,
+            suffix: 'Type',
         );
 
         return self::SUCCESS;

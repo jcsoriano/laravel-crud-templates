@@ -26,6 +26,7 @@ class MakeTemplateCommand extends Command
             methodName: 'registerTemplates',
             namespace: 'App\\Templates',
             useClosure: true,
+            suffix: 'Template',
         );
 
         return self::SUCCESS;

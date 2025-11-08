@@ -70,7 +70,7 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
         // Publish stubs
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/stubs/api' => base_path('stubs'),
+                __DIR__.'/stubs/api' => base_path('stubs/api'),
             ], 'crud-templates-stubs');
 
             // Publish make command stubs
@@ -82,21 +82,6 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
             $this->publishes([
                 __DIR__.'/stubs/CrudTemplatesServiceProvider.stub' => app_path('Providers/CrudTemplatesServiceProvider.php'),
             ], 'crud-templates-provider');
-        }
-
-        // Auto-register the published service provider
-        $this->registerPublishedServiceProvider();
-    }
-
-    /**
-     * Register the published service provider if it exists.
-     */
-    protected function registerPublishedServiceProvider(): void
-    {
-        $providerPath = app_path('Providers/CrudTemplatesServiceProvider.php');
-
-        if (file_exists($providerPath)) {
-            static::addProviderToBootstrapFile(\App\Providers\CrudTemplatesServiceProvider::class);
         }
     }
 
