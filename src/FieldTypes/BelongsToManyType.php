@@ -19,7 +19,8 @@ class BelongsToManyType extends FieldType
         $output = <<<OUTPUT
     public function {$relationName}(): BelongsToMany
     {
-        return \$this->belongsToMany({$modelName}::class);
+        return \$this->belongsToMany({$modelName}::class)
+            ->withTimestamps();
     }
 OUTPUT;
 
