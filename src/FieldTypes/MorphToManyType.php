@@ -64,8 +64,8 @@ OUTPUT;
         $output = <<<OUTPUT
         Schema::create('{$tableName}', function (Blueprint \$table) {
             \$table->id();
-            \$table->morphs('{$morphableName}');
             \$table->foreignId('{$relatedForeignKey}')->constrained('{$relatedTable}')->cascadeOnDelete();
+            \$table->morphs('{$morphableName}');
             \$table->timestamps();
         });
 OUTPUT;
