@@ -28,13 +28,16 @@ use JCSoriano\CrudTemplates\Generators\FactoryGenerator;
 use JCSoriano\CrudTemplates\Generators\MigrationGenerator;
 use JCSoriano\CrudTemplates\Generators\ModelGenerator;
 use JCSoriano\CrudTemplates\Generators\PintGenerator;
+use JCSoriano\CrudTemplates\Generators\PivotMigrationGenerator;
 use JCSoriano\CrudTemplates\Generators\PolicyGenerator;
 use JCSoriano\CrudTemplates\Generators\ResourceGenerator;
 use JCSoriano\CrudTemplates\Generators\StoreRequestGenerator;
 use JCSoriano\CrudTemplates\Generators\TestGenerator;
 use JCSoriano\CrudTemplates\Generators\UpdateRequestGenerator;
 use JCSoriano\CrudTemplates\Printers\CastsPrinter;
+use JCSoriano\CrudTemplates\Printers\CreatePivotTablePrinter;
 use JCSoriano\CrudTemplates\Printers\DbAssertionPrinter;
+use JCSoriano\CrudTemplates\Printers\DropPivotTablePrinter;
 use JCSoriano\CrudTemplates\Printers\FactoryPrinter;
 use JCSoriano\CrudTemplates\Printers\FillablePrinter;
 use JCSoriano\CrudTemplates\Printers\MigrationsPrinter;
@@ -137,6 +140,7 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
             'update-request' => UpdateRequestGenerator::class,
             'resource' => ResourceGenerator::class,
             'migration' => MigrationGenerator::class,
+            'pivot-migration' => PivotMigrationGenerator::class,
             'factory' => FactoryGenerator::class,
             'test' => TestGenerator::class,
             'api-route' => ApiRouteGenerator::class,
@@ -173,6 +177,8 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
             'resource' => ResourcePrinter::class,
             'rules' => RulesPrinter::class,
             'dbAssertions' => DbAssertionPrinter::class,
+            'createPivotTables' => CreatePivotTablePrinter::class,
+            'dropPivotTables' => DropPivotTablePrinter::class,
         ];
 
         foreach ($printers as $key => $class) {

@@ -14,6 +14,7 @@ class ApiTemplate extends Template
             'update-request',
             'resource',
             'migration',
+            'pivot-migration',
             'factory',
             'test',
             'api-route',
