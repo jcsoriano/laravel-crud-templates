@@ -97,27 +97,38 @@ Creates a many-to-many relationship with a pivot table.
 
 **Syntax:**
 ```bash
---fields="tags:belongsToMany"
+--fields="category:belongsToMany"
 ```
 
 **Migration:**
-No migration column is created (requires a separate pivot table).
+A pivot table migration is automatically generated following Laravel's naming conventions (alphabetically ordered, singular model names).
+
+**Pivot Table Structure:**
+```php
+Schema::create('category_post', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+    $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete();
+    $table->timestamps();
+});
+```
 
 **Model Relationship:**
 ```php
-public function tags(): BelongsToMany
+public function categories(): BelongsToMany
 {
-    return $this->belongsToMany(Tag::class);
+    return $this->belongsToMany(Category::class)
+        ->withTimestamps();
 }
 ```
 
 **Example:**
 ```bash
-php artisan crud:generate Post --fields="title:string,content:text,tags:belongsToMany"
+php artisan crud:generate Post --fields="title:string,content:text,category:belongsToMany"
 ```
 
-::: warning Pivot Table
-You'll need to manually create the pivot table migration (e.g., `post_tag`). Follow Laravel's naming conventions: alphabetically ordered, singular model names.
+::: tip Automatic Pivot Tables
+Pivot tables are automatically created in a separate migration file. See the [Pivot Tables](#pivot-tables) section for more details.
 :::
 
 ---
@@ -189,10 +200,23 @@ Creates a many-to-many polymorphic relationship.
 **Syntax:**
 ```bash
 --fields="tags:morphToMany"
+--fields="tags:morphToMany:Tag"  # Custom model with default morph name
+--fields="tags:morphToMany::taggable"  # Custom morph name with default model
+--fields="tags:morphToMany:Tag:taggable"  # Custom morph name with explicit model
 ```
 
 **Migration:**
-No migration column is created.
+A pivot table migration is automatically generated using the plural of the morph name. The morph name defaults to the singular field name with "able" suffix.
+
+**Pivot Table Structure:**
+```php
+Schema::create('taggables', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('tag_id')->constrained('tags')->cascadeOnDelete();
+    $table->morphs('taggable');
+    $table->timestamps();
+});
+```
 
 **Model Relationship:**
 ```php
@@ -202,9 +226,16 @@ public function tags(): MorphToMany
 }
 ```
 
-**Example:**
+**Examples:**
 ```bash
+# Using default morph name (auto-generated from field name)
 php artisan crud:generate Post --fields="title:string,tags:morphToMany"
+
+# Using custom morph name with default model
+php artisan crud:generate Post --fields="title:string,tags:morphToMany::taggable"
+
+# Using custom morph name with explicit model
+php artisan crud:generate Post --fields="title:string,tags:morphToMany:Tag:taggable"
 ```
 
 ---
@@ -225,7 +256,7 @@ The forward slash (`/`) separates namespace segments and maps to `App\Models\Nam
 - `hasMany`
 - `belongsToMany`
 - `morphMany`
-- `morphToMany`
+- `morphToMany` (also supports a 4th parameter for custom morph name)
 
 **Examples:**
 
@@ -239,6 +270,10 @@ The forward slash (`/`) separates namespace segments and maps to `App\Models\Nam
 # Multiple relationships with custom paths
 php artisan crud:generate Post \
   --fields="category:belongsTo:Content/PostCategory,author:belongsTo:Users/Author,tags:belongsToMany:Taxonomy/Tag"
+
+# morphToMany with custom model and morph name
+php artisan crud:generate Post \
+  --fields="tags:morphToMany:Taxonomy/Tag:taggable"
 ```
 
 **Real-world example:**

@@ -71,6 +71,11 @@ class FieldsParser
             ? trim($parts[2])
             : null;
 
+        // Handle morphToMany with optional morph name (4th parameter)
+        if ($fieldType === 'morphToMany' && count($parts) >= 4) {
+            $options['morphName'] = trim($parts[3]);
+        }
+
         return new Field(
             name: new Name($fieldName),
             required: $required,

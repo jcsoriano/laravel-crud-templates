@@ -65,13 +65,14 @@ php artisan crud:generate Content/Post --template=api --fields="title:string,con
 
 This command generates all the files needed to complete the CRUD feature, from routes, to validation, to authorization, to API responses, to migrations, to factories, to tests, and more.
 
-app/Http/Controllers/Api/Content/PostController.php`
+- `app/Http/Controllers/Api/Content/PostController.php`
 - `app/Models/Content/Post.php`
 - `app/Policies/PostPolicy.php`
 - `app/Http/Requests/Content/StorePostRequest.php`
 - `app/Http/Requests/Content/UpdatePostRequest.php`
 - `app/Http/Resources/Content/PostResource.php`
 - `database/migrations/{timestamp}_create_posts_table.php`
+- `database/migrations/{timestamp}_create_{pivot}_tables.php` (if belongsToMany or morphToMany relationships are present)
 - `database/factories/Content/PostFactory.php`
 - `tests/Feature/Api/Content/PostControllerTest.php`
 - API routes automatically added to `routes/api.php` (will run `install:api` if the file doesn't exist yet)

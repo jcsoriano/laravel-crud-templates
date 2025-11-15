@@ -39,6 +39,7 @@ The above command will generate the following files:
 - `app/Http/Requests/Content/UpdatePostRequest.php`
 - `app/Http/Resources/Content/PostResource.php`
 - `database/migrations/{timestamp}_create_posts_table.php`
+- `database/migrations/{timestamp}_create_{pivot}_tables.php` (if belongsToMany or morphToMany relationships are present)
 - `database/factories/Content/PostFactory.php`
 - `tests/Feature/Api/Content/PostControllerTest.php`
 - API routes automatically added to `routes/api.php` (will run `install:api` if the file doesn't exist yet)

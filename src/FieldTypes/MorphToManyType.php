@@ -15,11 +15,12 @@ class MorphToManyType extends FieldType
         $relationName = $name->pluralCamelCase();
         $modelName = $this->getModelName();
         $modelClass = $this->getModelClass();
+        $morphName = $this->morphableName();
 
         $output = <<<OUTPUT
     public function {$relationName}(): MorphToMany
     {
-        return \$this->morphToMany({$modelName}::class, '{$relationName}');
+        return \$this->morphToMany({$modelName}::class, '{$morphName}');
     }
 OUTPUT;
 
@@ -43,19 +44,24 @@ OUTPUT;
         ];
     }
 
-    public function pivotTableName(string $currentModelName): string
+    public function pivotTableName(string $currentModelName = ''): string
     {
-        return $this->field->name->pluralSnakeCase();
+        return str($this->morphableName())->plural();
     }
 
-    public function createPivotTable(string $currentModelName): Output
+    private function morphableName(): string
     {
-        $tableName = $this->pivotTableName($currentModelName);
-        $name = $this->field->name;
+        return $this->field->options['morphName']
+            ?? str($this->field->name)->snake()
+                ->singular()
+                ->finish('able');
+    }
+
+    public function createPivotTable(string $currentModelName = ''): Output
+    {
+        $tableName = $this->pivotTableName();
         $relatedModelName = $this->getModelName();
-        
-        // The morphable name matches what's used in the relation method (pluralCamelCase)
-        $morphableName = $name->pluralCamelCase();
+        $morphableName = $this->morphableName();
         
         // The related model foreign key
         $relatedForeignKey = str($relatedModelName)->snake()->singular().'_id';
@@ -73,9 +79,9 @@ OUTPUT;
         return new Output($output);
     }
 
-    public function dropPivotTable(string $currentModelName): Output
+    public function dropPivotTable(string $currentModelName = ''): Output
     {
-        $tableName = $this->pivotTableName($currentModelName);
+        $tableName = $this->pivotTableName();
         $output = "Schema::dropIfExists('{$tableName}');";
 
         return new Output($output);
