@@ -228,6 +228,16 @@ public function toArray($request): array
 - [Customizing Field Types](https://laravelcrudtemplates.com/templates/customizing-field-types) - Extend with custom field types
 - [Customizing Printers](https://laravelcrudtemplates.com/templates/customizing-printers) - Customize code output
 
+## Support
+
+If you find this package useful and would like to support its development, consider supporting me through one of these platforms:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jc.soriano)
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/cw/jcsoriano)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/jcsoriano)
+
+Your support helps me continue building and maintaining this package. Thank you! 🙏
+
 ## Coming Soon
 
 1. **Filament CRUD Generator** - a Filament GUI for generating CRUD features

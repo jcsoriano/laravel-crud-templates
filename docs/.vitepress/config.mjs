@@ -49,7 +49,8 @@ export default defineConfig({
       {
         text: 'Resources',
         items: [
-          { text: 'Troubleshooting', link: '/troubleshooting' }
+          { text: 'Troubleshooting', link: '/troubleshooting' },
+          { text: 'Support', link: '/support' }
         ]
       }
     ],
