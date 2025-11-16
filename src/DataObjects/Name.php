@@ -25,6 +25,11 @@ class Name
         return $this->name->plural()->snake();
     }
 
+    public function singularSnakeCase(): string
+    {
+        return $this->name->singular()->snake();
+    }
+
     public function kebabCase(): string
     {
         return $this->name->kebab();
@@ -53,5 +58,10 @@ class Name
     public function pluralStudlyCase(): string
     {
         return $this->name->plural()->studly();
+    }
+
+    public function singularStudlyCase(): string
+    {
+        return $this->name->singular()->studly();
     }
 }

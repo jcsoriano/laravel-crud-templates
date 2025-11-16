@@ -20,16 +20,24 @@ class FactoryPrinter implements Printer
 
             if (method_exists($fieldType, 'factory')) {
                 $output = $fieldType->factory();
+                // For factory() method, merge output directly (supports multi-line like MorphToType)
+                $lines = explode("\n", $output->output);
+                foreach ($lines as $line) {
+                    $factoryFields->push($line);
+                }
+
+                $namespaces = $output->mergeNamespaces($namespaces);
+            }
+
+            if (method_exists($fieldType, 'fakeData')) {
+                $output = $fieldType->fakeData();
                 $fakeData = $output->output;
                 $column = method_exists($fieldType, 'column')
                     ? $fieldType->column()
                     : $field->name->snakeCase();
                 $factoryFields->push("'{$column}' => {$fakeData},");
 
-                // Merge namespaces from the factory output
-                if ($output->namespaces) {
-                    $namespaces = $namespaces->merge($output->namespaces);
-                }
+                $namespaces = $output->mergeNamespaces($namespaces);
             }
         }
 

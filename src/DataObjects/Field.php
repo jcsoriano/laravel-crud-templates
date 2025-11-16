@@ -18,9 +18,13 @@ class Field
         if ($this->model) {
             $model = $this->model;
 
-            return $basePath.'\\'.$model->namespace().'\\'.$model->model()->studlyCase();
+            return collect([
+                $basePath,
+                $model->namespace(),
+                $model->model()->singularStudlyCase(),
+            ])->filter()->join('\\');
         }
 
-        return $basePath.'\\'.$this->name->studlyCase();
+        return $basePath.'\\'.$this->name->singularStudlyCase();
     }
 }

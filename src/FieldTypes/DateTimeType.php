@@ -32,7 +32,7 @@ class DateTimeType extends FieldType
         return $this->buildCast('immutable_datetime');
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         return new Output('fake()->dateTime()');
     }

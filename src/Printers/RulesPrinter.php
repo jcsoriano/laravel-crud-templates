@@ -21,7 +21,7 @@ class RulesPrinter implements Printer
             if (method_exists($fieldType, 'rule')) {
                 $output = $fieldType->rule();
                 $rules->push($output->output);
-                $namespaces = $namespaces->merge($output->namespaces);
+                $namespaces = $output->mergeNamespaces($namespaces);
             }
         }
 

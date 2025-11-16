@@ -25,7 +25,7 @@ class IntegerType extends FieldType
         return $this->buildSimpleRule('integer');
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         return new Output('fake()->numberBetween(1, 1000)');
     }

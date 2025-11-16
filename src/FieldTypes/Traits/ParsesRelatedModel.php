@@ -11,6 +11,9 @@ trait ParsesRelatedModel
 
     private function getModelName(): string
     {
-        return $this->field->model->model()->studlyCase();
+        $field = $this->field;
+
+        return $field->model?->model()->singularStudlyCase()
+            ?? $field->name->singularStudlyCase();
     }
 }

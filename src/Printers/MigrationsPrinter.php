@@ -21,7 +21,7 @@ class MigrationsPrinter implements Printer
             if (method_exists($fieldType, 'migration')) {
                 $output = $fieldType->migration();
                 $migrations->push('            '.$output->output);
-                $namespaces = $namespaces->merge($output->namespaces);
+                $namespaces = $output->mergeNamespaces($namespaces);
             }
         }
 

@@ -21,7 +21,7 @@ class CastsPrinter implements Printer
             if (method_exists($fieldType, 'cast')) {
                 $output = $fieldType->cast();
                 $casts->push($output->output);
-                $namespaces = $namespaces->merge($output->namespaces);
+                $namespaces = $output->mergeNamespaces($namespaces);
             }
         }
 

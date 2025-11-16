@@ -21,7 +21,7 @@ class RelationsPrinter implements Printer
             if (method_exists($fieldType, 'relation')) {
                 $output = $fieldType->relation();
                 $relations->push($output->output);
-                $namespaces = $namespaces->merge($output->namespaces);
+                $namespaces = $output->mergeNamespaces($namespaces);
             }
         }
 

@@ -25,7 +25,7 @@ class StringType extends FieldType
         return $this->buildSimpleRule(['string', 'max:255']);
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         return new Output('fake()->words(3, true)');
     }

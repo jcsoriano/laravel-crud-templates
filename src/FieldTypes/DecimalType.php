@@ -32,7 +32,7 @@ class DecimalType extends FieldType
         return $this->buildCast('decimal:2');
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         return new Output('fake()->randomFloat(2, 0, 9999)');
     }

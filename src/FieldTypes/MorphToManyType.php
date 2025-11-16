@@ -51,10 +51,10 @@ OUTPUT;
 
     private function morphableName(): string
     {
-        return $this->field->options['morphName']
-            ?? str($this->field->name)->snake()
-                ->singular()
-                ->finish('able');
+        $field = $this->field;
+
+        return $field->options['morphName']
+            ?? str($field->name->singularSnakeCase())->finish('able');
     }
 
     public function createPivotTable(string $currentModelName = ''): Output

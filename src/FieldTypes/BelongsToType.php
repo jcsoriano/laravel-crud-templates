@@ -78,7 +78,7 @@ OUTPUT;
         return $this->column();
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         $modelName = $this->getModelName();
         $modelClass = $this->getModelClass();

@@ -52,4 +52,16 @@ OUTPUT;
             "{$fieldName}_id",
         ];
     }
+
+    public function factory(): Output
+    {
+        $fieldName = $this->field->name->snakeCase();
+
+        $output = <<<OUTPUT
+'{$fieldName}_type' => (new User)->getMorphClass(),
+'{$fieldName}_id' => User::factory(),
+OUTPUT;
+
+        return new Output($output, collect(['App\\Models\\User']));
+    }
 }

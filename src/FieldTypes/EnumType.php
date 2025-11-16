@@ -42,7 +42,7 @@ class EnumType extends FieldType
         ]));
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         $enumClass = $this->field->options['enumClass'] ?? 'Enum';
         $output = "{$enumClass}::cases()[array_rand({$enumClass}::cases())]";

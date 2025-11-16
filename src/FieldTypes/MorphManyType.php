@@ -15,11 +15,12 @@ class MorphManyType extends FieldType
         $relationName = $name->pluralCamelCase();
         $modelName = $this->getModelName();
         $modelClass = $this->getModelClass();
+        $morphName = $this->morphableName();
 
         $output = <<<OUTPUT
     public function {$relationName}(): MorphMany
     {
-        return \$this->morphMany({$modelName}::class, 'morphable');
+        return \$this->morphMany({$modelName}::class, '{$morphName}');
     }
 OUTPUT;
 
@@ -41,5 +42,13 @@ OUTPUT;
         return [
             $fieldName => "{$resourceName}Resource::collection(\$this->whenLoaded('{$relationName}'))",
         ];
+    }
+
+    private function morphableName(): string
+    {
+        $field = $this->field;
+
+        return $field->options['morphName']
+            ?? str($field->name->singularSnakeCase())->finish('able');
     }
 }

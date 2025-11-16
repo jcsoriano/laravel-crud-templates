@@ -21,7 +21,7 @@ class DbAssertionPrinter implements Printer
             if (method_exists($fieldType, 'dbAssertion')) {
                 $output = $fieldType->dbAssertion();
                 $dbAssertions->push($output->output);
-                $namespaces = $namespaces->merge($output->namespaces);
+                $namespaces = $output->mergeNamespaces($namespaces);
             }
         }
 

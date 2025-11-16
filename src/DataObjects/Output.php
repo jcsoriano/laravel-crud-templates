@@ -10,4 +10,9 @@ class Output
         public protected(set) string $output,
         public protected(set) ?Collection $namespaces = null,
     ) {}
+
+    public function mergeNamespaces(Collection $namespaces): Collection
+    {
+        return $namespaces->merge($this->namespaces ?? []);
+    }
 }

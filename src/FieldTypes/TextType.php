@@ -25,7 +25,7 @@ class TextType extends FieldType
         return $this->buildSimpleRule('string');
     }
 
-    public function factory(): Output
+    public function fakeData(): Output
     {
         return new Output('fake()->paragraph()');
     }

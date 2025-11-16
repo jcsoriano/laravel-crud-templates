@@ -2,8 +2,11 @@
 
 namespace JCSoriano\CrudTemplates\Generators;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use JCSoriano\CrudTemplates\DataObjects\Payload;
+use Symfony\Component\Finder\SplFileInfo;
 
 class MigrationGenerator extends Generator
 {
@@ -26,9 +29,10 @@ class MigrationGenerator extends Generator
         }
 
         $migrations = File::allFiles($this->directory($payload));
-        $migration = $migrations->first(
-            fn ($migration) => Str::endsWith($migration->getFilename(), $this->migrationName($payload).'.php')
+        $migration = collect($migrations)->first(
+            fn (SplFileInfo $migration) => Str::endsWith($migration->getFilename(), $this->migrationName($payload).'.php')
         );
+
         if ($migration) {
             $payload->components->warn('Migration already exists. Skipping migration generation');
 
@@ -47,7 +51,7 @@ class MigrationGenerator extends Generator
     {
         $timestamp = now()->format('Y_m_d_His');
 
-        return $timestamp.$this->migrationName($payload);
+        return $timestamp.'_'.$this->migrationName($payload);
     }
 
     protected function migrationName(Payload $payload): string

@@ -48,16 +48,21 @@ abstract class Generator
 
     protected function logGeneratedFile(string $type, string $directory, string $fileName, Payload $payload): void
     {
-        $path = $directory.'/'.$fileName.'.php';
+        $path = $this->buildPath($directory, $fileName);
 
         $payload->components->info(sprintf('%s [%s] created successfully.', $type, $path));
 
         $payload->data['files'][] = $path;
     }
 
+    protected function buildPath(string $directory, string $fileName): string
+    {
+        return rtrim($directory, '/\\').'/'.$fileName.'.php';
+    }
+
     protected function checkIfFileExists(string $type, string $directory, string $fileName, Payload $payload): bool
     {
-        $path = $directory.'/'.$fileName.'.php';
+        $path = $this->buildPath($directory, $fileName);
 
         if (File::exists($path) && ! $payload->force) {
             $payload->components->warn(sprintf('%s [%s] already exists. Skipping. Use --force to overwrite.', $type, $path));
