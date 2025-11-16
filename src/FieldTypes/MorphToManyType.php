@@ -62,7 +62,7 @@ OUTPUT;
         $tableName = $this->pivotTableName();
         $relatedModelName = $this->getModelName();
         $morphableName = $this->morphableName();
-        
+
         // The related model foreign key
         $relatedForeignKey = str($relatedModelName)->snake()->singular().'_id';
         $relatedTable = str($relatedModelName)->snake()->plural();
