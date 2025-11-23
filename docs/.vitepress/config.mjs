@@ -8,7 +8,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/installation' },
+      { text: 'Guide', link: '/guide/introduction' },
       { text: 'Fields', link: '/guide/field-types' },
       { text: 'Templates', link: '/templates/api' },
     ],
@@ -17,6 +17,7 @@ export default defineConfig({
       {
         text: 'Getting Started',
         items: [
+          { text: 'Introduction', link: '/guide/introduction' },
           { text: 'Overview', link: '/guide/overview' },
           { text: 'Installation', link: '/guide/installation' },
           { text: 'Quick Start', link: '/guide/quick-start' }

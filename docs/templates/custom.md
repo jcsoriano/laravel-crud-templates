@@ -1,3 +1,9 @@
+# Video walkthrough
+
+For those who prefer learning visually, here's a video tutorial that goes through most of the advanced features of the package, including creating your own template.
+
+<iframe width="800" height="450" src="https://www.youtube.com/embed/TyMpxbxWn2o?si=fIEqtk-RJrqiWX0E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 # Creating Your Own Template
 
 The ability to create your own template is one of the most powerful features of CRUD Templates for Laravel. It allows you to generate different types of CRUDs beyond the default API pattern.
