@@ -24,6 +24,7 @@ use JCSoriano\CrudTemplates\FieldTypes\StringType;
 use JCSoriano\CrudTemplates\FieldTypes\TextType;
 use JCSoriano\CrudTemplates\Generators\ApiRouteGenerator;
 use JCSoriano\CrudTemplates\Generators\ControllerGenerator;
+use JCSoriano\CrudTemplates\Generators\DependenciesGenerator;
 use JCSoriano\CrudTemplates\Generators\FactoryGenerator;
 use JCSoriano\CrudTemplates\Generators\MigrationGenerator;
 use JCSoriano\CrudTemplates\Generators\ModelGenerator;
@@ -134,6 +135,7 @@ class CrudTemplatesServiceProvider extends PackageServiceProvider
     {
         $generators = [
             'controller' => ControllerGenerator::class,
+            'dependencies' => DependenciesGenerator::class,
             'model' => ModelGenerator::class,
             'policy' => PolicyGenerator::class,
             'store-request' => StoreRequestGenerator::class,

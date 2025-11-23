@@ -7,6 +7,7 @@ class ApiTemplate extends Template
     public function template(): array
     {
         return $this->buildGenerators([
+            'dependencies',
             'controller',
             'model',
             'policy',
