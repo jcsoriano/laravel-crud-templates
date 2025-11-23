@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: CRUD Templates for Laravel
-  text: 0 to 90% done in seconds.
+  text: Radically speed up your application development.
   tagline: Generate routes, controllers, models, policies, requests, resources, migrations, factories, and tests with a single command.
   image:
     src: /demo.gif
