@@ -4,7 +4,6 @@ namespace JCSoriano\CrudTemplates\Generators;
 
 use Illuminate\Support\Facades\Artisan;
 use JCSoriano\CrudTemplates\DataObjects\Payload;
-use RuntimeException;
 
 class DependenciesGenerator extends Generator
 {
